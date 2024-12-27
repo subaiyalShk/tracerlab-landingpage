@@ -11,17 +11,12 @@
 <body>
     <!-- Hero Section -->
     <section id="hero">
-        <div class="hero-bg"></div>
-        <div class="geometric-shapes">
-            <div class="shape"></div>
-            <div class="shape"></div>
-            <div class="shape"></div>
-        </div>
+        <canvas id="canvas3d"></canvas>
         <div class="container">
             <div id="hero-text" data-aos="fade-right">
                 <h1>We Build <br> <span class="gradient-text">Digital Solutions</span><br>That Drive Growth</h1>
             </div>
-            <div id="hero-visual" data-aos="fade-left">
+            <!-- <div id="hero-visual" data-aos="fade-left">
                 <iframe 
 
                     src="https://d2l8m8gdosxrdw.cloudfront.net/index9.html"
@@ -29,7 +24,7 @@
                     allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
                     allowfullscreen
                 ></iframe>
-            </div>
+            </div> -->
         </div>
     </section>
     
@@ -264,5 +259,33 @@
         });
         </script>
         <script type="text/javascript" src="https://assets.calendly.com/assets/external/widget.js" async></script>
+        <script type="module">
+            import { Application } from 'https://unpkg.com/@splinetool/runtime@0.9.516/build/runtime.js';
+            
+            const canvas = document.getElementById('canvas3d');
+            const app = new Application(canvas);
+            
+            app.load('https://prod.spline.design/xgVBKlYa7zzVCoOi/scene.splinecode')
+                .then(() => {
+                    console.log('Spline scene loaded successfully');
+                    const camera = app._camera; // Note: using _camera not camera
+                    
+                    // Set new camera position
+                    camera.position.set(
+                        200,    // x - move camera left (scene moves right)
+                        750,    // y - height
+                        700     // z - zoom (lower number = zoom in)
+                    );
+                    
+
+                    // Add this to help with positioning in console
+                    window.splineApp = app;
+                    console.log('Access camera with: window.splineApp._camera');
+                    
+                })
+                .catch(error => {
+                    console.error('Error loading Spline scene:', error);
+                });
+        </script>
 </body>
 </html>

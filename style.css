@@ -149,7 +149,7 @@ body {
     border-bottom: 1px solid rgba(255, 255, 255, 0.1);
     box-shadow: 0 4px 30px rgba(0, 0, 0, 0.1);
     z-index: 1000;
-    transition: all 0.3s ease;
+    transition: all 0.5s cubic-bezier(0.4, 0, 0.2, 1);
 }
 
 .nav-container{
@@ -163,23 +163,10 @@ body {
 #main-nav.sticky {
     position: fixed;
     top: 0;
-    left: 0;
-    width: 100%;
-    background: rgba(0, 0, 0, 0.2); /* Keep the same transparency as non-sticky */
-    backdrop-filter: blur(12px); /* Slightly stronger blur when sticky */
+    background: rgba(0, 0, 0, 0.2);
+    backdrop-filter: blur(12px);
     -webkit-backdrop-filter: blur(12px);
     border-bottom: 1px solid rgba(255, 255, 255, 0.15);
-}
-
-
-
-.nav-placeholder {
-    height: 0;
-    transition: height 0.3s ease;
-}
-
-.nav-placeholder.active {
-    height: 120px; /* Match this to your logo height */
 }
 
 .nav-links {

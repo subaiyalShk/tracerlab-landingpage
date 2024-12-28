@@ -177,15 +177,12 @@
                     </div>
                 </div>
                 
-                <!-- <div class="calendly-container" data-aos="fade-up">
-                    <div class="calendly-inline-widget" 
-                         data-url="https://calendly.com/subaiyalshk-tracerlabs/discovery-call?hide_event_type_details=1&hide_gdpr_banner=1">
-                    </div>
-                </div> -->
                 <iframe 
-
-                    src="https://d2l8m8gdosxrdw.cloudfront.net/index9.html"
+                    src="https://dev-agency-iezjiozvw-subaiyalshks-projects.vercel.app/lead-capture"
                     loading="lazy"
+                    width="100%"
+                    height="600px"
+                    style="border: none;"
                     allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
                     allowfullscreen
                 ></iframe>
@@ -220,22 +217,31 @@
     <script>
         document.addEventListener('DOMContentLoaded', function() {
         const nav = document.getElementById('main-nav');
-        const navPlaceholder = document.querySelector('.nav-placeholder');
         const content = document.getElementById('content');
 
         function handleScroll() {
-            const contentTop = content.getBoundingClientRect().top;
-            
-            if (contentTop <= 10) {
+            const scrollPosition = window.pageYOffset || document.documentElement.scrollTop;
+            const triggerPoint = content.offsetTop - 120;
+
+            if (scrollPosition >= triggerPoint) {
                 nav.classList.add('sticky');
-                navPlaceholder.classList.add('active');
             } else {
                 nav.classList.remove('sticky');
-                navPlaceholder.classList.remove('active');
             }
         }
 
-        window.addEventListener('scroll', handleScroll);
+        handleScroll();
+        
+        let ticking = false;
+        window.addEventListener('scroll', function() {
+            if (!ticking) {
+                window.requestAnimationFrame(function() {
+                    handleScroll();
+                    ticking = false;
+                });
+                ticking = true;
+            }
+        });
     });
     </script>
     <script>

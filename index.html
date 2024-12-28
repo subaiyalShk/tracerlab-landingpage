@@ -80,21 +80,21 @@
         </div>
     
         <!-- Services Section -->
-        <section id="services">
+        <section id="services" class="fg-bg">
             <div class="container">
                 <h2 data-aos="fade-up">Our Services</h2>
                 <div id="services-grid">
-                    <div class="service-card" data-aos="fade-up">
+                    <div class="service-card neon-card" data-aos="fade-up">
                         <div class="service-icon">💻</div>
                         <h3>Web Development</h3>
                         <p>Custom websites and web applications built with modern technologies and best practices.</p>
                     </div>
-                    <div class="service-card" data-aos="fade-up" data-aos-delay="100">
+                    <div class="service-card neon-card" data-aos="fade-up" data-aos-delay="100">
                         <div class="service-icon">📱</div>
                         <h3>Mobile Apps</h3>
                         <p>Native and cross-platform mobile applications that deliver exceptional user experiences.</p>
                     </div>
-                    <div class="service-card" data-aos="fade-up" data-aos-delay="200">
+                    <div class="service-card neon-card" data-aos="fade-up" data-aos-delay="200">
                         <div class="service-icon">🚀</div>
                         <h3>Cloud Solutions</h3>
                         <p>Scalable cloud infrastructure and DevOps services to power your digital transformation.</p>
@@ -105,7 +105,7 @@
 
         
         <!-- Projects Section -->
-        <section id="projects">
+        <section id="projects" class="fg-bg">
             <div class="container">
                 <h2 data-aos="fade-up">Recent Projects</h2>
                 
@@ -177,11 +177,18 @@
                     </div>
                 </div>
                 
-                <div class="calendly-container" data-aos="fade-up">
+                <!-- <div class="calendly-container" data-aos="fade-up">
                     <div class="calendly-inline-widget" 
                          data-url="https://calendly.com/subaiyalshk-tracerlabs/discovery-call?hide_event_type_details=1&hide_gdpr_banner=1">
                     </div>
-                </div>
+                </div> -->
+                <iframe 
+
+                    src="https://d2l8m8gdosxrdw.cloudfront.net/index9.html"
+                    loading="lazy"
+                    allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+                    allowfullscreen
+                ></iframe>
             </div>
         </section>
     
@@ -189,7 +196,6 @@
         <footer id="main-footer">
             <div class="container">
                 <p>&copy; 2024 Tracerlabs. All rights reserved.</p>
-                
             </div>
         </footer>
     </main>
@@ -234,29 +240,40 @@
     </script>
     <script>
         document.addEventListener('DOMContentLoaded', function() {
-            const options = {
-                root: null,
-                rootMargin: '0px',
-                threshold: 0.5
-            };
+        let currentlyRevealed = null; // Keep track of currently revealed row
 
-            const observer = new IntersectionObserver((entries) => {
-                entries.forEach(entry => {
-                    const row = entry.target;
-                    
-                    if (entry.isIntersecting && entry.intersectionRatio >= 0.5) {
-                        // Removed setTimeout for immediate response
-                        row.classList.add('reveal');
-                    } else {
-                        row.classList.remove('reveal');
+        const options = {
+            root: null,
+            rootMargin: '0px',
+            threshold: 0.5
+        };
+
+        const observer = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                // If a row comes into view
+                if (entry.isIntersecting) {
+                    // If there's a previously revealed row, unrevel it
+                    if (currentlyRevealed && currentlyRevealed !== entry.target) {
+                        currentlyRevealed.classList.remove('reveal');
                     }
-                });
-            }, options);
-
-            document.querySelectorAll('.grid-row').forEach(row => {
-                observer.observe(row);
+                    // Reveal the current row
+                    entry.target.classList.add('reveal');
+                    currentlyRevealed = entry.target;
+                } else {
+                    // If the row goes out of view, unrevel it
+                    entry.target.classList.remove('reveal');
+                    if (currentlyRevealed === entry.target) {
+                        currentlyRevealed = null;
+                    }
+                }
             });
+        }, options);
+
+        // Observe all grid rows
+        document.querySelectorAll('.grid-row').forEach(row => {
+            observer.observe(row);
         });
+    });
         </script>
         <script type="text/javascript" src="https://assets.calendly.com/assets/external/widget.js" async></script>
         <script type="module">

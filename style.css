@@ -64,6 +64,14 @@ body {
     padding: 0 20px;
 }
 
+.fg-bg{
+    background: rgba(0, 0, 0, 0.2);
+    backdrop-filter: blur(8px);
+    -webkit-backdrop-filter: blur(8px);
+    border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+    box-shadow: 0 4px 30px rgba(0, 0, 0, 0.1);
+}
+
 .gradient-text {
     font-family: 'Duborics', serif;
     background: linear-gradient(45deg, #E7028D, #056AFC);
@@ -71,6 +79,29 @@ body {
     -webkit-text-fill-color: transparent;
     background-clip: text;
 }
+
+.neon-card {
+    /* Base card styles */
+    background: rgba(255, 255, 255, 0.05);
+   
+    /* Softer pink neon glow */
+    box-shadow:
+        0 0 10px rgba(233, 0, 141, 0.2),   /* Inner glow */
+        0 0 20px rgba(233, 0, 141, 0.15),   /* Mid glow */
+        0 0 40px rgba(233, 0, 141, 0.1),   /* Outer glow */
+        0 10px 40px rgba(233, 0, 141, 0.15), /* Underglow */
+        0 20px 60px rgba(233, 0, 141, 0.1); /* Extended underglow */
+    transition: box-shadow 0.5s ease;
+ }
+ 
+ .neon-card:hover {
+    box-shadow:
+        0 0 15px rgba(233, 0, 141, 0.25),   /* Inner glow */
+        0 0 30px rgba(233, 0, 141, 0.2),   /* Mid glow */
+        0 0 60px rgba(233, 0, 141, 0.15),   /* Outer glow */
+        0 15px 60px rgba(233, 0, 141, 0.2), /* Underglow */
+        0 25px 80px rgba(233, 0, 141, 0.15); /* Extended underglow */
+ }
 
 
 /* Buttons */
@@ -120,6 +151,7 @@ body {
     z-index: 1000;
     transition: all 0.3s ease;
 }
+
 .nav-container{
     max-width: 1200px;
     margin: 0 auto;
@@ -138,6 +170,8 @@ body {
     -webkit-backdrop-filter: blur(12px);
     border-bottom: 1px solid rgba(255, 255, 255, 0.15);
 }
+
+
 
 .nav-placeholder {
     height: 0;
@@ -351,7 +385,6 @@ body {
 /* Services Section */
 #services {
     padding: 100px 0px;
-    background-color: #000000;
 }
 
 #services-grid {
@@ -359,19 +392,18 @@ body {
     grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
     gap: 30px;
     margin-top: 50px;
-    background-color: #000000;
+    
 }
 
 .service-card {
-    background: rgba(255, 255, 255, 0.05);
     padding: 30px;
-    border-radius: 15px;
+    
+    background-color: #000000;
     transition: transform 0.3s ease, background 0.3s ease;
 }
 
 .service-card:hover {
     transform: translateY(-10px);
-    background: rgba(255, 255, 255, 0.1);
 }
 
 .service-icon {
@@ -382,14 +414,17 @@ body {
 
 /* ------------------------ Projects Section */
 #projects {
-    background-color: #000000;
     width: 100vw; /* Full viewport width */
+}
+
+#projects h2{
+    padding-top: 45px;
 }
 
 .project-grid {
     margin-top: 50px;
-    border: 1px solid rgba(255, 255, 255, 0.1); /* Changed to pink with higher opacity */
-    overflow: hidden;
+     /* Changed to pink with higher opacity */
+    overflow: visible;
     width: 100%; /* Full width */
     border-left: none; /* Remove left border */
     border-right: none; /* Remove right border */
@@ -398,65 +433,36 @@ body {
 .grid-row {
     display: grid;
     grid-template-columns: 1fr 1fr;
-    min-height: 600px; /* Increased height */
+    min-height: 600px;
     opacity: 0;
-    transition: opacity 0.3s ease;
+    transform: translateY(20px);
+    gap: 0px;
+    transition: 
+        opacity 2s ease-in-out,
+        transform 2.5s cubic-bezier(0.19, 1, 0.22, 1),
+        gap 2.5s cubic-bezier(0.19, 1, 0.22, 1),
+        box-shadow 2.5s cubic-bezier(0.19, 1, 0.22, 1);
 }
 
-.grid-row:not(:last-child) {
-    border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+.grid-row.reveal {
+    opacity: 1;
+    transform: translateY(0);
+    gap: 30px;
 }
 
 .grid-cell {
-    padding: 5rem; /* Increased padding */
-    display: flex;
-    flex-direction: column;
-    justify-content: center;
+    background: #000000;
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    transition: all 2.5s cubic-bezier(0.19, 1, 0.22, 1);
 }
 
-.grid-cell:first-child {
-    border-right: 1px solid rgba(255, 255, 255, 0.1);
-}
-
-/* Curtain effect elements */
-.grid-row::before,
-.grid-row::after {
-    content: '';
-    position: absolute;
-    top: 0;
-    height: 100%;
-    width: 50%;
-    background-color: #000000; /* Changed to black */
-    transform: scaleX(0); /* Start closed */
-    transition: transform 0.6s cubic-bezier(0.4, 0, 0.2, 1);
-    z-index: 2;
-}
-
-.grid-row::before {
-    left: 0;
-    transform-origin: right; /* Changed for closing animation */
-}
-
-.grid-row::after {
-    right: 0;
-    transform-origin: left; /* Changed for closing animation */
-}
-
-/* Animation classes */
-/* Animation classes */
-.grid-row.reveal {
-    opacity: 1;
-}
-
-.grid-row.reveal::before,
-.grid-row.reveal::after {
-    transform: scaleX(0);
-}
-
-/* Not revealed state (curtains closed) */
-.grid-row:not(.reveal)::before,
-.grid-row:not(.reveal)::after {
-    transform: scaleX(1);
+.reveal .grid-cell {
+    transform: translateY(-10px);
+    box-shadow:
+        0 15px 30px -5px rgba(5, 106, 252, 0.25),
+        0 25px 50px -10px rgba(5, 106, 252, 0.2),
+        0 35px 70px -15px rgba(5, 106, 252, 0.15),
+        0 50px 100px -20px rgba(5, 106, 252, 0.1);
 }
 
 .project-content {
@@ -480,6 +486,7 @@ body {
     position: relative;
     overflow: hidden;
     height: 100%;
+    padding: 25%;
 }
 
 .project-visual img {
@@ -499,17 +506,18 @@ body {
 }
 
 .project-tech span {
-    background: rgba(231, 2, 141, 0.1);
-    color: #E7028D;
+  
+    color: #056AFC;
     padding: 0.5rem 1rem;
     border-radius: 20px;
     font-size: 0.9rem;
     transition: background 0.3s ease;
-}
-
-.project-tech span:hover {
-    background: rgba(231, 2, 141, 0.2);
-}
+ }
+ 
+ /* If you have any hover states, update those too */
+ .project-tech span:hover {
+    background: rgba(5, 106, 252, 0.2);
+ }
 
 /* Responsive Design */
 @media (max-width: 992px) {
@@ -565,6 +573,15 @@ body {
     flex-direction: column;
     justify-content: center;
     padding-right: 2rem;
+}
+
+.contact-grid iframe {
+    width: 100%;
+    height: 600px;
+    border: none;
+    border-radius: 15px;
+    background: rgba(255, 255, 255, 0.02);
+    
 }
 
 .contact-content h2 {

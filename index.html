@@ -82,20 +82,23 @@
                         <img src="/assets/firebase.png" alt="Firebase" />
                     </div>
                     <div class="tech-logo">
-                        <img src="/assets/flutter.png" alt="Next.js" />
+                        <img src="/assets/flutter.png" alt="Flutter" />
                     </div>
                     <div class="tech-logo">
-                        <img src="/assets/next.jpeg" alt="Claude" />
+                        <img src="/assets/next.jpeg" alt=" Next JS" />
                     </div>
                     <!-- Duplicate set for seamless scrolling -->
                     <div class="tech-logo">
-                        <img src="/assets/ethereum.png" alt="AWS" />
+                        <img src="/assets/ethereum.png" alt="ethereum" />
                     </div>
                     <div class="tech-logo">
-                        <img src="/assets/anthropic.png" alt="Google Cloud" />
+                        <img src="/assets/anthropic.png" alt="anthropic" />
                     </div>
                     <div class="tech-logo">
-                        <img src="/assets/gemini.png" alt="Firebase" />
+                        <img src="/assets/gemini.png" alt="google gemini" />
+                    </div>
+                    <div class="tech-logo">
+                        <img src="/assets/crew-ai.png" alt="crew ai" />
                     </div>
                 </div>
             </div>
@@ -246,18 +249,7 @@
                     </div>
                     
                     <!-- Form iframe (hidden initially) -->
-                    <iframe 
-                        class="form-iframe"
-                        src="https://admin.tracerlabs.io/lead-capture"
-                        loading="lazy"
-                        width="100%"
-                        height="600px"
-                        style="border: none;"
-                        sandbox="allow-same-origin allow-scripts allow-popups allow-forms"
-                        allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
-                        allowfullscreen
-                        aria-labelledby="contact-heading"
-                    ></iframe>
+                    <div id="iframe-container"></div>
                 </div> 
             </div>
         </section>
@@ -272,351 +264,371 @@
 
     <script src="https://cdnjs.cloudflare.com/ajax/libs/aos/2.3.4/aos.js"></script>
     <script>
-        AOS.init({
-            duration: 800,
-            offset: 50,
-            once: true
-        });
+        // Main app class to handle all functionality
+        class DevForgeSite {
+            constructor() {
+                // Initialize state
+                this.ticking = false;
+                this.currentStep = 0;
+                this.scrollHandlers = new Set();
+                
+                // Cache DOM elements and initialize
+                this.init();
+            }
 
-        document.querySelectorAll('a[href^="#"]').forEach(anchor => {
-            anchor.addEventListener('click', e => {
-                e.preventDefault();
-                document.querySelector(e.target.getAttribute('href')).scrollIntoView({
-                    behavior: 'smooth'
+            init() {
+                // Cache DOM elements
+                this.cacheElements();
+                
+                // Initialize components
+                this.initializeAOS();
+                this.initializeSmoothScroll();
+                this.initializeNav();
+                this.initializeRevealEffects();
+                this.initializeStepper();
+                this.initializeScreenAnimation();
+                
+                // Setup unified scroll/resize handler
+                this.setupEventListeners();
+            }
+
+            cacheElements() {
+                this.nav = document.getElementById('main-nav');
+                this.content = document.getElementById('content');
+                this.stepsContainer = document.querySelector('.steps-container');
+                this.steps = this.stepsContainer?.querySelectorAll('.stepper-step');
+                this.progressFill = document.querySelector('.progress-fill');
+                this.preFormContent = document.querySelector('.pre-form-content');
+                this.iframeContainer = document.querySelector('#iframe-container');
+                this.contactSection = document.querySelector('#contact .stepper-container');
+            }
+
+            initializeAOS() {
+                AOS.init({
+                    duration: 800,
+                    offset: 50,
+                    once: true
                 });
-            });
-        });
-    </script>
-    <script>
-        document.addEventListener('DOMContentLoaded', function() {
-        const nav = document.getElementById('main-nav');
-        const content = document.getElementById('content');
+            }
 
-        function handleScroll() {
-            const scrollPosition = window.pageYOffset || document.documentElement.scrollTop;
-            const triggerPoint = content.offsetTop - 120;
+            initializeSmoothScroll() {
+                document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+                    anchor.addEventListener('click', e => {
+                        e.preventDefault();
+                        document.querySelector(e.target.getAttribute('href'))?.scrollIntoView({ 
+                            behavior: 'smooth' 
+                        });
+                    });
+                });
+            }
 
-            if (scrollPosition >= triggerPoint) {
-                nav.classList.add('sticky');
-            } else {
-                nav.classList.remove('sticky');
+            initializeNav() {
+                const handleNav = () => {
+                    const scrollPosition = window.pageYOffset || document.documentElement.scrollTop;
+                    const triggerPoint = this.content.offsetTop - 120;
+                    this.nav.classList.toggle('sticky', scrollPosition >= triggerPoint);
+                };
+                
+                this.scrollHandlers.add(handleNav);
+                handleNav(); // Initial check
+            }
+
+            initializeRevealEffects() {
+                const isElementInCenter = (element) => {
+                    if (!element) return false;
+                    const rect = element.getBoundingClientRect();
+                    const viewportHeight = window.innerHeight;
+                    const elementCenter = rect.top + (rect.height / 2);
+                    const viewportCenter = viewportHeight / 2;
+                    const threshold = viewportHeight / 3;
+                    return Math.abs(elementCenter - viewportCenter) < threshold;
+                };
+
+                const handleReveal = () => {
+                    // Handle service cards
+                    const cards = document.querySelectorAll('.service-card');
+                    const viewportCenter = window.innerHeight / 2;
+                    
+                    let closestDistance = Infinity;
+                    cards.forEach(card => {
+                        const rect = card.getBoundingClientRect();
+                        const cardCenter = rect.top + (rect.height / 2);
+                        const distance = Math.abs(viewportCenter - cardCenter);
+                        closestDistance = Math.min(closestDistance, distance);
+                    });
+
+                    cards.forEach(card => {
+                        const rect = card.getBoundingClientRect();
+                        const cardCenter = rect.top + (rect.height / 2);
+                        const distance = Math.abs(viewportCenter - cardCenter);
+                        card.classList.toggle('reveal', 
+                            Math.abs(distance - closestDistance) <= 20 && 
+                            distance < window.innerHeight / 3
+                        );
+                    });
+
+                    // Handle project rows
+                    document.querySelectorAll('.grid-row').forEach(row => {
+                        row.classList.toggle('reveal', isElementInCenter(row));
+                    });
+
+                    // Handle contact section
+                    if (this.contactSection) {
+                        this.contactSection.classList.toggle('reveal', isElementInCenter(this.contactSection));
+                    }
+                };
+
+                this.scrollHandlers.add(handleReveal);
+                handleReveal(); // Initial check
+            }
+
+            initializeStepper() {
+                if (!this.stepsContainer) return;
+
+                const updateProgress = () => {
+                    const progress = ((this.currentStep + 1) / this.steps.length) * 100;
+                    this.progressFill.style.width = `${progress}%`;
+                };
+
+                const goToStep = (stepIndex) => {
+                    this.steps[this.currentStep].classList.remove('active');
+                    this.steps[stepIndex].classList.add('active');
+                    this.currentStep = stepIndex;
+                    updateProgress();
+                };
+
+                const createAndShowForm = () => {
+                    const iframe = document.createElement('iframe');
+                    Object.assign(iframe, {
+                        className: 'form-iframe',
+                        src: 'https://admin.tracerlabs.io/lead-capture',
+                        loading: 'lazy',
+                        width: '100%',
+                        height: '600px',
+                        style: 'border: none'
+                    });
+                    
+                    const attributes = {
+                        sandbox: 'allow-same-origin allow-scripts allow-popups allow-forms',
+                        allow: 'accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture',
+                        allowfullscreen: '',
+                        'aria-labelledby': 'contact-heading'
+                    };
+                    
+                    Object.entries(attributes).forEach(([key, value]) => iframe.setAttribute(key, value));
+                    
+                    this.iframeContainer.appendChild(iframe);
+                    this.preFormContent.classList.remove('active');
+                    iframe.classList.add('active');
+                    
+                    this.stepsContainer.querySelectorAll('.stepper-button')
+                        .forEach(button => button.style.display = 'none');
+                };
+
+                // Add click handlers
+                this.steps.forEach((step, index) => {
+                    const nextBtn = step.querySelector('.next-btn');
+                    const backBtn = step.querySelector('.back-btn');
+                    const startBtn = step.querySelector('.start-btn');
+
+                    nextBtn?.addEventListener('click', () => goToStep(index + 1));
+                    backBtn?.addEventListener('click', () => goToStep(index - 1));
+                    startBtn?.addEventListener('click', createAndShowForm);
+                });
+
+                updateProgress(); // Initialize progress bar
+            }
+
+            initializeScreenAnimation() {
+                new ScreenAnimation();
+            }
+
+            setupEventListeners() {
+                const handleScroll = () => {
+                    if (!this.ticking) {
+                        requestAnimationFrame(() => {
+                            this.scrollHandlers.forEach(handler => handler());
+                            this.ticking = false;
+                        });
+                        this.ticking = true;
+                    }
+                };
+
+                window.addEventListener('scroll', handleScroll, { passive: true });
+                window.addEventListener('resize', handleScroll, { passive: true });
             }
         }
 
-        handleScroll();
+        class ScreenAnimation {
+    constructor() {
+        this.canvas = document.getElementById('screen-canvas');
+        if (!this.canvas) return;
         
-        let ticking = false;
-        window.addEventListener('scroll', function() {
-            if (!ticking) {
-                window.requestAnimationFrame(function() {
-                    handleScroll();
-                    ticking = false;
-                });
-                ticking = true;
-            }
-        });
-    });
-    </script>
-    <script>
-        document.addEventListener('DOMContentLoaded', function() {
-            // Track currently revealed elements by section
-            const revealedElements = {
-                grid: null,
-                services: null
-            };
-
-            const options = {
-                root: null,
-                rootMargin: '0px',
-                threshold: 0.5
-            };
-
-            // Grid observer remains the same
-            const gridObserver = new IntersectionObserver((entries) => {
-                entries.forEach(entry => {
-                    if (entry.isIntersecting) {
-                        if (revealedElements.grid && revealedElements.grid !== entry.target) {
-                            revealedElements.grid.classList.remove('reveal');
-                        }
-                        entry.target.classList.add('reveal');
-                        revealedElements.grid = entry.target;
-                    } else {
-                        entry.target.classList.remove('reveal');
-                        if (revealedElements.grid === entry.target) {
-                            revealedElements.grid = null;
-                        }
-                    }
-                });
-            }, options);
-
-            // Function to find cards at the center
-            function updateCenterCards() {
-                const cards = document.querySelectorAll('.service-card');
-                const viewportCenter = window.innerHeight / 2;
-                
-                // First pass: find the closest distance to center
-                let closestDistance = Infinity;
-                
-                cards.forEach(card => {
-                    const rect = card.getBoundingClientRect();
-                    const cardCenter = rect.top + (rect.height / 2);
-                    const distance = Math.abs(viewportCenter - cardCenter);
-                    closestDistance = Math.min(closestDistance, distance);
-                });
-
-                const threshold = 20;
-
-                cards.forEach(card => {
-                    const rect = card.getBoundingClientRect();
-                    const cardCenter = rect.top + (rect.height / 2);
-                    const distance = Math.abs(viewportCenter - cardCenter);
-                    
-                    if (Math.abs(distance - closestDistance) <= threshold && 
-                        distance < window.innerHeight / 3) {
-                        if (!card.classList.contains('reveal')) {
-                            card.classList.add('reveal');
-                        }
-                    } else {
-                        if (card.classList.contains('reveal')) {
-                            card.classList.remove('reveal');
-                        }
-                    }
-                });
-            }
-
-            // Services observer now triggers center calculation
-            const servicesObserver = new IntersectionObserver((entries) => {
-                entries.forEach(entry => {
-                    if (entry.isIntersecting) {
-                        updateCenterCards();
-                    }
-                });
-            }, options);
-
-            // Observe grid rows
-            document.querySelectorAll('.grid-row').forEach(row => {
-                gridObserver.observe(row);
-            });
-
-            // Observe service cards
-            document.querySelectorAll('.service-card').forEach(card => {
-                servicesObserver.observe(card);
-            });
-
-            // Add scroll listener to continuously update center cards
-            let ticking = false;
-            window.addEventListener('scroll', () => {
-                if (!ticking) {
-                    window.requestAnimationFrame(() => {
-                        updateCenterCards();
-                        ticking = false;
-                    });
-                    ticking = true;
-                }
-            });
-
-            // Also update on window resize
-            window.addEventListener('resize', () => {
-                if (!ticking) {
-                    window.requestAnimationFrame(() => {
-                        updateCenterCards();
-                        ticking = false;
-                    });
-                    ticking = true;
-                }
-            });
-        });
-        </script>
+        this.ctx = this.canvas.getContext('2d');
+        this.particles = [];
+        this.time = 0;
+        this.message = "Follow the red buttons to find out how";
+        this.isRunning = false;
         
-        <script>
-            // Screen Animation
-            class ScreenAnimation {
-              constructor() {
-                this.canvas = document.getElementById('screen-canvas');
-                this.ctx = this.canvas.getContext('2d');
-                this.particles = [];
-                this.time = 0;
-                
-                this.init();
-              }
-              
-              init() {
+        this.init();
+    }
+    
+    init() {
+        this.setupCanvas();
+        this.createParticles();
+        this.start();
+        
+        // Handle resize with debounce
+        let resizeTimeout;
+        window.addEventListener('resize', () => {
+            clearTimeout(resizeTimeout);
+            resizeTimeout = setTimeout(() => {
                 this.setupCanvas();
                 this.createParticles();
-                this.animate();
-                
-                window.addEventListener('resize', () => {
-                  this.setupCanvas();
-                  this.createParticles();
-                });
-              }
-              
-              setupCanvas() {
-                this.canvas.width = this.canvas.offsetWidth;
-                this.canvas.height = this.canvas.offsetHeight;
-              }
-              
-              createParticles() {
-                const particleCount = Math.floor((this.canvas.width * this.canvas.height) / 10000);
-                this.particles = Array.from({ length: particleCount }, () => new Particle(this.canvas));
-              }
-              
-              animate() {
-                this.time += 0.016;
-                
-                // Clear with fade effect
-                this.ctx.fillStyle = 'rgba(0, 0, 0, 0.1)';
-                this.ctx.fillRect(0, 0, this.canvas.width, this.canvas.height);
-                
-                // Update and draw particles
-                this.particles.forEach(particle => {
-                  particle.update();
-                  particle.draw(this.ctx);
-                });
-                
-                // Draw scanning lines
-                this.ctx.strokeStyle = 'rgba(231, 2, 141, 0.1)';
-                this.ctx.lineWidth = 1;
-                for (let i = 0; i < 5; i++) {
-                  const y = (this.time * 50 + i * 30) % this.canvas.height;
-                  this.ctx.beginPath();
-                  this.ctx.moveTo(0, y);
-                  this.ctx.lineTo(this.canvas.width, y);
-                  this.ctx.stroke();
-                }
-                
-                requestAnimationFrame(() => this.animate());
-              }
-            }
-            
-            class Particle {
-              constructor(canvas) {
-                this.canvas = canvas;
-                this.reset();
-              }
-              
-              reset() {
-                this.x = Math.random() * this.canvas.width;
-                this.y = Math.random() * this.canvas.height;
-                this.size = Math.random() * 2 + 1;
-                this.speedX = (Math.random() - 0.5) * 2;
-                this.speedY = (Math.random() - 0.5) * 2;
-                this.color = Math.random() > 0.5 ? '#E7028D' : '#056AFC';
-                this.life = 1;
-                this.decay = Math.random() * 0.02 + 0.02;
-              }
-              
-              update() {
-                this.x += this.speedX;
-                this.y += this.speedY;
-                this.life -= this.decay;
-                
-                if (this.life <= 0) {
-                  this.reset();
-                }
-              }
-              
-              draw(ctx) {
-                ctx.beginPath();
-                ctx.arc(this.x, this.y, this.size, 0, Math.PI * 2);
-                ctx.fillStyle = `${this.color}${Math.floor(this.life * 255).toString(16).padStart(2, '0')}`;
-                ctx.fill();
-              }
-            }
-            
-            // Initialize when the DOM is loaded
-            document.addEventListener('DOMContentLoaded', () => {
-              new ScreenAnimation();
-            });
-        </script>
-        <script>
-            document.addEventListener('DOMContentLoaded', () => {
-                const stepsContainer = document.querySelector('.steps-container');
-                const steps = stepsContainer.querySelectorAll('.stepper-step');
-                const progressFill = document.querySelector('.progress-fill');
-                let currentStep = 0;
+            }, 250);
+        });
+    }
+    
+    setupCanvas() {
+        // Get the device pixel ratio
+        const dpr = window.devicePixelRatio || 1;
+        
+        // Get the size of the canvas in CSS pixels
+        const rect = this.canvas.getBoundingClientRect();
+        
+        // Set the canvas size accounting for DPI
+        this.canvas.width = rect.width * dpr;
+        this.canvas.height = rect.height * dpr;
+        
+        // Scale the context to ensure correct drawing operations
+        this.ctx.scale(dpr, dpr);
+        
+        // Set the canvas style width and height
+        this.canvas.style.width = `${rect.width}px`;
+        this.canvas.style.height = `${rect.height}px`;
+        
+        // Store the actual drawing dimensions
+        this.drawWidth = rect.width;
+        this.drawHeight = rect.height;
+        
+        // Set text properties
+        const fontSize = Math.min(rect.width / 30, 16); // Reduced font size
+        this.ctx.font = `${fontSize}px 'Plus Jakarta Sans', sans-serif`;
+        this.ctx.textAlign = 'center';
+        this.ctx.textBaseline = 'middle';
+    }
+    
+    createParticles() {
+        const particleCount = Math.floor((this.drawWidth * this.drawHeight) / 20000);
+        this.particles = Array.from({ length: particleCount }, 
+            () => new Particle(this.canvas, this.drawWidth, this.drawHeight)
+        );
+    }
+    
+    start() {
+        if (this.isRunning) return;
+        this.isRunning = true;
+        this.animate();
+    }
+    
+    animate() {
+        if (!this.isRunning) return;
+        
+        this.time += 0.016;
+        
+        // Clear canvas with solid black
+        this.ctx.fillStyle = 'black';
+        this.ctx.fillRect(0, 0, this.drawWidth, this.drawHeight);
+        
+        // Draw particles with low opacity
+        this.particles.forEach(particle => {
+            particle.update();
+            particle.draw(this.ctx, 0.3);
+        });
+        
+        // Draw scan lines
+        this.drawScanLines();
+        
+        // Draw text with glow effect
+        this.drawText();
+        
+        requestAnimationFrame(() => this.animate());
+    }
+    
+    drawScanLines() {
+        this.ctx.strokeStyle = 'rgba(231, 2, 141, 0.05)';
+        this.ctx.lineWidth = 1;
+        
+        this.ctx.beginPath();
+        for (let i = 0; i < 5; i++) {
+            const y = (this.time * 30 + i * 30) % this.drawHeight;
+            this.ctx.moveTo(0, y);
+            this.ctx.lineTo(this.drawWidth, y);
+        }
+        this.ctx.stroke();
+    }
+    
+    drawText() {
+        // Add strong glow effect
+        this.ctx.shadowColor = 'rgba(255, 255, 255, 0.8)';
+        this.ctx.shadowBlur = 8;
+        this.ctx.lineWidth = 1;
+        
+        // Draw text
+        this.ctx.fillStyle = 'white';
+        this.ctx.fillText(
+            this.message,
+            this.drawWidth / 2,
+            this.drawHeight / 2
+        );
+        
+        // Reset shadow
+        this.ctx.shadowBlur = 0;
+    }
+}
 
-                function updateProgress() {
-                    const progress = ((currentStep + 1) / steps.length) * 100;
-                    progressFill.style.width = `${progress}%`;
-                }
+class Particle {
+    constructor(canvas, drawWidth, drawHeight) {
+        this.canvas = canvas;
+        this.drawWidth = drawWidth;
+        this.drawHeight = drawHeight;
+        this.reset();
+    }
+    
+    reset() {
+        this.x = Math.random() * this.drawWidth;
+        this.y = Math.random() * this.drawHeight;
+        this.size = Math.random() * 1.5 + 0.5;
+        this.speedX = (Math.random() - 0.5) * 1;
+        this.speedY = (Math.random() - 0.5) * 1;
+        this.color = Math.random() > 0.5 ? '#E7028D' : '#056AFC';
+        this.life = 1;
+        this.decay = Math.random() * 0.01 + 0.01;
+    }
+    
+    update() {
+        this.x += this.speedX;
+        this.y += this.speedY;
+        this.life -= this.decay;
+        
+        if (this.life <= 0 || 
+            this.x < 0 || this.x > this.drawWidth || 
+            this.y < 0 || this.y > this.drawHeight) {
+            this.reset();
+        }
+    }
+    
+    draw(ctx, opacity = 1) {
+        ctx.beginPath();
+        ctx.arc(this.x, this.y, this.size, 0, Math.PI * 2);
+        const alpha = Math.floor(this.life * 255 * opacity).toString(16).padStart(2, '0');
+        ctx.fillStyle = `${this.color}${alpha}`;
+        ctx.fill();
+    }
+}
 
-                function goToStep(stepIndex) {
-                    steps[currentStep].classList.remove('active');
-                    steps[stepIndex].classList.add('active');
-                    currentStep = stepIndex;
-                    updateProgress();
-                }
-
-                // Initialize
-                updateProgress();
-
-                // Add click handlers
-                steps.forEach((step, index) => {
-                    const nextBtn = step.querySelector('.next-btn');
-                    const backBtn = step.querySelector('.back-btn');
-                    const startBtn = step.querySelector('.start-btn');
-
-                    if (nextBtn) nextBtn.addEventListener('click', () => goToStep(index + 1));
-                    if (backBtn) backBtn.addEventListener('click', () => goToStep(index - 1));
-                    if (startBtn) startBtn.addEventListener('click', () => {
-                        // Handle final action
-                        console.log('Starting process...');
-                    });
-                });
-            });
-        </script>
-        <script>
-            document.addEventListener('DOMContentLoaded', () => {
-                const stepsContainer = document.querySelector('.steps-container');
-                const steps = stepsContainer.querySelectorAll('.stepper-step');
-                const progressFill = document.querySelector('.progress-fill');
-                const preFormContent = document.querySelector('.pre-form-content');
-                const formIframe = document.querySelector('.form-iframe');
-                const allButtons = stepsContainer.querySelectorAll('.stepper-button');
-                let currentStep = 0;
-
-                function updateProgress() {
-                    const progress = ((currentStep + 1) / steps.length) * 100;
-                    progressFill.style.width = `${progress}%`;
-                }
-
-                function goToStep(stepIndex) {
-                    steps[currentStep].classList.remove('active');
-                    steps[stepIndex].classList.add('active');
-                    currentStep = stepIndex;
-                    updateProgress();
-                }
-
-                function showForm() {
-                    preFormContent.classList.remove('active');
-                    formIframe.classList.add('active');
-                    // Hide all buttons
-                    allButtons.forEach(button => {
-                        button.style.display = 'none';
-                    });
-                }
-
-                // Add click handlers
-                steps.forEach((step, index) => {
-                    const nextBtn = step.querySelector('.next-btn');
-                    const backBtn = step.querySelector('.back-btn');
-                    const startBtn = step.querySelector('.start-btn');
-
-                    if (nextBtn) {
-                        nextBtn.addEventListener('click', () => goToStep(index + 1));
-                    }
-                    if (backBtn) {
-                        backBtn.addEventListener('click', () => goToStep(index - 1));
-                    }
-                    if (startBtn) {
-                        startBtn.addEventListener('click', showForm);
-                    }
-                });
-
-                // Initialize progress bar
-                updateProgress();
-            });
-        </script>
+        // Initialize everything when DOM is ready
+        document.addEventListener('DOMContentLoaded', () => new DevForgeSite());
+    </script>
     </body>
 </html>

@@ -6,25 +6,47 @@
     <title>DevForge | Digital Solutions</title>
     <link href="https://cdnjs.cloudflare.com/ajax/libs/aos/2.3.4/aos.css" rel="stylesheet">
     <link href="style.css" rel="stylesheet">
-    <script type="module" src="https://unpkg.com/@splinetool/runtime@0.9.516/build/runtime.js"></script>
+
 </head>
 <body>
     <!-- Hero Section -->
     <section id="hero">
-        <canvas id="canvas3d"></canvas>
+        <div class="hero-bg"></div>
+        <div class="geometric-shapes">
+            <div class="shape"></div>
+            <div class="shape"></div>
+            <div class="shape"></div>
+        </div>
         <div class="container">
             <div id="hero-text" data-aos="fade-right">
                 <h1>We Build <br> <span class="gradient-text">Digital Solutions</span><br>That Drive Growth</h1>
             </div>
-            <!-- <div id="hero-visual" data-aos="fade-left">
-                <iframe 
-
-                    src="https://d2l8m8gdosxrdw.cloudfront.net/index9.html"
-                    loading="lazy"
-                    allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
-                    allowfullscreen
-                ></iframe>
-            </div> -->
+            <div id="hero-visual" data-aos="fade-left">
+                <div class="laptop-container">
+                    <!-- Laptop Frame -->
+                    <div class="laptop">
+                      <!-- Laptop Body -->
+                      <div class="laptop-body"></div>
+                      
+                      <!-- Screen Frame -->
+                      <div class="screen-frame">
+                        <!-- Screen Content -->
+                        <div class="screen-content">
+                          <canvas id="screen-canvas"></canvas>
+                        </div>
+                      </div>
+                      
+                      <!-- Laptop Hinge -->
+                      <div class="laptop-hinge"></div>
+                      
+                      <!-- Laptop Base -->
+                      <div class="laptop-base"></div>
+                      
+                      <!-- Ambient Glow -->
+                      <div class="laptop-glow"></div>
+                    </div>
+                  </div>
+            </div>
         </div>
     </section>
     
@@ -82,22 +104,22 @@
         <!-- Services Section -->
         <section id="services" class="fg-bg">
             <div class="container">
-                <h2 data-aos="fade-up">Our Services</h2>
+                <h2 data-aos="fade-in">Our Services</h2>
                 <div id="services-grid">
-                    <div class="service-card neon-card" data-aos="fade-up">
-                        <div class="service-icon">💻</div>
-                        <h3>Web Development</h3>
-                        <p>Custom websites and web applications built with modern technologies and best practices.</p>
+                    <div class="service-card" >
+                        <div data-aos="fade-in" class="service-icon">🚀</div>
+                        <h3 data-aos="fade-in">AI Process Automation</h3>
+                        <p data-aos="fade-in">Transform your business operations with AI-powered automation. From intelligent lead qualification and automated appointment scheduling to smart client communications and data analytics - streamline your workflow and focus on what matters most.</p>
                     </div>
-                    <div class="service-card neon-card" data-aos="fade-up" data-aos-delay="100">
-                        <div class="service-icon">📱</div>
-                        <h3>Mobile Apps</h3>
-                        <p>Native and cross-platform mobile applications that deliver exceptional user experiences.</p>
+                    <div class="service-card">
+                        <div data-aos="fade-in" class="service-icon">💻</div>
+                        <h3 data-aos="fade-in">Web Applications & Modernization</h3>
+                        <p data-aos="fade-in">Transform your legacy systems into modern, cloud-native applications. Our custom web solutions streamline operations, enhance customer experience, and provide real-time insights - helping you stay competitive in today's digital landscape.</p>
                     </div>
-                    <div class="service-card neon-card" data-aos="fade-up" data-aos-delay="200">
-                        <div class="service-icon">🚀</div>
-                        <h3>Cloud Solutions</h3>
-                        <p>Scalable cloud infrastructure and DevOps services to power your digital transformation.</p>
+                    <div class="service-card">
+                        <div data-aos="fade-in" class="service-icon">📱</div>
+                        <h3 data-aos="fade-in">Mobile Apps</h3>
+                        <p data-aos="fade-in">Engage your customers anywhere with powerful mobile experiences. From branded apps with loyalty programs to on-the-go service booking and instant notifications - keep your business connected to customers 24/7 while building lasting relationships.</p>
                     </div>
                 </div>
             </div>
@@ -246,69 +268,215 @@
     </script>
     <script>
         document.addEventListener('DOMContentLoaded', function() {
-        let currentlyRevealed = null; // Keep track of currently revealed row
+            // Track currently revealed elements by section
+            const revealedElements = {
+                grid: null,
+                services: null
+            };
 
-        const options = {
-            root: null,
-            rootMargin: '0px',
-            threshold: 0.5
-        };
+            const options = {
+                root: null,
+                rootMargin: '0px',
+                threshold: 0.5
+            };
 
-        const observer = new IntersectionObserver((entries) => {
-            entries.forEach(entry => {
-                // If a row comes into view
-                if (entry.isIntersecting) {
-                    // If there's a previously revealed row, unrevel it
-                    if (currentlyRevealed && currentlyRevealed !== entry.target) {
-                        currentlyRevealed.classList.remove('reveal');
+            // Grid observer remains the same
+            const gridObserver = new IntersectionObserver((entries) => {
+                entries.forEach(entry => {
+                    if (entry.isIntersecting) {
+                        if (revealedElements.grid && revealedElements.grid !== entry.target) {
+                            revealedElements.grid.classList.remove('reveal');
+                        }
+                        entry.target.classList.add('reveal');
+                        revealedElements.grid = entry.target;
+                    } else {
+                        entry.target.classList.remove('reveal');
+                        if (revealedElements.grid === entry.target) {
+                            revealedElements.grid = null;
+                        }
                     }
-                    // Reveal the current row
-                    entry.target.classList.add('reveal');
-                    currentlyRevealed = entry.target;
-                } else {
-                    // If the row goes out of view, unrevel it
-                    entry.target.classList.remove('reveal');
-                    if (currentlyRevealed === entry.target) {
-                        currentlyRevealed = null;
+                });
+            }, options);
+
+            // Function to find cards at the center
+            function updateCenterCards() {
+                const cards = document.querySelectorAll('.service-card');
+                const viewportCenter = window.innerHeight / 2;
+                
+                // First pass: find the closest distance to center
+                let closestDistance = Infinity;
+                
+                cards.forEach(card => {
+                    const rect = card.getBoundingClientRect();
+                    const cardCenter = rect.top + (rect.height / 2);
+                    const distance = Math.abs(viewportCenter - cardCenter);
+                    closestDistance = Math.min(closestDistance, distance);
+                });
+
+                const threshold = 20;
+
+                cards.forEach(card => {
+                    const rect = card.getBoundingClientRect();
+                    const cardCenter = rect.top + (rect.height / 2);
+                    const distance = Math.abs(viewportCenter - cardCenter);
+                    
+                    if (Math.abs(distance - closestDistance) <= threshold && 
+                        distance < window.innerHeight / 3) {
+                        if (!card.classList.contains('reveal')) {
+                            card.classList.add('reveal');
+                        }
+                    } else {
+                        if (card.classList.contains('reveal')) {
+                            card.classList.remove('reveal');
+                        }
                     }
+                });
+            }
+
+            // Services observer now triggers center calculation
+            const servicesObserver = new IntersectionObserver((entries) => {
+                entries.forEach(entry => {
+                    if (entry.isIntersecting) {
+                        updateCenterCards();
+                    }
+                });
+            }, options);
+
+            // Observe grid rows
+            document.querySelectorAll('.grid-row').forEach(row => {
+                gridObserver.observe(row);
+            });
+
+            // Observe service cards
+            document.querySelectorAll('.service-card').forEach(card => {
+                servicesObserver.observe(card);
+            });
+
+            // Add scroll listener to continuously update center cards
+            let ticking = false;
+            window.addEventListener('scroll', () => {
+                if (!ticking) {
+                    window.requestAnimationFrame(() => {
+                        updateCenterCards();
+                        ticking = false;
+                    });
+                    ticking = true;
                 }
             });
-        }, options);
 
-        // Observe all grid rows
-        document.querySelectorAll('.grid-row').forEach(row => {
-            observer.observe(row);
+            // Also update on window resize
+            window.addEventListener('resize', () => {
+                if (!ticking) {
+                    window.requestAnimationFrame(() => {
+                        updateCenterCards();
+                        ticking = false;
+                    });
+                    ticking = true;
+                }
+            });
         });
-    });
         </script>
-        <script type="text/javascript" src="https://assets.calendly.com/assets/external/widget.js" async></script>
-        <script type="module">
-            import { Application } from 'https://unpkg.com/@splinetool/runtime@0.9.516/build/runtime.js';
-            
-            const canvas = document.getElementById('canvas3d');
-            const app = new Application(canvas);
-            
-            app.load('https://prod.spline.design/xgVBKlYa7zzVCoOi/scene.splinecode')
-                .then(() => {
-                    console.log('Spline scene loaded successfully');
-                    const camera = app._camera; // Note: using _camera not camera
-                    
-                    // Set new camera position
-                    camera.position.set(
-                        200,    // x - move camera left (scene moves right)
-                        750,    // y - height
-                        700     // z - zoom (lower number = zoom in)
-                    );
-                    
-
-                    // Add this to help with positioning in console
-                    window.splineApp = app;
-                    console.log('Access camera with: window.splineApp._camera');
-                    
-                })
-                .catch(error => {
-                    console.error('Error loading Spline scene:', error);
+        
+        <script>
+            // Screen Animation
+            class ScreenAnimation {
+              constructor() {
+                this.canvas = document.getElementById('screen-canvas');
+                this.ctx = this.canvas.getContext('2d');
+                this.particles = [];
+                this.time = 0;
+                
+                this.init();
+              }
+              
+              init() {
+                this.setupCanvas();
+                this.createParticles();
+                this.animate();
+                
+                window.addEventListener('resize', () => {
+                  this.setupCanvas();
+                  this.createParticles();
                 });
-        </script>
+              }
+              
+              setupCanvas() {
+                this.canvas.width = this.canvas.offsetWidth;
+                this.canvas.height = this.canvas.offsetHeight;
+              }
+              
+              createParticles() {
+                const particleCount = Math.floor((this.canvas.width * this.canvas.height) / 10000);
+                this.particles = Array.from({ length: particleCount }, () => new Particle(this.canvas));
+              }
+              
+              animate() {
+                this.time += 0.016;
+                
+                // Clear with fade effect
+                this.ctx.fillStyle = 'rgba(0, 0, 0, 0.1)';
+                this.ctx.fillRect(0, 0, this.canvas.width, this.canvas.height);
+                
+                // Update and draw particles
+                this.particles.forEach(particle => {
+                  particle.update();
+                  particle.draw(this.ctx);
+                });
+                
+                // Draw scanning lines
+                this.ctx.strokeStyle = 'rgba(231, 2, 141, 0.1)';
+                this.ctx.lineWidth = 1;
+                for (let i = 0; i < 5; i++) {
+                  const y = (this.time * 50 + i * 30) % this.canvas.height;
+                  this.ctx.beginPath();
+                  this.ctx.moveTo(0, y);
+                  this.ctx.lineTo(this.canvas.width, y);
+                  this.ctx.stroke();
+                }
+                
+                requestAnimationFrame(() => this.animate());
+              }
+            }
+            
+            class Particle {
+              constructor(canvas) {
+                this.canvas = canvas;
+                this.reset();
+              }
+              
+              reset() {
+                this.x = Math.random() * this.canvas.width;
+                this.y = Math.random() * this.canvas.height;
+                this.size = Math.random() * 2 + 1;
+                this.speedX = (Math.random() - 0.5) * 2;
+                this.speedY = (Math.random() - 0.5) * 2;
+                this.color = Math.random() > 0.5 ? '#E7028D' : '#056AFC';
+                this.life = 1;
+                this.decay = Math.random() * 0.02 + 0.02;
+              }
+              
+              update() {
+                this.x += this.speedX;
+                this.y += this.speedY;
+                this.life -= this.decay;
+                
+                if (this.life <= 0) {
+                  this.reset();
+                }
+              }
+              
+              draw(ctx) {
+                ctx.beginPath();
+                ctx.arc(this.x, this.y, this.size, 0, Math.PI * 2);
+                ctx.fillStyle = `${this.color}${Math.floor(this.life * 255).toString(16).padStart(2, '0')}`;
+                ctx.fill();
+              }
+            }
+            
+            // Initialize when the DOM is loaded
+            document.addEventListener('DOMContentLoaded', () => {
+              new ScreenAnimation();
+            });
+            </script>
 </body>
 </html>

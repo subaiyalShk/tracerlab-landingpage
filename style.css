@@ -68,7 +68,6 @@ body {
     background: rgba(0, 0, 0, 0.2);
     backdrop-filter: blur(8px);
     -webkit-backdrop-filter: blur(8px);
-    border-bottom: 1px solid rgba(255, 255, 255, 0.1);
     box-shadow: 0 4px 30px rgba(0, 0, 0, 0.1);
 }
 
@@ -79,29 +78,6 @@ body {
     -webkit-text-fill-color: transparent;
     background-clip: text;
 }
-
-.neon-card {
-    /* Base card styles */
-    background: rgba(255, 255, 255, 0.05);
-   
-    /* Softer pink neon glow */
-    box-shadow:
-        0 0 10px rgba(233, 0, 141, 0.2),   /* Inner glow */
-        0 0 20px rgba(233, 0, 141, 0.15),   /* Mid glow */
-        0 0 40px rgba(233, 0, 141, 0.1),   /* Outer glow */
-        0 10px 40px rgba(233, 0, 141, 0.15), /* Underglow */
-        0 20px 60px rgba(233, 0, 141, 0.1); /* Extended underglow */
-    transition: box-shadow 0.5s ease;
- }
- 
- .neon-card:hover {
-    box-shadow:
-        0 0 15px rgba(233, 0, 141, 0.25),   /* Inner glow */
-        0 0 30px rgba(233, 0, 141, 0.2),   /* Mid glow */
-        0 0 60px rgba(233, 0, 141, 0.15),   /* Outer glow */
-        0 15px 60px rgba(233, 0, 141, 0.2), /* Underglow */
-        0 25px 80px rgba(233, 0, 141, 0.15); /* Extended underglow */
- }
 
 
 /* Buttons */
@@ -267,14 +243,109 @@ body {
     padding: 0 2rem;
 }
 
-#canvas3d {
-    position: fixed;
+/* Animated Background Styles */
+.hero-bg {
+    position: absolute;
     top: 0;
     left: 0;
     width: 100%;
-    height: 100vh;
-    z-index: 0;
-    background: #000000; /* Fallback background color */
+    height: 100%;
+    z-index: -1;
+    background: #000000;
+}
+
+.hero-bg::before,
+.hero-bg::after {
+    content: '';
+    position: absolute;
+    width: 500px;
+    height: 500px;
+    border-radius: 50%;
+    opacity: 0.15;
+    filter: blur(60px);
+    animation: float 15s infinite ease-in-out;
+}
+
+.hero-bg::before {
+    background: #E7028D;
+    top: -100px;
+    left: -100px;
+    animation-delay: -5s;
+}
+
+.hero-bg::after {
+    background: #056AFC;
+    bottom: -100px;
+    right: -100px;
+    animation-delay: -2.5s;
+}
+
+@keyframes float {
+    0%, 100% {
+        transform: translate(0, 0);
+    }
+    25% {
+        transform: translate(50px, 50px);
+    }
+    50% {
+        transform: translate(0, 100px);
+    }
+    75% {
+        transform: translate(-50px, 50px);
+    }
+}
+
+/* Add geometric shapes */
+.geometric-shapes {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    z-index: -1;
+    overflow: hidden;
+}
+
+.shape {
+    position: absolute;
+    opacity: 0.05;
+    animation: rotate 20s infinite linear;
+}
+
+.shape:nth-child(1) {
+    top: 20%;
+    left: 10%;
+    width: 100px;
+    height: 100px;
+    border: 2px solid #E7028D;
+    transform-origin: center;
+}
+
+.shape:nth-child(2) {
+    top: 60%;
+    right: 15%;
+    width: 150px;
+    height: 150px;
+    border: 2px solid #056AFC;
+    animation-direction: reverse;
+}
+
+.shape:nth-child(3) {
+    bottom: 15%;
+    left: 30%;
+    width: 80px;
+    height: 80px;
+    border: 2px solid #E7028D;
+    animation-duration: 25s;
+}
+
+@keyframes rotate {
+    from {
+        transform: rotate(0deg);
+    }
+    to {
+        transform: rotate(360deg);
+    }
 }
 
 #hero .container {
@@ -384,13 +455,20 @@ body {
 
 .service-card {
     padding: 30px;
-    
     background-color: #000000;
-    transition: transform 0.3s ease, background 0.3s ease;
+    transform: translateY(20px);
+    transition: 
+        opacity 2s ease-in-out,
+        transform 2.5s cubic-bezier(0.19, 1, 0.22, 1),
+        box-shadow 2.5s cubic-bezier(0.19, 1, 0.22, 1);
 }
 
-.service-card:hover {
-    transform: translateY(-10px);
+.service-card.reveal {
+    box-shadow:
+        0 15px 30px -5px rgba(5, 106, 252, 0.25),
+        0 25px 50px -10px rgba(5, 106, 252, 0.2),
+        0 35px 70px -15px rgba(5, 106, 252, 0.15),
+        0 50px 100px -20px rgba(5, 106, 252, 0.1);
 }
 
 .service-icon {
@@ -402,6 +480,7 @@ body {
 /* ------------------------ Projects Section */
 #projects {
     width: 100vw; /* Full viewport width */
+    padding-bottom: 25px;
 }
 
 #projects h2{
@@ -716,3 +795,103 @@ body {
         font-size: 32px;
     }
 }
+
+.laptop-container {
+    width: 100%;
+    height: 100%;
+    min-height: 400px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 2rem;
+  }
+  
+  .laptop {
+    position: relative;
+    width: 100%;
+    max-width: 42rem;
+    aspect-ratio: 16/10;
+  }
+  
+  .laptop-body {
+    position: absolute;
+    bottom: 0;
+    width: 100%;
+    height: 4%;
+    background: linear-gradient(to bottom, #1a1a1a, #0a0a0a);
+    border-radius: 0 0 12px 12px;
+    box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 
+                0 2px 4px -1px rgba(0, 0, 0, 0.06);
+  }
+  
+  .screen-frame {
+    position: absolute;
+    left: 2%;
+    right: 2%;
+    top: 0;
+    bottom: 4%;
+    background-color: #0a0a0a;
+    border-radius: 12px 12px 0 0;
+    padding: 0.5rem;
+    box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1),
+                0 10px 10px -5px rgba(0, 0, 0, 0.04);
+  }
+  
+  .screen-content {
+    position: relative;
+    width: 100%;
+    height: 100%;
+    background-color: #000;
+    border-radius: 8px;
+    overflow: hidden;
+  }
+  
+  #screen-canvas {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+  }
+  
+  .laptop-hinge {
+    position: absolute;
+    bottom: 4%;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 20%;
+    height: 1%;
+    background-color: #1a1a1a;
+    border-radius: 9999px;
+  }
+  
+  .laptop-base {
+    position: absolute;
+    bottom: 0;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 60%;
+    height: 0.5%;
+    background: linear-gradient(to bottom, #1a1a1a, #0a0a0a);
+    border-radius: 8px;
+  }
+  
+  .laptop-glow {
+    position: absolute;
+    inset: -1rem;
+    background: linear-gradient(to right, #E7028D, #056AFC);
+    opacity: 0.2;
+    filter: blur(2rem);
+    border-radius: 9999px;
+    pointer-events: none;
+  }
+  
+  /* Animation for the glow effect */
+  @keyframes pulse {
+    0%, 100% { opacity: 0.15; }
+    50% { opacity: 0.25; }
+  }
+  
+  .laptop-glow {
+    animation: pulse 4s ease-in-out infinite;
+  }

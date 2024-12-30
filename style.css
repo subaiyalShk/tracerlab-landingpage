@@ -415,26 +415,21 @@ body {
     width: 100%; /* Full width */
     border-left: none; /* Remove left border */
     border-right: none; /* Remove right border */
+    
 }
 
 .grid-row {
+    margin-top: 25px;
     display: grid;
     grid-template-columns: 1fr 1fr;
     min-height: 600px;
     opacity: 0;
     transform: translateY(20px);
-    gap: 0px;
+    gap: 25px;
     transition: 
         opacity 2s ease-in-out,
         transform 2.5s cubic-bezier(0.19, 1, 0.22, 1),
-        gap 2.5s cubic-bezier(0.19, 1, 0.22, 1),
         box-shadow 2.5s cubic-bezier(0.19, 1, 0.22, 1);
-}
-
-.grid-row.reveal {
-    opacity: 1;
-    transform: translateY(0);
-    gap: 30px;
 }
 
 .grid-cell {
@@ -444,7 +439,6 @@ body {
 }
 
 .reveal .grid-cell {
-    transform: translateY(-10px);
     box-shadow:
         0 15px 30px -5px rgba(5, 106, 252, 0.25),
         0 25px 50px -10px rgba(5, 106, 252, 0.2),

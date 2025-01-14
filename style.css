@@ -1153,3 +1153,46 @@ body {
     height: 100%;
     background: black;
 }
+
+.project-tech span:hover {
+    background: rgba(5, 106, 252, 0.2);
+}
+
+.project-link {
+    display: inline-block;
+    margin-top: 2rem;
+    padding: 0.8rem 2rem;
+    background: linear-gradient(45deg, #E7028D, #056AFC);
+    color: white;
+    text-decoration: none;
+    font-weight: 500;
+    border-radius: 4px;
+    transition: all 0.3s ease;
+    position: relative;
+    overflow: hidden;
+}
+
+.project-link:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 10px 20px rgba(231, 2, 141, 0.2);
+}
+
+.project-link::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: -100%;
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(
+        90deg,
+        transparent,
+        rgba(255, 255, 255, 0.2),
+        transparent
+    );
+    transition: 0.5s;
+}
+
+.project-link:hover::before {
+    left: 100%;
+}

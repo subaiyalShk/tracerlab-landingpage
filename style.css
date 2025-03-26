@@ -265,7 +265,8 @@ body {
 /* Media query for mobile */
 @media (max-width: 768px) {
     .logo-img {
-        height: 92px; /* Slightly smaller on mobile */
+        height: 92px;
+        margin-left: 0px; /* Slightly smaller on mobile */
     }
     #main-nav{
         top: -90px;
@@ -1411,6 +1412,8 @@ input:not(:checked) + .slider .moon {
     #cta {
         font-size: 15px;
         padding: 5px 25px;
+        margin-left: 40px;
+        margin-bottom: 10px;
     }
     
     /* Add hamburger menu for mobile */

@@ -199,7 +199,7 @@ body {
 /* --------------- Navigation -------------- */
 #main-nav {
     position: absolute;
-    top: -90px;
+    top: -120px;
     left: 0;
     width: 100%;
     background: rgba(255, 255, 255, 0.7);
@@ -210,6 +210,12 @@ body {
     z-index: 1000;
     transition: all 0.5s cubic-bezier(0.4, 0, 0.2, 1);
     height: auto;
+}
+
+@media (max-width: 768px) {
+    #main-nav {
+        top: -90px;
+    }
 }
 
 .nav-container {

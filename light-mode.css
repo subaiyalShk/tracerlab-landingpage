@@ -117,10 +117,89 @@ body {
     background-color: #056AFC;
 }
 
+/* Main CTA styles - move this ABOVE the media query */
+#cta {
+    clip-path: polygon(
+        0 0,
+        calc(100% - 15px) 0,
+        100% 15px,
+        100% 100%,
+        15px 100%,
+        0 calc(100% - 15px)
+    );
+    opacity: 0.8;
+    text-align: center;
+    background-color: #e21949;
+    margin-left: 10px;
+    margin-right: 10px;
+    padding: 5px 35px;
+    font-size: 17px;
+    font-weight: bold;
+    display: inline-block;
+    position: relative;
+    top: 2px;
+    left: -10px;
+    color: #FFFFFF;
+    text-decoration: none;
+    transition: all 0.3s ease;
+}
+
+#cta:hover {
+    opacity: 1;
+    transform: translateY(-2px);
+    box-shadow: 0 5px 15px rgba(226, 25, 73, 0.3);
+}
+
+/* Media query for mobile AFTER the main styles */
+@media (max-width: 768px) {
+    .nav-container {
+        height: 90px;
+    }
+    
+    .logo-img {
+        height: 92px;
+        margin-left: 0px;
+    }
+    
+    .nav-links .non-cta {
+        display: none;
+    }
+    
+    /* Add !important to ensure these styles take precedence */
+    #cta {
+        font-size: 15px !important;
+        padding: 5px 25px !important;
+        margin-left: 40px !important;
+        margin-bottom: 10px !important;
+        position: relative !important;
+        top: 2px !important;
+        left: -10px !important;
+    }
+    
+    .theme-toggle-wrapper {
+        margin-left: 10px;
+        margin-right: 5px;
+    }
+    
+    .theme-toggle {
+        width: 50px;
+        height: 26px;
+    }
+    
+    .slider:before {
+        height: 20px;
+        width: 20px;
+    }
+    
+    input:checked + .slider:before {
+        transform: translateX(24px);
+    }
+}
+
 /* --------------- Navigation -------------- */
 #main-nav {
     position: absolute;
-    top: -120px;
+    top: -90px;
     left: 0;
     width: 100%;
     background: rgba(255, 255, 255, 0.7);
@@ -130,15 +209,17 @@ body {
     box-shadow: 0 4px 30px rgba(0, 0, 0, 0.1);
     z-index: 1000;
     transition: all 0.5s cubic-bezier(0.4, 0, 0.2, 1);
+    height: auto;
 }
 
-.nav-container{
+.nav-container {
     max-width: 1200px;
     margin: 0 auto;
     display: flex;
     justify-content: space-between;
     align-items: center;
     height: 120px;
+    padding: 0 20px;
 }
 
 #main-nav.sticky {
@@ -183,55 +264,56 @@ body {
 }
 
 .logo-img {
-    height: 120px; /* Adjust this value based on your logo size */
+    height: 120px;
     width: auto;
     object-fit: contain;
     margin-left: 20px;
+    transition: height 0.3s ease, margin 0.3s ease;
 }
 
 /* Media query for mobile */
 @media (max-width: 768px) {
+    .nav-container {
+        height: 90px;
+    }
+    
     .logo-img {
-        height: 92px; /* Slightly smaller on mobile */
+        height: 92px;
+        margin-left: 0px;
     }
-    #main-nav{
-        top: -120px;
-    }
+    
     .nav-links .non-cta {
         display: none;
     }
-}
-
-#cta {
-    clip-path: polygon(
-        0 0,                      /* top left */ 
-        calc(100% - 15px) 0,      /* top right horizontal */
-        100% 15px,               /* top right vertical */
-        100% 100%,               /* bottom right */
-        15px 100%,               /* bottom left horizontal */
-        0 calc(100% - 15px)      /* bottom left vertical */
-    );
-    opacity: 0.8;
-    text-align: center;
-    background-color: #e21949;
-    margin-left: 10px;
-    margin-right: 10px;
-    padding: 5px 35px;
-    font-size: 17px;
-    font-weight: bold;
-    display: inline-block;
-    position: relative;
-    top: 2px;
-    left: -10px;
-    color: #FFFFFF;
-    text-decoration: none;
-    transition: all 0.3s ease;
-}
-
-#cta:hover {
-    opacity: 1;
-    transform: translateY(-2px);
-    box-shadow: 0 5px 15px rgba(226, 25, 73, 0.3);
+    
+    #cta {
+        font-size: 15px;
+        padding: 5px 25px;
+        margin-left: 40px;
+        margin-bottom: 10px;
+        position: relative;
+        top: 2px;
+        left: -10px;
+    }
+    
+    .theme-toggle-wrapper {
+        margin-left: 10px;
+        margin-right: 5px;
+    }
+    
+    .theme-toggle {
+        width: 50px;
+        height: 26px;
+    }
+    
+    .slider:before {
+        height: 20px;
+        width: 20px;
+    }
+    
+    input:checked + .slider:before {
+        transform: translateX(24px);
+    }
 }
 
 /* ---------- Hero Section --------------*/
@@ -1211,6 +1293,7 @@ body {
     margin-left: 15px;
     display: flex;
     align-items: center;
+    transition: margin 0.3s ease;
 }
 
 .theme-toggle {

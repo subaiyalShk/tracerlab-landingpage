@@ -33,7 +33,7 @@
     
     <title>Tracerlabs | Ai Dev Agency</title>
     <link href="https://cdnjs.cloudflare.com/ajax/libs/aos/2.3.4/aos.css" rel="stylesheet">
-    <link href="light-mode.css" rel="stylesheet">
+    <link rel="stylesheet" href="style.css" id="theme-stylesheet">
     <script> (function (c, s, q, u, a, r, e) { c.hj=c.hj||function(){(c.hj.q=c.hj.q||[]).push(arguments)}; c._hjSettings = { hjid: a }; r = s.getElementsByTagName('head')[0]; e = s.createElement('script'); e.async = true; e.src = q + c._hjSettings.hjid + u; r.appendChild(e); })(window, document, 'https://static.hj.contentsquare.net/c/csq-', '.js', 5253738); </script>
 </head>
 <body>
@@ -89,12 +89,23 @@
         <nav id="main-nav">
             <div class="nav-container">
                 <a href="#" class="logo">
-                    <img src="./assets/logo-light.png" alt="tracerlabs" class="logo-img">
+                    <img src="./assets/logo-dark.png" alt="tracerlabs" class="logo-img">
                 </a>
                 <div class="nav-links">
                     <a class="non-cta" href="#services">Services</a>
                     <a class="non-cta" href="#works">Works</a>
                     <a href="#contact" id="cta">Contact Us</a>
+                </div>
+                <div class="theme-toggle-wrapper">
+                    <label class="theme-toggle" for="theme-toggle-checkbox">
+                        <input type="checkbox" id="theme-toggle-checkbox" checked>
+                        <div class="slider">
+                            <div class="icons">
+                                <span class="sun">☀️</span>
+                                <span class="moon">🌙</span>
+                            </div>
+                        </div>
+                    </label>
                 </div>
             </div>
         </nav>
@@ -665,6 +676,36 @@ class Particle {
 
         // Initialize everything when DOM is ready
         document.addEventListener('DOMContentLoaded', () => new DevForgeSite());
+    </script>
+    
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            const themeToggleCheckbox = document.getElementById('theme-toggle-checkbox');
+            const themeStylesheet = document.getElementById('theme-stylesheet');
+            
+            // Check if user has a saved preference
+            const savedTheme = localStorage.getItem('theme');
+            if (savedTheme === 'light') {
+                themeStylesheet.href = 'light-mode.css';
+                themeToggleCheckbox.checked = false;
+            } else {
+                // Default to dark if no preference or preference is dark
+                themeStylesheet.href = 'style.css';
+                themeToggleCheckbox.checked = true;
+            }
+            
+            themeToggleCheckbox.addEventListener('change', function() {
+                if (this.checked) {
+                    // Dark mode
+                    themeStylesheet.href = 'style.css';
+                    localStorage.setItem('theme', 'dark');
+                } else {
+                    // Light mode
+                    themeStylesheet.href = 'light-mode.css';
+                    localStorage.setItem('theme', 'light');
+                }
+            });
+        });
     </script>
     
     </body>

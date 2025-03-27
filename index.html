@@ -529,6 +529,10 @@
                 
                 // Instead of detecting the theme here, we'll do it in init()
                 this.isLightMode = false;
+                this.transitionProgress = 1; // 0 to 1 for transition
+                this.transitionDuration = 500; // milliseconds
+                this.transitionStartTime = 0;
+                this.previousMode = false;
                 
                 this.init();
             }
@@ -565,10 +569,17 @@
                 });
             }
             
-            // Add a method to update the theme
+            // Update the updateTheme method to start transition
             updateTheme(isLightMode) {
-                this.isLightMode = isLightMode;
-                this.createParticles(); // Recreate particles with new colors
+                if (this.isLightMode !== isLightMode) {
+                    this.previousMode = this.isLightMode;
+                    this.isLightMode = isLightMode;
+                    this.transitionStartTime = Date.now();
+                    this.transitionProgress = 0;
+                    
+                    // Still recreate particles to match new theme
+                    this.createParticles();
+                }
             }
             
             setupCanvas() {
@@ -618,18 +629,37 @@
                 
                 this.time += 0.016;
                 
-                // Clear canvas with background color based on theme
-                if (this.isLightMode) {
-                    this.ctx.fillStyle = '#ffffff';
-                } else {
-                    this.ctx.fillStyle = 'black';
+                // Handle transition if in progress
+                if (this.transitionProgress < 1) {
+                    const elapsed = Date.now() - this.transitionStartTime;
+                    this.transitionProgress = Math.min(elapsed / this.transitionDuration, 1);
                 }
-                this.ctx.fillRect(0, 0, this.drawWidth, this.drawHeight);
+                
+                // Clear canvas with transitioning background color
+                const ctx = this.ctx;
+                
+                if (this.transitionProgress < 1) {
+                    // During transition, blend colors
+                    const startColor = this.previousMode ? [255, 255, 255] : [0, 0, 0];
+                    const endColor = this.isLightMode ? [255, 255, 255] : [0, 0, 0];
+                    
+                    // Calculate blended color
+                    const r = Math.round(startColor[0] + (endColor[0] - startColor[0]) * this.transitionProgress);
+                    const g = Math.round(startColor[1] + (endColor[1] - startColor[1]) * this.transitionProgress);
+                    const b = Math.round(startColor[2] + (endColor[2] - startColor[2]) * this.transitionProgress);
+                    
+                    ctx.fillStyle = `rgb(${r}, ${g}, ${b})`;
+                } else {
+                    // After transition completed
+                    ctx.fillStyle = this.isLightMode ? '#ffffff' : 'black';
+                }
+                
+                ctx.fillRect(0, 0, this.drawWidth, this.drawHeight);
                 
                 // Draw particles with appropriate opacity
                 this.particles.forEach(particle => {
                     particle.update();
-                    particle.draw(this.ctx, this.isLightMode ? 0.5 : 0.3);
+                    particle.draw(ctx, this.isLightMode ? 0.5 : 0.3);
                 });
                 
                 // Draw scan lines

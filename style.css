@@ -1276,11 +1276,13 @@ body {
     left: 100%;
 }
 
-/* Theme Toggle Styles - Improved */
+/* Theme Toggle Styles - Fixed Alignment */
 .theme-toggle-wrapper {
     margin-left: 15px;
+    margin-right: 5px; /* Add consistent right margin */
     display: flex;
     align-items: center;
+    justify-content: center; /* Center the toggle */
 }
 
 .theme-toggle {
@@ -1338,7 +1340,8 @@ body {
 .icons .sun {
     font-size: 14px;
     z-index: 1;
-    margin-left: 5px;
+    margin-left: 2px;
+    margin-right: auto;
     opacity: 0.7;
     transition: opacity 0.3s ease;
 }
@@ -1347,6 +1350,7 @@ body {
     font-size: 14px;
     z-index: 1;
     margin-right: 5px;
+    margin-left: auto; /* Push to right */
     opacity: 1;
     transition: opacity 0.3s ease;
 }
@@ -1379,6 +1383,7 @@ input:not(:checked) + .slider .moon {
 @media (max-width: 768px) {
     .theme-toggle-wrapper {
         margin-left: 10px;
+        margin-right: 10px; /* Consistent right margin on mobile */
     }
     
     .theme-toggle {
@@ -1393,6 +1398,17 @@ input:not(:checked) + .slider .moon {
     
     input:checked + .slider:before {
         transform: translateX(24px);
+    }
+    
+    /* Fix icon alignment on mobile */
+    .icons .sun {
+        margin-left: 0px;
+        font-size: 12px;
+    }
+    
+    .icons .moon {
+        margin-right: 3px;
+        font-size: 12px; /* Slightly smaller on mobile */
     }
 }
 

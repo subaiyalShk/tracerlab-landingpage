@@ -764,18 +764,22 @@
         document.addEventListener('DOMContentLoaded', function() {
             const themeToggleCheckbox = document.getElementById('theme-toggle-checkbox');
             const themeStylesheet = document.getElementById('theme-stylesheet');
+            const logoImage = document.querySelector('.logo-img');
             
             // Check if user has a saved preference
             const savedTheme = localStorage.getItem('theme');
             let isLightMode = savedTheme === 'light';
             
+            // Set initial theme and logo
             if (isLightMode) {
                 themeStylesheet.href = 'light-mode.css';
                 themeToggleCheckbox.checked = false;
+                logoImage.src = './assets/logo-light.png'; // Light logo for light mode
             } else {
                 // Default to dark if no preference or preference is dark
                 themeStylesheet.href = 'style.css';
                 themeToggleCheckbox.checked = true;
+                logoImage.src = './assets/logo-dark.png'; // Dark logo for dark mode
             }
             
             // Dispatch initial theme state for any components that need it
@@ -792,10 +796,12 @@
                     // Dark mode
                     themeStylesheet.href = 'style.css';
                     localStorage.setItem('theme', 'dark');
+                    logoImage.src = './assets/logo-dark.png'; // Dark logo for dark mode
                 } else {
                     // Light mode
                     themeStylesheet.href = 'light-mode.css';
                     localStorage.setItem('theme', 'light');
+                    logoImage.src = './assets/logo-light.png'; // Light logo for light mode
                 }
                 
                 // Dispatch a custom event with the theme state

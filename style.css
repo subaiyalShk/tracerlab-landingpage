@@ -1516,3 +1516,119 @@ h1, h2, h3,
 .card-image:hover {
     transform: scale(1.05);
 }
+
+/* Minimal Social Proof */
+.social-proof {
+    margin-top: 2rem;
+}
+
+.avatars-count {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    margin-bottom: 8px;
+}
+
+.avatars {
+    display: flex;
+    margin-left: 0; /* Remove negative margin to prevent overflow */
+}
+
+.avatar {
+    width: 32px;
+    height: 32px;
+    border-radius: 50%;
+    border: 2px solid rgba(255, 255, 255, 0.2);
+    margin-left: -6px; /* Reduced negative margin */
+    background-size: cover;
+    background-position: center;
+    background-repeat: no-repeat;
+    position: relative;
+    overflow: hidden;
+    flex-shrink: 0; /* Prevent shrinking */
+}
+
+.avatar:first-child {
+    margin-left: 0; /* First avatar has no negative margin */
+}
+
+.avatar:nth-child(1) {
+    background-image: url('https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=64&h=64&fit=crop&crop=face&auto=format');
+}
+
+.avatar:nth-child(2) {
+    background-image: url('https://images.unsplash.com/photo-1438761681033-6461ffad8d80?w=64&h=64&fit=crop&crop=face&auto=format');
+}
+
+.avatar:nth-child(3) {
+    background-image: url('https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?w=64&h=64&fit=crop&crop=face&auto=format');
+}
+
+/* Add subtle hover effect */
+.avatar:hover {
+    transform: scale(1.1);
+    transition: transform 0.2s ease;
+    z-index: 10;
+    border-color: rgba(255, 255, 255, 0.4);
+}
+
+/* Remove the gradient animation since we're using real photos */
+@keyframes gradientShift {
+    /* Remove this animation */
+}
+
+.star-rating {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    background: rgba(255, 255, 255, 0.15);
+    backdrop-filter: blur(10px);
+    border: 1px solid rgba(255, 255, 255, 0.2);
+    border-radius: 20px;
+    padding: 6px 12px;
+}
+
+.stars {
+    font-size: 12px;
+    line-height: 1;
+    filter: drop-shadow(0 0 3px rgba(255, 215, 0, 0.3));
+}
+
+.rating-text {
+    font-size: 13px;
+    font-weight: 600;
+    color: #FFFFFF;
+    line-height: 1;
+}
+
+/* Mobile adjustments */
+@media (max-width: 768px) {
+    .social-proof {
+        margin-top: 1.5rem;
+    }
+    
+    .avatars-count {
+        gap: 10px;
+    }
+    
+    .avatar {
+        width: 28px;
+        height: 28px;
+    }
+    
+    .star-rating {
+        padding: 5px 10px;
+    }
+    
+    .stars {
+        font-size: 11px;
+    }
+    
+    .rating-text {
+        font-size: 12px;
+    }
+    
+    .recommendation-text {
+        font-size: 13px;
+    }
+}

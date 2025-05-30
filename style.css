@@ -612,6 +612,8 @@ body {
 .service-card {
     padding: 30px;
     background-color: #000000;
+    border-radius: 0;
+    border: 1px solid rgba(255, 255, 255, 0.1);
     transform: translateY(20px);
     transition: 
         opacity 2s ease-in-out,
@@ -631,6 +633,152 @@ body {
     font-size: 40px;
     margin-bottom: 20px;
     color: #E7028D;
+}
+
+/* Automation features styling - updated for 4 items */
+.automation-features {
+    margin: 1.5rem 0;
+    display: flex;
+    flex-direction: column;
+    gap: 0.7rem; /* Slightly reduced gap for 4 items */
+}
+
+.feature-item {
+    display: flex;
+    align-items: center;
+    color: rgba(255, 255, 255, 0.8);
+    font-size: 0.9rem; /* Slightly smaller to fit 4 items nicely */
+    padding: 0.4rem 0;
+    border-left: 2px solid rgba(231, 2, 141, 0.3);
+    padding-left: 1rem;
+    transition: all 0.3s ease;
+}
+
+.feature-item:hover {
+    border-left-color: #E7028D;
+    color: #FFFFFF;
+    transform: translateX(5px);
+}
+
+/* Tools showcase */
+.tools-showcase {
+    margin-top: 2rem;
+    padding-top: 1.5rem;
+    border-top: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.tools-label {
+    font-size: 0.9rem;
+    color: rgba(255, 255, 255, 0.6);
+    display: block;
+    margin-bottom: 0.8rem;
+}
+
+.tool-badges {
+    display: flex;
+    gap: 0.5rem;
+    flex-wrap: wrap;
+}
+
+.tool-badge {
+    background: linear-gradient(45deg, rgba(231, 2, 141, 0.2), rgba(5, 106, 252, 0.2));
+    border: 1px solid rgba(255, 255, 255, 0.2);
+    color: rgba(255, 255, 255, 0.9);
+    padding: 0.4rem 0.8rem;
+    border-radius: 20px;
+    font-size: 0.8rem;
+    font-weight: 500;
+    backdrop-filter: blur(10px);
+    transition: all 0.3s ease;
+}
+
+.tool-badge:hover {
+    background: linear-gradient(45deg, rgba(231, 2, 141, 0.3), rgba(5, 106, 252, 0.3));
+    border-color: rgba(255, 255, 255, 0.4);
+    transform: translateY(-2px);
+}
+
+/* Mobile responsive */
+@media (max-width: 768px) {
+    .automation-features {
+        gap: 0.6rem;
+    }
+    
+    .feature-item {
+        font-size: 0.9rem;
+        padding-left: 0.8rem;
+    }
+    
+    .tool-badges {
+        justify-content: center;
+    }
+    
+    .tool-badge {
+        font-size: 0.75rem;
+        padding: 0.3rem 0.6rem;
+    }
+}
+
+/* Enterprise features styling */
+.enterprise-features {
+    margin: 1.5rem 0;
+    display: flex;
+    flex-direction: column;
+    gap: 0.8rem;
+}
+
+/* Client showcase styling */
+.client-showcase {
+    margin-top: 2rem;
+    padding-top: 1.5rem;
+    border-top: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.clients-label {
+    font-size: 0.9rem;
+    color: rgba(255, 255, 255, 0.6);
+    display: block;
+    margin-bottom: 0.8rem;
+}
+
+.client-badges {
+    display: flex;
+    gap: 0.5rem;
+    flex-wrap: wrap;
+}
+
+.client-badge {
+    background: linear-gradient(45deg, rgba(5, 106, 252, 0.2), rgba(0, 200, 150, 0.2));
+    border: 1px solid rgba(255, 255, 255, 0.2);
+    color: rgba(255, 255, 255, 0.9);
+    padding: 0.4rem 0.8rem;
+    border-radius: 20px;
+    font-size: 0.8rem;
+    font-weight: 500;
+    backdrop-filter: blur(10px);
+    transition: all 0.3s ease;
+}
+
+.client-badge:hover {
+    background: linear-gradient(45deg, rgba(5, 106, 252, 0.3), rgba(0, 200, 150, 0.3));
+    border-color: rgba(255, 255, 255, 0.4);
+    transform: translateY(-2px);
+}
+
+/* Mobile responsive updates */
+@media (max-width: 768px) {
+    .enterprise-features {
+        gap: 0.6rem;
+    }
+    
+    .client-badges {
+        justify-content: center;
+    }
+    
+    .client-badge {
+        font-size: 0.75rem;
+        padding: 0.3rem 0.6rem;
+    }
 }
 
 /* ------------------------ Projects Section */
@@ -1630,5 +1778,67 @@ h1, h2, h3,
     
     .recommendation-text {
         font-size: 13px;
+    }
+}
+
+/* Startup features styling */
+.startup-features {
+    margin: 1.5rem 0;
+    display: flex;
+    flex-direction: column;
+    gap: 0.8rem;
+}
+
+/* Tech showcase styling */
+.tech-showcase {
+    margin-top: 2rem;
+    padding-top: 1.5rem;
+    border-top: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.tech-label {
+    font-size: 0.9rem;
+    color: rgba(255, 255, 255, 0.6);
+    display: block;
+    margin-bottom: 0.8rem;
+}
+
+.tech-badges {
+    display: flex;
+    gap: 0.5rem;
+    flex-wrap: wrap;
+}
+
+.tech-badge {
+    background: linear-gradient(45deg, rgba(255, 102, 0, 0.2), rgba(255, 215, 0, 0.2));
+    border: 1px solid rgba(255, 255, 255, 0.2);
+    color: rgba(255, 255, 255, 0.9);
+    padding: 0.4rem 0.8rem;
+    border-radius: 20px;
+    font-size: 0.8rem;
+    font-weight: 500;
+    backdrop-filter: blur(10px);
+    transition: all 0.3s ease;
+}
+
+.tech-badge:hover {
+    background: linear-gradient(45deg, rgba(255, 102, 0, 0.3), rgba(255, 215, 0, 0.3));
+    border-color: rgba(255, 255, 255, 0.4);
+    transform: translateY(-2px);
+}
+
+/* Mobile responsive updates */
+@media (max-width: 768px) {
+    .startup-features {
+        gap: 0.6rem;
+    }
+    
+    .tech-badges {
+        justify-content: center;
+    }
+    
+    .tech-badge {
+        font-size: 0.75rem;
+        padding: 0.3rem 0.6rem;
     }
 }

@@ -630,8 +630,10 @@ body {
 .service-card {
     padding: 30px;
     background-color: #ffffff;
-    transform: translateY(20px);
+    border-radius: 0;
+    border: 1px solid rgba(0, 0, 0, 0.1);
     box-shadow: 0 4px 6px rgba(0, 0, 0, 0.05);
+    transform: translateY(20px);
     transition: 
         opacity 2s ease-in-out,
         transform 2.5s cubic-bezier(0.19, 1, 0.22, 1),
@@ -650,6 +652,34 @@ body {
     font-size: 40px;
     margin-bottom: 20px;
     color: #E7028D;
+}
+
+.feature-item {
+    color: #333333;
+    border-left-color: rgba(231, 2, 141, 0.4);
+}
+
+.feature-item:hover {
+    color: #1a1a1a;
+}
+
+.tools-label {
+    color: #666666;
+}
+
+.tools-showcase {
+    border-top-color: rgba(0, 0, 0, 0.1);
+}
+
+.tool-badge {
+    background: linear-gradient(45deg, rgba(231, 2, 141, 0.1), rgba(5, 106, 252, 0.1));
+    border-color: rgba(0, 0, 0, 0.15);
+    color: #333333;
+}
+
+.tool-badge:hover {
+    background: linear-gradient(45deg, rgba(231, 2, 141, 0.2), rgba(5, 106, 252, 0.2));
+    border-color: rgba(0, 0, 0, 0.25);
 }
 
 /* ------------------------ Projects Section */
@@ -1550,4 +1580,42 @@ body {
     .recommendation-text {
         font-size: 13px;
     }
+}
+
+.clients-label {
+    color: #666666;
+}
+
+.client-showcase {
+    border-top-color: rgba(0, 0, 0, 0.1);
+}
+
+.client-badge {
+    background: linear-gradient(45deg, rgba(5, 106, 252, 0.1), rgba(0, 200, 150, 0.1));
+    border-color: rgba(0, 0, 0, 0.15);
+    color: #333333;
+}
+
+.client-badge:hover {
+    background: linear-gradient(45deg, rgba(5, 106, 252, 0.2), rgba(0, 200, 150, 0.2));
+    border-color: rgba(0, 0, 0, 0.25);
+}
+
+.tech-label {
+    color: #666666;
+}
+
+.tech-showcase {
+    border-top-color: rgba(0, 0, 0, 0.1);
+}
+
+.tech-badge {
+    background: linear-gradient(45deg, rgba(255, 102, 0, 0.1), rgba(255, 215, 0, 0.1));
+    border-color: rgba(0, 0, 0, 0.15);
+    color: #333333;
+}
+
+.tech-badge:hover {
+    background: linear-gradient(45deg, rgba(255, 102, 0, 0.2), rgba(255, 215, 0, 0.2));
+    border-color: rgba(0, 0, 0, 0.25);
 }

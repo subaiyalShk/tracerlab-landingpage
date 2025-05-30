@@ -1530,8 +1530,7 @@ input:not(:checked) + .slider .moon {
 /* Media query for mobile */
 @media (max-width: 768px) {
     .theme-toggle-wrapper {
-        margin-left: 10px;
-        margin-right: 10px; /* Consistent right margin on mobile */
+        display: none;
     }
     
     .theme-toggle {
@@ -1778,6 +1777,7 @@ h1, h2, h3,
     
     .recommendation-text {
         font-size: 13px;
+        text-align: left;
     }
 }
 

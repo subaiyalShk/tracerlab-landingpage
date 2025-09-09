@@ -808,7 +808,6 @@ body {
     min-height: 600px;
     opacity: 0;
     transform: translateY(20px);
-    gap: 25px;
     transition: 
         opacity 2s ease-in-out,
         transform 2.5s cubic-bezier(0.19, 1, 0.22, 1),
@@ -830,14 +829,14 @@ body {
 }
 
 .project-content {
-    padding: 5rem;
+    padding: 2.5rem;
     max-width: 600px; /* Control text width for readability */
     margin: 0 auto;
 }
 
 .project-content h3 {
-    font-size: clamp(28px, 4vw, 36px); /* Larger font size */
-    margin-bottom: 2rem;
+    font-size: clamp(20px, 3vw, 24px); /* More proportionate font size */
+    margin-bottom: 1.5rem;
 }
 
 .project-content p {
@@ -850,7 +849,7 @@ body {
     position: relative;
     overflow: hidden;
     height: 100%;
-    padding: 25%;
+    padding: 15%;
 }
 
 .project-visual img {
@@ -895,7 +894,7 @@ body {
     }
 
     .project-content {
-        padding: 2rem;
+        padding: 1.5rem;
     }
 
     .project-visual {
@@ -924,25 +923,21 @@ body {
     box-shadow: 0 4px 30px rgba(0, 0, 0, 0.1);
 }
 
-#contact .contact-grid {
+#contact .contact-content {
+    text-align: center;
+    margin-bottom: 2rem;
+}
+
+#contact .cards-container {
     display: grid;
     grid-template-columns: 1fr 1fr;
     gap: 4rem;
-    max-width: 1400px;
-    margin: 0 auto;
-    padding: 0 2rem;
-    align-items: start; /* This helps align the content properly */
-}
-
-#contact .contact-content {
-    display: flex;
-    flex-direction: column;
-    justify-content: center;
-    padding-right: 2rem;
+    align-items: start;
+    align-content: start;
 }
 
 #contact .contact-content h2 {
-    text-align: left;
+    text-align: center;
     margin-bottom: 1.5rem;
 }
 
@@ -960,6 +955,16 @@ body {
 }
 
 #contact .stepper-container.reveal {
+    opacity: 1;
+    transform: translateY(0);
+    box-shadow:
+        0 15px 30px -5px rgba(5, 106, 252, 0.25),
+        0 25px 50px -10px rgba(5, 106, 252, 0.2),
+        0 35px 70px -15px rgba(5, 106, 252, 0.15),
+        0 50px 100px -20px rgba(5, 106, 252, 0.1);
+}
+
+#contact .testimonials-container.reveal {
     opacity: 1;
     transform: translateY(0);
     box-shadow:
@@ -1087,6 +1092,252 @@ body {
     font-size: 1.1rem;
 }
 
+#contact .testimonials-container {
+    position: relative;
+    background: #000000;
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    margin: 2rem 0;
+    padding: 2rem;
+    display: flex;
+    flex-direction: column;
+    transform: translateY(20px);
+    opacity: 0.8;
+    transition: 
+        opacity 2s ease-in-out,
+        transform 2.5s cubic-bezier(0.19, 1, 0.22, 1),
+        box-shadow 2.5s cubic-bezier(0.19, 1, 0.22, 1);
+    align-self: flex-start;
+}
+
+#contact .testimonials-header {
+    text-align: center;
+    margin-bottom: 2rem;
+}
+
+#contact .testimonials-header h3 {
+    color: #FFFFFF;
+    font-size: 1.5rem;
+    margin-bottom: 0.5rem;
+}
+
+#contact .testimonials-slider {
+    position: relative;
+    overflow: hidden;
+    min-height: 300px;
+}
+
+#contact .testimonial-slide {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    opacity: 0;
+    transform: translateX(50px);
+    transition: all 0.5s ease;
+    pointer-events: none;
+    visibility: hidden;
+}
+
+#contact .testimonial-slide.active {
+    opacity: 1;
+    transform: translateX(0);
+    pointer-events: all;
+    visibility: visible;
+}
+
+#contact .testimonial-content {
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    text-align: center;
+    padding: 2rem 1.5rem;
+}
+
+
+#contact .testimonial-text {
+    font-size: 1.2rem;
+    line-height: 1.7;
+    color: rgba(255, 255, 255, 0.9);
+    margin-bottom: 2.5rem;
+    font-style: italic;
+    max-width: 500px;
+    margin-left: auto;
+    margin-right: auto;
+}
+
+#contact .testimonial-author {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 0.75rem;
+}
+
+#contact .author-info h4 {
+    color: #FFFFFF;
+    font-size: 1.2rem;
+    margin-bottom: 0.5rem;
+    font-weight: 600;
+}
+
+#contact .author-info span {
+    color: rgba(255, 255, 255, 0.7);
+    font-size: 1rem;
+}
+
+
+#contact .testimonial-navigation {
+    display: flex;
+    justify-content: center;
+    gap: 0.5rem;
+    margin-top: 1rem;
+}
+
+#contact .nav-dot {
+    width: 12px;
+    height: 12px;
+    border-radius: 50%;
+    border: none;
+    background: rgba(255, 255, 255, 0.3);
+    cursor: pointer;
+    transition: all 0.3s ease;
+}
+
+#contact .nav-dot.active {
+    background: #E7028D;
+    transform: scale(1.2);
+}
+
+#contact .nav-dot:hover {
+    background: rgba(231, 2, 141, 0.7);
+}
+
+/* Modal Styles */
+.modal {
+    display: none;
+    position: fixed;
+    z-index: 10000;
+    left: 0;
+    top: 0;
+    width: 100vw;
+    height: 100vh;
+    background-color: rgba(0, 0, 0, 0.8);
+    backdrop-filter: blur(5px);
+    -webkit-backdrop-filter: blur(5px);
+    overflow: hidden;
+}
+
+.modal-content {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    background-color: #000000;
+    padding: 0;
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    border-radius: 12px;
+    width: 90%;
+    max-width: 800px;
+    max-height: 80vh;
+    box-shadow: 0 25px 50px rgba(0, 0, 0, 0.7);
+    animation: modalSlideIn 0.3s ease-out;
+    overflow: hidden;
+}
+
+@keyframes modalSlideIn {
+    from {
+        opacity: 0;
+        transform: translate(-50%, -60%);
+        scale: 0.9;
+    }
+    to {
+        opacity: 1;
+        transform: translate(-50%, -50%);
+        scale: 1;
+    }
+}
+
+.modal-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 1.5rem 2rem;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.modal-header h3 {
+    color: #FFFFFF;
+    margin: 0;
+    font-size: 1.5rem;
+}
+
+.modal-close {
+    background: none;
+    border: none;
+    color: #FFFFFF;
+    font-size: 2rem;
+    cursor: pointer;
+    padding: 0;
+    width: 30px;
+    height: 30px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 50%;
+    transition: all 0.3s ease;
+}
+
+.modal-close:hover {
+    background: rgba(255, 255, 255, 0.1);
+    color: #E7028D;
+}
+
+.modal-body {
+    padding: 0;
+    height: 600px;
+    overflow: hidden;
+}
+
+.modal-body #iframe-container {
+    width: 100%;
+    height: 100%;
+}
+
+.modal-body iframe {
+    width: 100%;
+    height: 100%;
+    border: none;
+    border-radius: 0 0 8px 8px;
+}
+
+/* Mobile responsive */
+@media (max-width: 768px) {
+    .modal-content {
+        width: 100%;
+        height: 100vh;
+        max-width: none;
+        max-height: none;
+        top: 0;
+        left: 0;
+        transform: none;
+        border-radius: 0;
+        margin: 0;
+    }
+    
+    .modal-header {
+        padding: 1rem 1.5rem;
+    }
+    
+    .modal-header h3 {
+        font-size: 1.2rem;
+    }
+    
+    .modal-body {
+        height: calc(100vh - 80px);
+    }
+}
+
 #contact .contact-form-container {
     position: relative;
     height: 600px;
@@ -1185,6 +1436,11 @@ body {
     #contact .contact-form-container {
         margin-top: 0; /* Remove margin on mobile */
     }
+
+    #contact .cards-container {
+        grid-template-columns: 1fr;
+        gap: 2rem;
+    }
 }
 
 @media (max-width: 768px) {
@@ -1194,6 +1450,33 @@ body {
 
     #contact .contact-grid {
         gap: 2rem;
+    }
+
+    #contact .cards-container {
+        gap: 1.5rem;
+    }
+
+    #contact .stepper-container,
+    #contact .testimonials-container {
+        margin: 1rem 0;
+        padding: 1.5rem;
+    }
+
+    #contact .testimonials-header h3 {
+        font-size: 1.3rem;
+    }
+
+    #contact .testimonial-text {
+        font-size: 1.1rem;
+        line-height: 1.6;
+    }
+
+    #contact .stepper-step h4 {
+        font-size: 1.1rem;
+    }
+
+    #contact .stepper-step p {
+        font-size: 0.95rem;
     }
 }
 

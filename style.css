@@ -1243,6 +1243,8 @@ body {
     box-shadow: 0 25px 50px rgba(0, 0, 0, 0.7);
     animation: modalSlideIn 0.3s ease-out;
     overflow: hidden;
+    display: flex;
+    flex-direction: column;
 }
 
 @keyframes modalSlideIn {
@@ -1295,7 +1297,9 @@ body {
 
 .modal-body {
     padding: 0;
-    height: 600px;
+    flex: 1;
+    height: auto;
+    min-height: 0;
     overflow: hidden;
 }
 

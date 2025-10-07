@@ -422,12 +422,12 @@
     <!-- Modal for contact form -->
     <div id="contact-modal" class="modal">
         <div class="modal-content">
-            <div class="modal-header">
+            <div class="modal-header" style="display: none;">
                 <h3>Get Started with Tracy</h3>
                 <button class="modal-close">&times;</button>
             </div>
-            <div class="modal-body">
-                <div id="iframe-container"></div>
+            <div class="modal-body" style="height: 100%; padding: 0;">
+                <div id="iframe-container" style="height: 100%;"></div>
             </div>
         </div>
     </div>
@@ -459,6 +459,7 @@
                 this.initializeTestimonials();
                 this.initializeModal();
                 this.initializeScreenAnimation();
+                this.initializeIframeEvents();
                 
                 // Setup unified scroll/resize handler
                 this.setupEventListeners();
@@ -597,23 +598,27 @@
                     const iframe = document.createElement('iframe');
                     Object.assign(iframe, {
                         className: 'form-iframe',
-                        src: 'https://admin.tracerlabs.io/lead-capture',
+                        src: 'https://dealflow.tracerlabs.io/lead-intake',
                         loading: 'lazy',
                         width: '100%',
                         height: '100%',
-                        style: 'border: none'
+                        style: 'border: none; position: absolute; top: 0; left: 0;'
                     });
                     
                     const attributes = {
                         sandbox: 'allow-same-origin allow-scripts allow-popups allow-forms',
                         allow: 'accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture',
                         allowfullscreen: '',
-                        'aria-labelledby': 'contact-heading'
+                        'aria-labelledby': 'contact-heading',
+                        scrolling: 'yes'
                     };
                     
                     Object.entries(attributes).forEach(([key, value]) => iframe.setAttribute(key, value));
                     
                     iframeContainer.appendChild(iframe);
+                    
+                    // Lock body scroll and show modal
+                    this.lockBodyScroll();
                     modal.style.display = 'block';
                     
                     // Hide stepper buttons
@@ -641,6 +646,8 @@
                 
                 const closeModal = () => {
                     modal.style.display = 'none';
+                    // Unlock body scroll when modal closes
+                    this.unlockBodyScroll();
                     // Restore stepper buttons when modal closes
                     if (this.stepsContainer) {
                         this.stepsContainer.querySelectorAll('.stepper-button')
@@ -664,6 +671,192 @@
                         closeModal();
                     }
                 });
+            }
+
+            lockBodyScroll() {
+                // Store current scroll position
+                this.scrollPosition = window.pageYOffset || document.documentElement.scrollTop;
+                
+                // Apply styles to prevent scrolling
+                document.body.style.position = 'fixed';
+                document.body.style.top = `-${this.scrollPosition}px`;
+                document.body.style.width = '100%';
+                document.body.style.overflow = 'hidden';
+                
+                // Prevent touch scrolling on mobile
+                document.body.style.touchAction = 'none';
+            }
+
+            unlockBodyScroll() {
+                // Remove fixed positioning
+                document.body.style.position = '';
+                document.body.style.top = '';
+                document.body.style.width = '';
+                document.body.style.overflow = '';
+                document.body.style.touchAction = '';
+                
+                // Restore scroll position
+                if (this.scrollPosition !== undefined) {
+                    window.scrollTo(0, this.scrollPosition);
+                    this.scrollPosition = undefined;
+                }
+            }
+
+            initializeIframeEvents() {
+                // Security: Define allowed origins
+                const ALLOWED_ORIGINS = [
+                    'https://dealflow.tracerlabs.io',
+                    'http://localhost:3001' // For development
+                ];
+
+                // Listen for messages from the iframe
+                window.addEventListener('message', (event) => {
+                    // Security: Verify origin
+                    if (!ALLOWED_ORIGINS.includes(event.origin)) {
+                        console.warn('Blocked message from untrusted origin:', event.origin);
+                        return;
+                    }
+
+                    // Handle terminal events
+                    if (event.data && event.data.type === 'terminalEvent') {
+                        this.handleTerminalEvent(event.data);
+                    }
+                });
+            }
+
+            handleTerminalEvent(data) {
+                console.log('Terminal event received:', data);
+
+                switch(data.eventType) {
+                    case 'close':
+                        this.handleTerminalClose();
+                        break;
+                    case 'minimize':
+                        this.handleTerminalMinimize();
+                        break;
+                    case 'maximize':
+                        this.handleTerminalMaximize();
+                        break;
+                }
+            }
+
+            handleTerminalClose() {
+                // Close the modal
+                const modal = document.getElementById('contact-modal');
+                modal.style.display = 'none';
+                
+                // Unlock body scroll
+                this.unlockBodyScroll();
+                
+                // Reset stepper to initial state
+                this.resetStepperToInitialState();
+                
+                // Show stepper buttons again
+                if (this.stepsContainer) {
+                    this.stepsContainer.querySelectorAll('.stepper-button')
+                        .forEach(button => button.style.display = '');
+                }
+            }
+
+            handleTerminalMinimize() {
+                // Hide the modal
+                const modal = document.getElementById('contact-modal');
+                modal.style.display = 'none';
+                
+                // Unlock body scroll
+                this.unlockBodyScroll();
+                
+                // Show floating chat button
+                this.showFloatingChatButton();
+                
+                // Note: We don't change the iframe's internal state
+                // The iframe keeps its conversation and normal display state
+            }
+
+            handleTerminalMaximize() {
+                // For now, just ensure fullscreen behavior
+                const modal = document.getElementById('contact-modal');
+                const iframe = modal.querySelector('iframe');
+                
+                if (iframe) {
+                    iframe.style.height = '100vh';
+                    iframe.style.width = '100vw';
+                }
+            }
+
+            resetStepperToInitialState() {
+                // Reset to step 1
+                this.currentStep = 0;
+                
+                // Update step visibility
+                if (this.steps) {
+                    this.steps.forEach((step, index) => {
+                        step.classList.toggle('active', index === 0);
+                    });
+                }
+                
+                // Reset progress bar
+                if (this.progressFill) {
+                    this.progressFill.style.width = '33.33%'; // First step
+                }
+            }
+
+            showFloatingChatButton() {
+                // Remove existing floating button if any
+                const existingButton = document.getElementById('floating-chat-button');
+                if (existingButton) {
+                    existingButton.remove();
+                }
+
+                // Create floating chat button
+                const floatingButton = document.createElement('div');
+                floatingButton.id = 'floating-chat-button';
+                floatingButton.innerHTML = `
+                    <div class="floating-chat-content">
+                        <span class="chat-icon">💬</span>
+                        <span class="chat-text">Chat</span>
+                    </div>
+                `;
+                
+                // Add click handler to restore terminal
+                floatingButton.addEventListener('click', () => {
+                    this.restoreTerminal();
+                });
+                
+                // Add to body
+                document.body.appendChild(floatingButton);
+            }
+
+            restoreTerminal() {
+                // Remove floating button
+                const floatingButton = document.getElementById('floating-chat-button');
+                if (floatingButton) {
+                    floatingButton.remove();
+                }
+
+                // Show modal again
+                const modal = document.getElementById('contact-modal');
+                modal.style.display = 'block';
+                
+                // Lock body scroll
+                this.lockBodyScroll();
+                
+                // Send restore message to iframe to ensure it's in normal state
+                this.sendMessageToIframe('restore');
+            }
+
+            sendMessageToIframe(messageType, data = null) {
+                const modal = document.getElementById('contact-modal');
+                const iframe = modal.querySelector('iframe');
+                
+                if (iframe && iframe.contentWindow) {
+                    iframe.contentWindow.postMessage({
+                        type: 'parentMessage',
+                        messageType: messageType,
+                        data: data,
+                        timestamp: new Date().toISOString()
+                    }, 'https://dealflow.tracerlabs.io');
+                }
             }
 
             initializeTestimonials() {

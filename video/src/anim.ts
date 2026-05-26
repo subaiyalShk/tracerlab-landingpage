@@ -24,3 +24,13 @@ export const useFade = (delay: number) => {
     extrapolateRight: "clamp",
   });
 };
+
+/** Count a number from 0 → `to` over `dur` frames starting at `delay` (eased). */
+export const useCountUp = (to: number, delay: number, dur = 34) => {
+  const f = useCurrentFrame();
+  return interpolate(f, [delay, delay + dur], [0, to], {
+    easing: Easing.out(Easing.cubic),
+    extrapolateLeft: "clamp",
+    extrapolateRight: "clamp",
+  });
+};

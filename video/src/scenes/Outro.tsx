@@ -1,6 +1,7 @@
 import { AbsoluteFill } from "remotion";
 import { C, display, textGrad } from "../theme";
 import { useFadeUp } from "../anim";
+import { AccentGlow } from "./parts";
 
 export const Outro: React.FC = () => {
   const line = useFadeUp(6);
@@ -8,6 +9,7 @@ export const Outro: React.FC = () => {
   const mark = useFadeUp(28);
   return (
     <AbsoluteFill style={{ justifyContent: "center", alignItems: "center", textAlign: "center" }}>
+      <AccentGlow color="rgba(245,179,1,0.18)" delay={2} style={{ top: "50%" }} />
       <div
         style={{
           fontFamily: display,

@@ -1,7 +1,7 @@
 import { interpolate, spring, useCurrentFrame, useVideoConfig } from "remotion";
 import { C } from "../theme";
 import { useFade } from "../anim";
-import { Scene, SceneTitle, Pill } from "./parts";
+import { Scene, SceneTitle, Pill, AccentGlow } from "./parts";
 
 // 4 deals are "signed", then 1 flips to CANCELED (~25%).
 const DEALS = [
@@ -18,6 +18,7 @@ export const SceneCancellations: React.FC = () => {
 
   return (
     <Scene>
+      <AccentGlow color="rgba(220,38,38,0.13)" delay={FLIP_AT} />
       <SceneTitle kicker="Pressure today, cancellations tomorrow" title="A deal pushed at the door doesn't stick." />
       <div style={{ display: "flex", gap: 28, marginTop: 50 }}>
         {DEALS.map((d, i) => {
@@ -42,6 +43,7 @@ export const SceneCancellations: React.FC = () => {
                 gap: 18,
                 opacity: appear,
                 transform: `scale(${interpolate(appear, [0, 1], [0.85, 1])})`,
+                boxShadow: canceled ? "0 20px 55px -18px rgba(220,38,38,0.5)" : "none",
               }}
             >
               <div
@@ -55,6 +57,10 @@ export const SceneCancellations: React.FC = () => {
                   fontWeight: 800,
                   color: "#fff",
                   background: canceled ? C.red : C.emerald,
+                  // CANCELED stamps in: slams from oversized + tilted, then settles.
+                  transform: canceled
+                    ? `scale(${interpolate(flip, [0, 1], [1.8, 1], { extrapolateRight: "clamp" })}) rotate(${interpolate(flip, [0, 1], [-16, 0], { extrapolateRight: "clamp" })}deg)`
+                    : "none",
                 }}
               >
                 {canceled ? "✕" : "✓"}

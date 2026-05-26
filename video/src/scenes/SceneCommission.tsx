@@ -1,7 +1,7 @@
 import { interpolate, spring, useCurrentFrame, useVideoConfig } from "remotion";
 import { C, emberGrad, goldGrad } from "../theme";
 import { useFade } from "../anim";
-import { Scene, SceneTitle, Pill } from "./parts";
+import { Scene, SceneTitle, Pill, AccentGlow } from "./parts";
 
 const BASE_H = 210;
 const COMM_H = 185;
@@ -21,6 +21,7 @@ export const SceneCommission: React.FC = () => {
 
   return (
     <Scene>
+      <AccentGlow color="rgba(249,115,22,0.22)" delay={8} />
       <SceneTitle kicker="The commission tax" title="Same panels. Different sales model." />
       <div style={{ display: "flex", alignItems: "flex-end", gap: 120, marginTop: 40 }}>
         <Deal

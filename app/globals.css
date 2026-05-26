@@ -1,26 +1,110 @@
-@import "tailwindcss";
+/* Tailwind v4 — theme + utilities only, NO preflight.
+   The rest of the page is still legacy static markup styled by public/style.css;
+   importing Tailwind's preflight reset would clobber it. We opt out by importing
+   the layers individually and omitting "tailwindcss/preflight.css".
 
-:root {
-  --background: #ffffff;
-  --foreground: #171717;
+   IMPORTANT: utilities are imported UNLAYERED (no `layer(utilities)`). The legacy
+   style.css is itself unlayered and includes `* { margin:0; padding:0 }`; unlayered
+   rules beat ANY cascade layer regardless of specificity, so layered utilities would
+   lose to that reset. Unlayered, our utility classes win on specificity instead, while
+   legacy id/class rules only ever match legacy elements (not the hero subtree). */
+@layer theme;
+@import "tailwindcss/theme.css" layer(theme);
+@import "tailwindcss/utilities.css";
+
+@theme {
+  /* Tracerlabs brand palette (lifted from public/style.css :root) */
+  --color-brand-pink: #e7028d;
+  --color-brand-blue: #056afc;
+  --color-brand-red: #e21949;
+  --color-ink: #ffffff;
+  --color-muted: #8a8a93;
+  --color-faint: #5a5a63;
+
+  /* Fonts already loaded by public/style.css (@font-face Duborics, @import Plus Jakarta) */
+  --font-display: "Duborics", "Plus Jakarta Sans", sans-serif;
+  --font-body: "Plus Jakarta Sans", system-ui, sans-serif;
+
+  /* Hero entrance + ambient motion */
+  --animate-rise: rise 0.9s cubic-bezier(0.16, 1, 0.3, 1) both;
+  --animate-drift: drift 18s ease-in-out infinite alternate;
+  --animate-drift-slow: drift 26s ease-in-out infinite alternate-reverse;
+  --animate-shimmer: shimmer 6s linear infinite;
 }
 
-@theme inline {
-  --color-background: var(--background);
-  --color-foreground: var(--foreground);
-  --font-sans: var(--font-geist-sans);
-  --font-mono: var(--font-geist-mono);
-}
-
-@media (prefers-color-scheme: dark) {
-  :root {
-    --background: #0a0a0a;
-    --foreground: #ededed;
+@keyframes rise {
+  from {
+    opacity: 0;
+    transform: translateY(22px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
   }
 }
 
-body {
-  background: var(--background);
-  color: var(--foreground);
-  font-family: Arial, Helvetica, sans-serif;
+@keyframes drift {
+  from {
+    transform: translate3d(0, 0, 0) scale(1);
+  }
+  to {
+    transform: translate3d(4%, -6%, 0) scale(1.12);
+  }
+}
+
+@keyframes shimmer {
+  to {
+    background-position: 200% center;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  [class*="animate-"] {
+    animation: none !important;
+  }
+}
+
+/* Scoped reset for the componentized hero (we run Tailwind without preflight, so
+   the hero needs border-box + zeroed default margins; legacy sections are untouched). */
+#tl-hero,
+#tl-hero *,
+#tl-hero *::before,
+#tl-hero *::after {
+  box-sizing: border-box;
+}
+#tl-hero h1,
+#tl-hero p,
+#tl-hero ul,
+#tl-hero figure {
+  margin: 0;
+}
+#tl-hero ul {
+  padding: 0;
+  list-style: none;
+}
+#tl-hero a {
+  text-decoration: none;
+}
+
+/* The legacy hero was position:fixed and #content cleared it with margin-top:100vh,
+   dropping the nav (absolute, top:-120px) into that gap. The hero is now a normal-flow
+   component, so that 100vh offset is dead space — neutralize it and let the nav be a
+   sticky top bar. (The nav is the next section slated for componentizing.) */
+#content {
+  margin-top: 0 !important;
+}
+#main-nav {
+  position: sticky !important;
+  top: 0 !important;
+}
+
+/* The legacy ScreenAnimation writes a fixed pixel width/height inline onto the
+   canvas. Force it to fill its framed parent instead (!important beats the inline
+   style) so the canvas tracks the responsive layout and the JS re-measures the
+   correct size on resize rather than locking onto a stale value. */
+#tl-hero #screen-canvas {
+  position: absolute;
+  inset: 0;
+  width: 100% !important;
+  height: 100% !important;
 }

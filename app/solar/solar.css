@@ -1,0 +1,79 @@
+/* Standalone funnel stylesheet — full Tailwind v4 (preflight INCLUDED). This route
+   never loads the legacy site CSS, so a clean reset is exactly what we want. */
+@import "tailwindcss";
+
+@theme {
+  /* Solar / energy palette — WARM LIGHT theme.
+     Semantic tokens (base=page, surface=card, cream=primary text, sand=secondary,
+     faint=tertiary, line=border) let components re-theme by value alone.
+     `solar` is a deeper gold so it stays legible as text/icons on a light bg, while
+     `amber`/`ember` stay bright for fills, buttons, and glows. */
+  --color-base: #faf5ec; /* warm cream page background */
+  --color-base-2: #f1e8d8; /* deeper warm — alt rows / insets */
+  --color-surface: #ffffff; /* cards */
+  --color-line: #ebe1d0; /* warm hairline border */
+  --color-solar: #b9790a; /* deep gold — readable accent text/icons */
+  --color-amber: #f59e0b; /* bright amber — fills */
+  --color-ember: #f97316; /* orange — fills / accents */
+  --color-ember-deep: #ea580c;
+  --color-cream: #211a11; /* PRIMARY TEXT (warm near-black). Name kept for component compat. */
+  --color-sand: #6b6053; /* secondary text */
+  --color-faint: #9a9083; /* tertiary text */
+
+  --font-display: var(--font-bricolage), "Plus Jakarta Sans", sans-serif;
+  --font-body: var(--font-jakarta), system-ui, sans-serif;
+
+  --animate-rise: rise 0.8s cubic-bezier(0.16, 1, 0.3, 1) both;
+  --animate-sun: sun 14s ease-in-out infinite alternate;
+  --animate-pulse-dot: pulse-dot 2.4s ease-in-out infinite;
+  --animate-feed: feed 0.6s cubic-bezier(0.16, 1, 0.3, 1) both;
+  --animate-grow: grow-up 1s cubic-bezier(0.16, 1, 0.3, 1) both;
+}
+
+@keyframes grow-up {
+  from { transform: scaleY(0); }
+  to { transform: scaleY(1); }
+}
+
+@keyframes rise {
+  from { opacity: 0; transform: translateY(20px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+@keyframes sun {
+  from { transform: translate3d(0, 0, 0) scale(1); opacity: 0.85; }
+  to { transform: translate3d(0, -4%, 0) scale(1.1); opacity: 1; }
+}
+@keyframes pulse-dot {
+  0%, 100% { opacity: 1; transform: scale(1); }
+  50% { opacity: 0.45; transform: scale(0.8); }
+}
+@keyframes feed {
+  from { opacity: 0; transform: translateY(10px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+/* Readable warm gradient for display headlines on the light background. */
+.text-gradient {
+  background-image: linear-gradient(100deg, #c2870a 0%, #ef6c12 55%, #ea580c 100%);
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+}
+
+/* This stylesheet only loads on /solar, so these globals are scoped to the funnel. */
+html {
+  scroll-behavior: smooth;
+}
+body {
+  background-color: var(--color-base);
+  color: var(--color-cream);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation: none !important;
+    scroll-behavior: auto !important;
+  }
+}

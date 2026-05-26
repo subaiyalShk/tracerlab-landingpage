@@ -727,6 +727,10 @@
             }
         }
 
+        // Standalone funnel pages (e.g. /solar) reuse this bundle but have none of
+        // these elements and their own styling — skip all legacy initialization there.
+        if (location.pathname.indexOf('/solar') !== 0) {
+
         // Initialize everything when DOM is ready
         onDomReady(() => new DevForgeSite());
 
@@ -780,3 +784,5 @@
                 }));
             });
         });
+
+        } // end /solar guard

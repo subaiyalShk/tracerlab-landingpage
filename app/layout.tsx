@@ -1,42 +1,15 @@
 import type { Metadata } from "next";
 import Script from "next/script";
 
-// NOTE: Tailwind's globals.css is intentionally NOT imported here. This page is a
-// pixel-identical lift-and-shift of the legacy static site, which ships its own CSS
-// (public/style.css + public/light-mode.css). Tailwind stays installed for future
-// landing pages and will be wired in when we componentize.
+// Root layout: only <html>/<body> and the site-wide beforeInteractive scripts
+// (Next requires beforeInteractive in the ROOT layout). Per-area styling/metadata
+// live in the route-group layouts: app/(tracerlabs)/ for the main site,
+// app/solar/ for the standalone funnel. No global CSS is imported here so that
+// each area stays fully isolated.
 
 export const metadata: Metadata = {
-  metadataBase: new URL("https://tracerlabs.io"),
-  title: "Tracerlabs | AI Development Agency",
-  description:
-    "Transform your business with AI-powered digital solutions. We build cutting-edge web and mobile applications that drive real business results.",
-  keywords: [
-    "AI development",
-    "web development",
-    "mobile apps",
-    "business automation",
-    "digital transformation",
-  ],
-  icons: {
-    icon: "/assets/favicon.ico",
-    apple: "/assets/apple-touch-icon.png",
-  },
-  openGraph: {
-    type: "website",
-    url: "https://tracerlabs.io",
-    title: "Tracerlabs | AI Development Agency",
-    description:
-      "Transform your business with AI-powered digital solutions. We build cutting-edge web and mobile applications that drive real business results.",
-    images: ["https://tracerlabs.ai/assets/Tracer.png"],
-  },
-  twitter: {
-    card: "summary_large_image",
-    title: "Tracerlabs | AI Development Agency",
-    description:
-      "Transform your business with AI-powered digital solutions. We build cutting-edge web and mobile applications that drive real business results.",
-    images: ["https://tracerlabs.ai/assets/Tracer.png"],
-  },
+  title: "Tracerlabs",
+  description: "AI products, web & mobile apps, and growth systems by Tracerlabs.",
 };
 
 export default function RootLayout({
@@ -47,16 +20,14 @@ export default function RootLayout({
   return (
     <html lang="en">
       <body>
-        {/* Stylesheet bootstrap. These are injected as plain (non-React-managed) <link>
-            elements rather than rendered by React, because the legacy theme toggle swaps
-            #theme-stylesheet's href between /style.css and /light-mode.css — and a React
-            `precedence` stylesheet refuses to release the old sheet on an href change, so
-            both themes would stack. Running beforeInteractive puts the CSS in <head>
-            before first paint (no FOUC) and before the legacy app measures the hero
-            canvas (which needs real layout to size itself). The theme is read from
-            localStorage up front so the correct theme paints immediately. */}
+        {/* Legacy stylesheet bootstrap for the main Tracerlabs site. Injected as plain
+            (non-React-managed) <link>s so the theme toggle can swap #theme-stylesheet's
+            href cleanly. Gated by pathname so standalone pages (e.g. /solar) never load
+            the legacy CSS. Runs beforeInteractive: CSS in <head> before first paint and
+            before the hero canvas measures its layout. */}
         <Script id="css-bootstrap" strategy="beforeInteractive">
           {`(function () {
+  if (location.pathname.indexOf('/solar') === 0) return;
   function css(href, id) { var l = document.createElement('link'); l.rel = 'stylesheet'; l.href = href; if (id) l.id = id; document.head.appendChild(l); }
   css('https://cdnjs.cloudflare.com/ajax/libs/aos/2.3.4/aos.css');
   css(localStorage.getItem('theme') === 'light' ? '/light-mode.css' : '/style.css', 'theme-stylesheet');
@@ -65,8 +36,7 @@ export default function RootLayout({
 
         {children}
 
-        {/* AOS must be defined before the legacy app boots (it calls AOS.init()).
-            beforeInteractive scripts execute in order, after css-bootstrap above. */}
+        {/* AOS + the legacy app. app.js self-gates its initialization off /solar. */}
         <Script
           src="https://cdnjs.cloudflare.com/ajax/libs/aos/2.3.4/aos.js"
           strategy="beforeInteractive"

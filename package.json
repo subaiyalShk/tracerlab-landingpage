@@ -11,9 +11,12 @@
   "dependencies": {
     "next": "16.2.6",
     "react": "19.2.4",
-    "react-dom": "19.2.4"
+    "react-dom": "19.2.4",
+    "retell-client-js-sdk": "^2.0.8",
+    "retell-sdk": "^5.36.0"
   },
   "devDependencies": {
+    "@fal-ai/client": "^1.10.1",
     "@tailwindcss/postcss": "^4",
     "@types/node": "^20",
     "@types/react": "^19",

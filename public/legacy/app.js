@@ -437,6 +437,9 @@
 
             initializeTestimonials() {
                 const slides = document.querySelectorAll('.testimonial-slide');
+                // Testimonials section was componentized away (React CTA). No slides → no-op
+                // so the 5s auto-advance interval doesn't run modulo-zero and throw.
+                if (!slides.length) return;
                 const dots = document.querySelectorAll('.nav-dot');
                 let currentSlide = 0;
 

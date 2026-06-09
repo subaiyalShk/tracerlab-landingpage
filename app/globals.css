@@ -30,6 +30,10 @@
   --animate-drift: drift 18s ease-in-out infinite alternate;
   --animate-drift-slow: drift 26s ease-in-out infinite alternate-reverse;
   --animate-shimmer: shimmer 6s linear infinite;
+
+  /* Voice widget orb (CTA). animate-* prefix so the reduced-motion rule disables them. */
+  --animate-orb-pulse: orbPulse 2.4s ease-in-out infinite;
+  --animate-orb-ripple: orbRipple 1.6s ease-out infinite;
 }
 
 @keyframes rise {
@@ -58,32 +62,127 @@
   }
 }
 
+@keyframes orbPulse {
+  0%, 100% {
+    transform: scale(1);
+    box-shadow: 0 10px 40px -8px rgba(231, 2, 141, 0.7);
+  }
+  50% {
+    transform: scale(1.06);
+    box-shadow: 0 14px 52px -6px rgba(231, 2, 141, 0.85);
+  }
+}
+
+@keyframes orbRipple {
+  from {
+    transform: scale(0.9);
+    opacity: 0.7;
+  }
+  to {
+    transform: scale(1.5);
+    opacity: 0;
+  }
+}
+
 @media (prefers-reduced-motion: reduce) {
   [class*="animate-"] {
     animation: none !important;
   }
 }
 
-/* Scoped reset for the componentized hero (we run Tailwind without preflight, so
-   the hero needs border-box + zeroed default margins; legacy sections are untouched). */
+/* Scoped reset for the componentized hero + services (we run Tailwind without preflight,
+   so they need border-box + zeroed default margins; legacy sections are untouched).
+
+   IMPORTANT: the margin/padding/list/underline resets are wrapped in :where() so they
+   carry ZERO specificity. Otherwise `#tl-hero h1` (id+element = 0,1,0,1) would outrank
+   Tailwind's `mt-*` margin utilities (0,0,1,0) and silently kill every spacing utility on
+   h1/h2/h3/p/ul/li — collapsing the layout so elements touch. As a zero-specificity base,
+   these only apply when no utility overrides them, which is exactly what a reset should do.
+   (box-sizing keeps id specificity — nothing competes with it.) */
 #tl-hero,
 #tl-hero *,
 #tl-hero *::before,
-#tl-hero *::after {
+#tl-hero *::after,
+#tl-services,
+#tl-services *,
+#tl-services *::before,
+#tl-services *::after,
+#tl-projects,
+#tl-projects *,
+#tl-projects *::before,
+#tl-projects *::after,
+#tl-cta,
+#tl-cta *,
+#tl-cta *::before,
+#tl-cta *::after {
   box-sizing: border-box;
 }
-#tl-hero h1,
-#tl-hero p,
-#tl-hero ul,
-#tl-hero figure {
+:where(#tl-hero, #tl-services, #tl-projects, #tl-cta) :where(h1, h2, h3, h4, p, ul, ol, li, figure) {
   margin: 0;
 }
-#tl-hero ul {
+:where(#tl-hero, #tl-services, #tl-projects, #tl-cta) :where(ul, ol) {
   padding: 0;
   list-style: none;
 }
-#tl-hero a {
+:where(#tl-hero, #tl-services, #tl-projects, #tl-cta) :where(a) {
   text-decoration: none;
+}
+/* Keyboard focus visibility for our componentized links/buttons (we run without preflight,
+   so we provide an explicit brand focus ring rather than rely on UA defaults). */
+#tl-hero a:focus-visible,
+#tl-services a:focus-visible,
+#tl-projects a:focus-visible,
+#tl-cta a:focus-visible,
+#tl-cta button:focus-visible {
+  outline: 2px solid var(--color-brand-pink);
+  outline-offset: 3px;
+  border-radius: 6px;
+}
+
+/* Brand-font isolation. The legacy style.css has a global `* { font-family: 'Inter' }`
+   reset that applies DIRECTLY to every element (specificity 0,0,0,0) — overriding the
+   brand font our components inherit. Inside our React subtrees we neutralize it: the
+   section roots carry the body font, descendants inherit (so heading <span>s pick up
+   Duborics from their <h1>/<h2>, and <p>/badges pick up Plus Jakarta from the root),
+   and the font utilities are re-scoped under the ids so they outrank `#tl-* *`. */
+#tl-hero,
+#tl-services,
+#tl-projects,
+#tl-cta {
+  font-family: var(--font-body);
+}
+#tl-hero *,
+#tl-services *,
+#tl-projects *,
+#tl-cta * {
+  font-family: inherit;
+}
+#tl-hero .font-display,
+#tl-services .font-display,
+#tl-projects .font-display,
+#tl-cta .font-display {
+  font-family: var(--font-display);
+}
+#tl-hero .font-body,
+#tl-services .font-body,
+#tl-projects .font-body,
+#tl-cta .font-body {
+  font-family: var(--font-body);
+}
+
+/* The #contact scroll-anchor lives inside #tl-cta. The legacy style.css `#contact` rule
+   (padding:100px 0; blurred background) would otherwise apply to it — neutralize with a
+   higher-specificity selector (#tl-cta #contact = 0,2,0,0 beats #contact = 0,1,0,0) and
+   give it scroll-margin so #contact links clear the sticky nav. */
+#tl-cta #contact {
+  display: block;
+  padding: 0;
+  margin: 0;
+  background: none;
+  backdrop-filter: none;
+  -webkit-backdrop-filter: none;
+  box-shadow: none;
+  scroll-margin-top: 6rem;
 }
 
 /* The legacy hero was position:fixed and #content cleared it with margin-top:100vh,

@@ -9,7 +9,7 @@ const AVATARS = [
   "https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?w=64&h=64&fit=crop&crop=face&auto=format",
 ];
 
-const CAPABILITIES = ["Voice agents", "Web & mobile apps", "Sales automation"];
+const CAPABILITIES = ["Voice agents", "Web & mobile apps", "AI GTM"];
 
 // SVG grain, base64-free data URI — adds film-grain texture over the gradients.
 const GRAIN =
@@ -86,7 +86,7 @@ export default function Hero() {
 
           {/* Headline */}
           <h1
-            className="font-display animate-rise mt-7 text-[clamp(2.6rem,6vw,4.7rem)] font-normal uppercase leading-[0.96] tracking-tight"
+            className="font-display animate-rise mt-7 text-[clamp(1.9rem,4.4vw,3.5rem)] font-normal uppercase leading-[1.04] tracking-tight"
             style={{ animationDelay: "0.12s" }}
           >
             <span className="block">We build the AI</span>

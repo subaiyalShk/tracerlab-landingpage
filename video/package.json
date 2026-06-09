@@ -5,7 +5,8 @@
   "description": "Remotion compositions for the Tracerlabs solar landing page",
   "scripts": {
     "studio": "remotion studio",
-    "render": "remotion render Problem out/problem.mp4"
+    "render": "remotion render Problem out/problem.mp4",
+    "render:mobile": "remotion render ProblemMobile out/problem-mobile.mp4"
   },
   "dependencies": {
     "@remotion/cli": "4.0.380",

@@ -1,4 +1,10 @@
-import { Easing, interpolate, useCurrentFrame } from "remotion";
+import { Easing, interpolate, useCurrentFrame, useVideoConfig } from "remotion";
+
+/** True when the composition is portrait (mobile 9:16) vs landscape (16:9). */
+export const usePortrait = () => {
+  const { width, height } = useVideoConfig();
+  return height > width;
+};
 
 /** Fade + slide up, starting at `delay` frames (local to the current Sequence). */
 export const useFadeUp = (delay: number, dist = 22) => {

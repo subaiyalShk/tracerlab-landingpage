@@ -1,6 +1,6 @@
 import { interpolate, spring, useCurrentFrame, useVideoConfig } from "remotion";
 import { C } from "../theme";
-import { useFade } from "../anim";
+import { useFade, usePortrait } from "../anim";
 import { Scene, SceneTitle, Pill, AccentGlow } from "./parts";
 
 // 4 deals are "signed", then 1 flips to CANCELED (~25%).
@@ -15,12 +15,22 @@ const FLIP_AT = 64;
 export const SceneCancellations: React.FC = () => {
   const frame = useCurrentFrame();
   const { fps } = useVideoConfig();
+  const portrait = usePortrait();
 
   return (
     <Scene>
       <AccentGlow color="rgba(220,38,38,0.13)" delay={FLIP_AT} />
       <SceneTitle kicker="Pressure today, cancellations tomorrow" title="A deal pushed at the door doesn't stick." />
-      <div style={{ display: "flex", gap: 28, marginTop: 50 }}>
+      <div
+        style={{
+          display: "flex",
+          flexWrap: portrait ? "wrap" : "nowrap",
+          justifyContent: "center",
+          gap: 28,
+          marginTop: portrait ? 40 : 50,
+          width: portrait ? 528 : "auto",
+        }}
+      >
         {DEALS.map((d, i) => {
           const appear = spring({ frame, fps, delay: 16 + i * 7, config: { damping: 200 } });
           const flip = d.cancels

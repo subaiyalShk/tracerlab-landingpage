@@ -1,6 +1,6 @@
 import { useCurrentFrame } from "remotion";
 import { C } from "../theme";
-import { useFadeUp } from "../anim";
+import { useFadeUp, usePortrait } from "../anim";
 import { Scene, SceneTitle, Pill, AccentGlow } from "./parts";
 
 const QUERY = "solar installer near me";
@@ -22,16 +22,25 @@ export const SceneInvisible: React.FC = () => {
   const resultsStart = TYPE_START + QUERY.length * TYPE_SPEED + 6;
   // gentle pulsing glow on the winning result
   const winnerPulse = frame > resultsStart + 8 ? 0.5 + 0.5 * Math.sin((frame - resultsStart) / 7) : 0;
+  const portrait = usePortrait();
 
   return (
     <Scene>
       <AccentGlow color="rgba(245,179,1,0.18)" delay={10} />
       <SceneTitle kicker="Good homeowners never hear from you" title="Ready buyers are searching — for someone else." />
-      <div style={{ display: "flex", alignItems: "center", gap: 56, marginTop: 60 }}>
+      <div
+        style={{
+          display: "flex",
+          flexDirection: portrait ? "column" : "row",
+          alignItems: "center",
+          gap: portrait ? 40 : 56,
+          marginTop: portrait ? 40 : 60,
+        }}
+      >
         {/* Search card */}
         <div
           style={{
-            width: 720,
+            width: portrait ? 880 : 720,
             borderRadius: 24,
             border: `1px solid ${C.line}`,
             background: C.surface,

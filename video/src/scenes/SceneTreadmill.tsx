@@ -1,6 +1,6 @@
 import { spring, useCurrentFrame, useVideoConfig } from "remotion";
 import { C, emberGrad } from "../theme";
-import { useCountUp, useFade, useFadeUp } from "../anim";
+import { useCountUp, useFade, useFadeUp, usePortrait } from "../anim";
 import { Scene, SceneTitle, Pill, AccentGlow } from "./parts";
 
 const COSTS = [
@@ -11,22 +11,31 @@ const COSTS = [
 ];
 
 const CHAIN = [
-  "You hire, house & hype them up",
-  "They learn your offers & playbook",
-  "The moment they've got it — they quit",
+  "You constantly onboard new sales reps",
+  "They ramp up on your offers & playbook",
+  "The moment they start performing…",
 ];
 
 export const SceneTreadmill: React.FC = () => {
   const frame = useCurrentFrame();
   const { fps } = useVideoConfig();
+  const portrait = usePortrait();
   const burn = Math.round(useCountUp(30, 60, 30));
   const compPulse = frame > 88 ? 1 + 0.08 * Math.sin((frame - 88) / 5) : 1;
 
   return (
     <Scene>
       <AccentGlow color="rgba(249,115,22,0.20)" delay={10} />
-      <SceneTitle kicker="The retention treadmill" title="You fund them, train them — then they compete." />
-      <div style={{ display: "flex", gap: 70, marginTop: 60, width: 1500 }}>
+      <SceneTitle kicker="The retention treadmill" title="You onboard them, ramp them up — then they leave." />
+      <div
+        style={{
+          display: "flex",
+          flexDirection: portrait ? "column" : "row",
+          gap: portrait ? 36 : 70,
+          marginTop: portrait ? 40 : 60,
+          width: portrait ? 940 : 1500,
+        }}
+      >
         {/* Cash burn */}
         <div style={{ flex: 1, border: `1px solid ${C.line}`, borderRadius: 20, background: "rgba(255,255,255,0.6)", padding: 34 }}>
           <div style={{ fontSize: 22, fontWeight: 600, color: C.sand }}>What it costs to keep reps</div>
@@ -83,12 +92,12 @@ export const SceneTreadmill: React.FC = () => {
               >
                 4
               </span>
-              <span style={{ fontSize: 24, fontWeight: 700, color: C.ink }}>They open a competing solar company.</span>
+              <span style={{ fontSize: 24, fontWeight: 700, color: C.ink }}>They leave for a different opportunity.</span>
             </div>
           </div>
           <div style={{ marginTop: 30, ...useFadeUp(92) }}>
             <Pill bg="rgba(249,115,22,0.12)" color={C.emberDeep} style={{ fontSize: 20 }}>
-              You funded — and trained — your own competition.
+              You fund every ramp-up — and the payoff walks out the door.
             </Pill>
           </div>
         </div>

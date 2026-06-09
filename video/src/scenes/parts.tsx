@@ -1,7 +1,7 @@
 import { AbsoluteFill, Easing, interpolate, useCurrentFrame } from "remotion";
 import type { ReactNode } from "react";
 import { C, display } from "../theme";
-import { useFadeUp } from "../anim";
+import { useFadeUp, usePortrait } from "../anim";
 
 /** Fades a whole scene in at its start and out at its end (to the cream background),
     with a subtle vertical drift. Used between back-to-back scenes so two scenes are
@@ -24,32 +24,44 @@ export const SceneFade: React.FC<{ dur: number; children: ReactNode }> = ({ dur,
 };
 
 /** Centered scene wrapper. Transparent so the shared background shows through. */
-export const Scene: React.FC<{ children: ReactNode }> = ({ children }) => (
-  <AbsoluteFill
-    style={{
-      justifyContent: "center",
-      alignItems: "center",
-      padding: "120px 110px 90px",
-    }}
-  >
-    {children}
-  </AbsoluteFill>
-);
+export const Scene: React.FC<{ children: ReactNode }> = ({ children }) => {
+  const portrait = usePortrait();
+  return (
+    <AbsoluteFill
+      style={{
+        justifyContent: "center",
+        alignItems: "center",
+        padding: portrait ? "200px 56px 140px" : "120px 110px 90px",
+      }}
+    >
+      {children}
+    </AbsoluteFill>
+  );
+};
 
 /** Scene kicker + heading near the top. */
 export const SceneTitle: React.FC<{ kicker: string; title: string }> = ({
   kicker,
   title,
 }) => {
+  const portrait = usePortrait();
   const k = useFadeUp(2);
   const t = useFadeUp(8);
   return (
-    <div style={{ position: "absolute", top: 96, width: "100%", textAlign: "center" }}>
+    <div
+      style={{
+        position: "absolute",
+        top: portrait ? 150 : 96,
+        width: "100%",
+        textAlign: "center",
+        padding: portrait ? "0 56px" : 0,
+      }}
+    >
       <div
         style={{
-          fontSize: 22,
+          fontSize: portrait ? 28 : 22,
           fontWeight: 700,
-          letterSpacing: 6,
+          letterSpacing: portrait ? 4 : 6,
           textTransform: "uppercase",
           color: C.solar,
           ...k,
@@ -59,10 +71,11 @@ export const SceneTitle: React.FC<{ kicker: string; title: string }> = ({
       </div>
       <div
         style={{
-          marginTop: 12,
+          marginTop: portrait ? 18 : 12,
           fontFamily: display,
           fontWeight: 600,
-          fontSize: 58,
+          fontSize: portrait ? 56 : 58,
+          lineHeight: portrait ? 1.08 : 1,
           letterSpacing: -1.5,
           color: C.ink,
           ...t,

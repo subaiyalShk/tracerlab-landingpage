@@ -16,7 +16,7 @@ export default function Nav() {
       <div className="mx-auto flex h-16 w-full max-w-[1280px] items-center justify-between gap-4 px-6 sm:px-10">
         <a href="#" className="flex items-center transition-opacity hover:opacity-80" aria-label="Tracerlabs home">
           {/* eslint-disable-next-line @next/next/no-img-element */}
-          <img src="/assets/logo-dark.png" alt="Tracerlabs" className="h-12 w-auto" />
+          <img src="/assets/logo-dark.png" alt="Tracerlabs" className="h-16 w-auto" />
         </a>
 
         <nav className="hidden items-center gap-9 md:flex">

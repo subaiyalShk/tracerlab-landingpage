@@ -30,7 +30,9 @@ export default function RootLayout({
   if (location.pathname.indexOf('/solar') === 0) return;
   function css(href, id) { var l = document.createElement('link'); l.rel = 'stylesheet'; l.href = href; if (id) l.id = id; document.head.appendChild(l); }
   css('https://cdnjs.cloudflare.com/ajax/libs/aos/2.3.4/aos.css');
-  css(localStorage.getItem('theme') === 'light' ? '/light-mode.css' : '/style.css', 'theme-stylesheet');
+  css('/style.css', 'theme-stylesheet');
+  var t; try { t = localStorage.getItem('theme'); } catch (e) {}
+  document.documentElement.dataset.theme = t === 'light' ? 'light' : 'dark';
 })();`}
         </Script>
 

@@ -157,8 +157,8 @@ const FRAME_CLIP =
 function Frame({ media }: { media: Media }) {
   return (
     <div
-      className="relative aspect-[9/16] w-full shadow-[0_40px_120px_-40px_rgba(0,0,0,0.9)]"
-      style={{ clipPath: FRAME_CLIP, backgroundColor: GLASS_BORDER }}
+      className="relative aspect-[9/16] w-full"
+      style={{ clipPath: FRAME_CLIP, backgroundColor: "rgba(255,255,255,0.10)", filter: "var(--tl-frame-shadow, none)" }}
     >
       <div
         className="absolute inset-px overflow-hidden"
@@ -190,7 +190,7 @@ function Frame({ media }: { media: Media }) {
 
 export default function Projects() {
   return (
-    <section id="tl-projects" className="font-body relative isolate w-full overflow-hidden bg-black text-ink">
+    <section id="tl-projects" className="font-body relative isolate w-full overflow-hidden bg-page text-ink">
       {/* ambient brand glow */}
       <div
         aria-hidden
@@ -206,7 +206,7 @@ export default function Projects() {
             Work we&apos;ve{" "}
             <span className="bg-clip-text text-transparent" style={{ backgroundImage: "linear-gradient(100deg,#e7028d,#056afc)" }}>shipped</span>
           </h2>
-          <p className="animate-rise mt-5 max-w-[40rem] text-[1.02rem] leading-relaxed text-white/55" style={{ animationDelay: "0.12s" }}>
+          <p className="animate-rise mt-5 max-w-[40rem] text-[1.02rem] leading-relaxed text-ink/55" style={{ animationDelay: "0.12s" }}>
             Real products in production — voice agents, field-sales platforms, operations software, and AI video. A sample of what we&apos;ve built for the businesses we work with.
           </p>
         </div>
@@ -237,14 +237,14 @@ export default function Projects() {
                   className="w-full min-w-0 lg:flex-1"
                 >
                   <div className="flex h-full flex-col justify-center p-7 sm:p-10">
-                    <div className="text-[0.72rem] font-semibold uppercase tracking-[0.2em] text-white/40">{p.client}</div>
+                    <div className="text-[0.72rem] font-semibold uppercase tracking-[0.2em] text-ink/40">{p.client}</div>
                     <h3 className="font-display mt-3 text-[clamp(1.4rem,2.6vw,1.9rem)] font-normal leading-tight tracking-tight">{p.title}</h3>
-                    <p className="mt-4 text-[0.98rem] leading-relaxed text-white/55 lg:max-w-[42rem]">{p.blurb}</p>
+                    <p className="mt-4 text-[0.98rem] leading-relaxed text-ink/55 lg:max-w-[42rem]">{p.blurb}</p>
 
                     {/* metric chips — neutral beveled glass (restraint: accent lives at focal points, not here) */}
                     <ul className="mt-6 flex flex-wrap gap-2">
                       {p.metrics.map((m) => (
-                        <li key={m} className="bv-6 inline-flex items-center bg-white/[0.06] px-3 py-1 text-[0.78rem] font-medium text-white/80">
+                        <li key={m} className="bv-6 inline-flex items-center bg-ink/[0.06] px-3 py-1 text-[0.78rem] font-medium text-ink/80">
                           {m}
                         </li>
                       ))}
@@ -253,7 +253,7 @@ export default function Projects() {
                     {/* tech badges */}
                     <ul className="mt-4 flex flex-wrap gap-2">
                       {p.tech.map((t) => (
-                        <li key={t} className="bv-6 bg-white/[0.045] px-3 py-1 text-[0.72rem] font-medium tracking-wide text-white/50">{t}</li>
+                        <li key={t} className="bv-6 bg-ink/[0.045] px-3 py-1 text-[0.72rem] font-medium tracking-wide text-ink/50">{t}</li>
                       ))}
                     </ul>
 
@@ -261,7 +261,7 @@ export default function Projects() {
                     <a
                       href={p.link.href}
                       {...(p.link.external ? { target: "_blank", rel: "noopener noreferrer" } : {})}
-                      className="group/lk mt-7 inline-flex items-center gap-1.5 text-[0.88rem] font-semibold text-white/70 transition-colors hover:text-white"
+                      className="group/lk mt-7 inline-flex items-center gap-1.5 text-[0.88rem] font-semibold text-ink/70 transition-colors hover:text-ink"
                     >
                       {p.link.label}
                       <Arrow />
@@ -274,9 +274,9 @@ export default function Projects() {
         </div>
 
         {/* section CTA → conversion */}
-        <p className="animate-rise mt-16 text-[0.98rem] text-white/55">
+        <p className="animate-rise mt-16 text-[0.98rem] text-ink/55">
           Have something like this in mind?{" "}
-          <a href="#contact" className="group/lk inline-flex items-center gap-1.5 font-semibold text-white/80 transition-colors hover:text-white">
+          <a href="#contact" className="group/lk inline-flex items-center gap-1.5 font-semibold text-ink/80 transition-colors hover:text-ink">
             Tell us what you&apos;re building
             <Arrow />
           </a>

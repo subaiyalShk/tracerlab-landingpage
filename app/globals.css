@@ -25,7 +25,6 @@ a {
   --color-brand-pink: #e7028d;
   --color-brand-blue: #056afc;
   --color-brand-red: #e21949;
-  --color-ink: #ffffff;
   --color-muted: #8a8a93;
   --color-faint: #5a5a63;
 
@@ -43,6 +42,77 @@ a {
   --animate-orb-pulse: orbPulse 2.4s ease-in-out infinite;
   --animate-orb-ripple: orbRipple 1.6s ease-out infinite;
 }
+
+/* Theme-aware semantic colors. @theme inline (NOT plain @theme) so utilities emit the raw
+   var() — e.g. text-ink/55 → color-mix(in oklab, var(--tl-ink) 55%, transparent) — which
+   re-resolves at runtime when --tl-ink flips on <html data-theme>. Verified vs tailwindcss@4.3.0.
+   The --tl-* values live in the plain :root rules below (they must NOT go inside @theme). */
+@theme inline {
+  --color-ink: var(--tl-ink);
+  --color-page: var(--tl-page);
+  --color-surface: var(--tl-surface);
+}
+
+/* ── Theme token values ──────────────────────────────────────────────────────
+   Dark is the default (no attribute); light is opt-in via data-theme="light" on <html>,
+   set before first paint by the css-bootstrap script in app/layout.tsx. */
+:root {
+  color-scheme: dark;
+
+  /* core */
+  --tl-ink: #ffffff;
+  --tl-page: #000000;
+  --tl-surface: #0b0b0e;
+
+  /* shared card recipe (Bevel.tsx GLASS_BG/GLASS_BORDER + defaults point here) */
+  --tl-card-bg: linear-gradient(160deg, rgba(255,255,255,0.045) 0%, rgba(255,255,255,0.01) 35%, rgba(255,255,255,0) 70%), rgba(7,8,10,0.82);
+  --tl-card-border: rgba(255,255,255,0.10);
+  --tl-card-shadow: none;
+
+  /* decorative (per-theme) */
+  --tl-dot-grid: rgba(255,255,255,0.06);
+  --tl-hero-vignette: rgba(0,0,0,0.85);
+  --tl-frame-shadow: none;
+  --tl-btn-ghost-border: rgba(255,255,255,0.22);
+  --tl-btn-ghost-fill: #0a0a0c;
+  --tl-logo-filter: grayscale(1) brightness(1.6) contrast(0.9);
+}
+
+html[data-theme="light"] {
+  color-scheme: light;
+
+  /* core */
+  --tl-ink: #0b0d12;
+  --tl-page: #eef0f4;
+  --tl-surface: #ffffff;
+
+  /* cards become solid white + a soft drop-shadow (applied via filter: drop-shadow in
+     Bevel — box-shadow is clipped by the bevel clip-path, drop-shadow follows the shape) */
+  --tl-card-bg: #ffffff;
+  --tl-card-border: rgba(11,13,18,0.08);
+  --tl-card-shadow: drop-shadow(0 1px 2px rgba(11,13,18,0.05)) drop-shadow(0 12px 24px rgba(11,13,18,0.10));
+
+  /* decorative */
+  --tl-dot-grid: rgba(11,13,18,0.06);
+  --tl-hero-vignette: rgba(15,23,42,0.08);
+  --tl-frame-shadow: drop-shadow(0 24px 40px rgba(11,13,18,0.22));
+  --tl-btn-ghost-border: rgba(11,13,18,0.22);
+  --tl-btn-ghost-fill: #ffffff;
+  --tl-logo-filter: grayscale(1) invert(1);
+}
+
+/* Own the page background here so it flips with the theme. Beats legacy public/style.css
+   `body{background:#000}` — `html body` = (0,0,0,2) > `body` = (0,0,0,1); there is zero
+   !important in style.css. Keep this rule UNLAYERED (never inside @layer) so it stays in
+   the same tier as the legacy sheet and wins on specificity regardless of load order. */
+html body {
+  background-color: var(--tl-page, #000);
+}
+
+/* Per-theme logo swap. Nav renders both <img>s tagged data-logo; CSS shows the right one
+   (no client JS, no flash). */
+html[data-theme="light"] [data-logo="dark"] { display: none; }
+html:not([data-theme="light"]) [data-logo="light"] { display: none; }
 
 @keyframes rise {
   from {

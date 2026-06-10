@@ -14,10 +14,10 @@ const LOGOS = [
 
 export default function TechBar() {
   return (
-    <div className="relative w-full overflow-hidden border-y border-white/[0.07] bg-black py-7">
+    <div className="relative w-full overflow-hidden border-y border-ink/[0.07] bg-page py-7">
       {/* edge fades */}
-      <div className="pointer-events-none absolute inset-y-0 left-0 z-10 w-20 bg-gradient-to-r from-black to-transparent sm:w-28" />
-      <div className="pointer-events-none absolute inset-y-0 right-0 z-10 w-20 bg-gradient-to-l from-black to-transparent sm:w-28" />
+      <div className="pointer-events-none absolute inset-y-0 left-0 z-10 w-20 bg-gradient-to-r from-page to-transparent sm:w-28" />
+      <div className="pointer-events-none absolute inset-y-0 right-0 z-10 w-20 bg-gradient-to-l from-page to-transparent sm:w-28" />
       <div className="animate-marquee flex w-max items-center gap-14 sm:gap-20">
         {[...LOGOS, ...LOGOS].map((l, i) => (
           // eslint-disable-next-line @next/next/no-img-element
@@ -27,7 +27,7 @@ export default function TechBar() {
             alt={l.alt}
             loading="lazy"
             className="h-6 w-auto shrink-0 opacity-40 transition-opacity duration-300 hover:opacity-70 sm:h-7"
-            style={{ filter: "grayscale(1) brightness(1.6) contrast(0.9)" }}
+            style={{ filter: "var(--tl-logo-filter)" }}
           />
         ))}
       </div>

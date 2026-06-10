@@ -1,6 +1,7 @@
 // Sticky top nav — replaces the legacy #main-nav (rounded logo pill + emoji toggle + pink
 // hovers + raw #cta button). Scoped #tl-nav so the brand fonts resolve (globals font isolation).
 import Button from "./Button";
+import { GLASS_BORDER, GLASS_BG } from "./Bevel";
 
 const LINKS = [
   { label: "Services", href: "#tl-services" },
@@ -11,7 +12,8 @@ export default function Nav() {
   return (
     <header
       id="tl-nav"
-      className="font-body sticky top-0 z-50 w-full border-b border-white/[0.08] bg-black/70 backdrop-blur-md"
+      className="font-body sticky top-0 z-50 w-full border-b backdrop-blur-md"
+      style={{ background: GLASS_BG, borderColor: GLASS_BORDER }}
     >
       <div className="mx-auto flex h-20 w-full max-w-[1280px] items-center justify-between gap-4 px-6 sm:px-10">
         <a href="#" className="flex items-center transition-opacity hover:opacity-80" aria-label="Tracerlabs home">

@@ -19,24 +19,26 @@ export default function Nav() {
               overflow-hidden box so the brand mark fills the height instead of being shrunk by
               the padding. */}
           <span className="flex h-16 shrink-0 items-center overflow-hidden">
+            {/* The pill mark sits above the square image's center, so shift the oversized image
+                down a touch so the crop shows the full pill centered (not clipped at the top). */}
             {/* eslint-disable-next-line @next/next/no-img-element */}
-            <img src="/assets/logo-dark.png" alt="Tracerlabs" className="h-[160px] w-auto max-w-none" />
+            <img src="/assets/logo-dark.png" alt="Tracerlabs" className="h-[150px] w-auto max-w-none translate-y-3" />
           </span>
         </a>
 
-        <nav className="hidden items-center gap-9 md:flex">
+        <nav className="hidden items-center gap-10 md:flex">
           {LINKS.map((l) => (
             <a
               key={l.label}
               href={l.href}
-              className="font-display text-[0.82rem] uppercase tracking-[0.06em] text-white/60 transition-colors hover:text-white"
+              className="font-display text-[0.95rem] uppercase tracking-[0.06em] text-white/70 transition-colors hover:text-white"
             >
               {l.label}
             </a>
           ))}
         </nav>
 
-        <Button href="#contact" variant="primary" size="sm">
+        <Button href="#contact" variant="primary">
           Contact
         </Button>
       </div>

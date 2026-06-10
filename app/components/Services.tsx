@@ -80,7 +80,7 @@ const CUSTOM: Service = {
   title: "Custom AI Products & Agents",
   blurb: "Bespoke AI agents and internal tools, tailored to exactly how your business runs.",
   badges: ["OpenAI", "Anthropic", "Vercel"],
-  cta: { label: "See the work", href: "#projects" },
+  cta: { label: "Explore AI agents", href: "/agents" },
   icon: ChipIcon,
 };
 

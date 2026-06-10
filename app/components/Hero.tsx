@@ -22,7 +22,7 @@ export default function Hero() {
   return (
     <section
       id="tl-hero"
-      className="font-body relative isolate w-full overflow-hidden bg-black text-ink"
+      className="font-body relative isolate w-full overflow-hidden bg-page text-ink"
     >
       {/* ── Ambient background layers ───────────────────────────────── */}
       {/* Drifting brand auroras */}
@@ -48,7 +48,7 @@ export default function Hero() {
         className="pointer-events-none absolute inset-0 -z-10 opacity-[0.5]"
         style={{
           backgroundImage:
-            "radial-gradient(circle, rgba(255,255,255,0.06) 1px, transparent 1px)",
+            "radial-gradient(circle, var(--tl-dot-grid) 1px, transparent 1px)",
           backgroundSize: "22px 22px",
           maskImage:
             "radial-gradient(ellipse 90% 70% at 50% 35%, #000 30%, transparent 75%)",
@@ -65,7 +65,7 @@ export default function Hero() {
         className="pointer-events-none absolute inset-0 -z-10"
         style={{
           background:
-            "radial-gradient(120% 80% at 50% 0%, transparent 55%, rgba(0,0,0,0.85) 100%)",
+            "radial-gradient(120% 80% at 50% 0%, transparent 55%, var(--tl-hero-vignette) 100%)",
         }}
       />
 
@@ -99,7 +99,7 @@ export default function Hero() {
 
           {/* Subcopy */}
           <p
-            className="animate-rise mt-7 max-w-[34rem] text-[1.05rem] leading-relaxed text-white/55"
+            className="animate-rise mt-7 max-w-[34rem] text-[1.05rem] leading-relaxed text-ink/55"
             style={{ animationDelay: "0.2s" }}
           >
             From voice agents that answer every call to custom web &amp; mobile
@@ -122,12 +122,12 @@ export default function Hero() {
 
           {/* Capability strip */}
           <ul
-            className="animate-rise mt-10 flex flex-wrap items-center gap-x-3 gap-y-2 text-[0.8rem] font-medium text-white/45"
+            className="animate-rise mt-10 flex flex-wrap items-center gap-x-3 gap-y-2 text-[0.8rem] font-medium text-ink/45"
             style={{ animationDelay: "0.34s" }}
           >
             {CAPABILITIES.map((c, i) => (
               <li key={c} className="flex items-center gap-3">
-                {i > 0 && <span className="h-1 w-1 rounded-full bg-white/25" />}
+                {i > 0 && <span className="h-1 w-1 rounded-full bg-ink/25" />}
                 <span>{c}</span>
               </li>
             ))}
@@ -135,7 +135,7 @@ export default function Hero() {
 
           {/* Trust row */}
           <div
-            className="animate-rise mt-9 flex flex-wrap items-center gap-x-6 gap-y-4 border-t border-white/8 pt-7"
+            className="animate-rise mt-9 flex flex-wrap items-center gap-x-6 gap-y-4 border-t border-ink/8 pt-7"
             style={{ animationDelay: "0.42s" }}
           >
             <div className="flex items-center gap-3">
@@ -143,7 +143,7 @@ export default function Hero() {
                 {AVATARS.map((src, i) => (
                   <span
                     key={src}
-                    className="h-9 w-9 rounded-full border-2 border-black bg-cover bg-center ring-1 ring-white/15"
+                    className="h-9 w-9 rounded-full border-2 border-page bg-cover bg-center ring-1 ring-ink/15"
                     style={{
                       backgroundImage: `url('${src}')`,
                       marginLeft: i === 0 ? 0 : "-10px",
@@ -155,15 +155,15 @@ export default function Hero() {
                 <span className="text-[0.95rem] leading-none text-amber-300">
                   ★★★★★
                 </span>
-                <span className="mt-1 text-[0.78rem] text-white/45">
-                  <span className="font-semibold text-white/80">4.9</span> avg
+                <span className="mt-1 text-[0.78rem] text-ink/45">
+                  <span className="font-semibold text-ink/80">4.9</span> avg
                   rating
                 </span>
               </div>
             </div>
-            <div className="h-9 w-px bg-white/10" />
-            <p className="text-[0.85rem] text-white/55">
-              <span className="font-semibold text-white">300+</span> businesses
+            <div className="h-9 w-px bg-ink/10" />
+            <p className="text-[0.85rem] text-ink/55">
+              <span className="font-semibold text-ink">300+</span> businesses
               served
             </p>
           </div>
@@ -189,14 +189,14 @@ export default function Hero() {
             border={GLASS_BORDER}
             bg={GLASS_BG}
             innerClassName="backdrop-blur-md"
-            className="shadow-[0_40px_120px_-30px_rgba(0,0,0,0.9)]"
+            className=""
           >
             {/* Top chrome */}
-            <div className="flex items-center gap-2 border-b border-white/8 px-4 py-3">
-              <span className="h-3 w-3 rounded-full bg-white/15" />
-              <span className="h-3 w-3 rounded-full bg-white/15" />
-              <span className="h-3 w-3 rounded-full bg-white/15" />
-              <span className="ml-3 min-w-0 truncate text-[0.7rem] font-medium tracking-wide text-white/35">
+            <div className="flex items-center gap-2 border-b border-ink/8 px-4 py-3">
+              <span className="h-3 w-3 rounded-full bg-ink/15" />
+              <span className="h-3 w-3 rounded-full bg-ink/15" />
+              <span className="h-3 w-3 rounded-full bg-ink/15" />
+              <span className="ml-3 min-w-0 truncate text-[0.7rem] font-medium tracking-wide text-ink/35">
                 tracerlabs · live demo
               </span>
               <span className="ml-auto flex shrink-0 items-center gap-1.5 text-[0.65rem] font-semibold uppercase tracking-widest text-brand-pink/80">
@@ -230,7 +230,7 @@ export default function Hero() {
       {/* Seam fade into the legacy sections below */}
       <div
         aria-hidden
-        className="pointer-events-none absolute inset-x-0 bottom-0 h-24 bg-gradient-to-b from-transparent to-black"
+        className="pointer-events-none absolute inset-x-0 bottom-0 h-24 bg-gradient-to-b from-transparent to-page"
       />
     </section>
   );

@@ -1,5 +1,7 @@
 // Technology marquee — replaces the legacy .tech-scroll (grayscale logos that lit to full
 // color on hover). Here they stay monochrome/dimmed (on-system, restrained), gently scrolling.
+import Image from "next/image";
+
 const LOGOS = [
   { src: "/assets/aws.png", alt: "AWS" },
   { src: "/assets/google.jpg", alt: "Google Cloud" },
@@ -20,14 +22,15 @@ export default function TechBar() {
       <div className="pointer-events-none absolute inset-y-0 right-0 z-10 w-20 bg-gradient-to-l from-page to-transparent sm:w-28" />
       <div className="animate-marquee flex w-max items-center gap-14 sm:gap-20">
         {[...LOGOS, ...LOGOS].map((l, i) => (
-          // eslint-disable-next-line @next/next/no-img-element
-          <img
+          <Image
             key={i}
             src={l.src}
             alt={l.alt}
-            loading="lazy"
+            width={120}
+            height={32}
             className="h-6 w-auto shrink-0 opacity-40 transition-opacity duration-300 hover:opacity-70 sm:h-7"
             style={{ filter: "var(--tl-logo-filter)" }}
+            loading="lazy"
           />
         ))}
       </div>

@@ -17,7 +17,7 @@ export default function Cta() {
   const calcomUrl = process.env.NEXT_PUBLIC_CAL_BOOKING_LINK || "https://cal.com/team/tracerlabs/discovery-call";
 
   return (
-    <section id="tl-cta" className="font-body relative isolate w-full overflow-hidden bg-black text-ink">
+    <section id="tl-cta" className="font-body relative isolate w-full overflow-hidden bg-page text-ink">
       {/* scroll anchor for #contact links (hero CTA, nav) — legacy #contact CSS neutralized in globals.css */}
       <div id="contact" aria-hidden />
 
@@ -41,7 +41,7 @@ export default function Cta() {
           </span>
         </h2>
 
-        <p className="animate-rise mt-6 max-w-[34rem] text-[1.05rem] leading-relaxed text-white/55" style={{ animationDelay: "0.12s" }}>
+        <p className="animate-rise mt-6 max-w-[34rem] text-[1.05rem] leading-relaxed text-ink/55" style={{ animationDelay: "0.12s" }}>
           Talk to our AI for two minutes — it&apos;ll learn what you&apos;re building and book your
           call on the spot. Yes, it&apos;s one of ours.
         </p>
@@ -69,15 +69,15 @@ export default function Cta() {
                     {s.n}
                   </span>
                   <h3 className="font-display mt-4 text-[1.05rem] font-normal leading-tight tracking-tight">{s.t}</h3>
-                  <p className="mt-2 text-[0.85rem] leading-relaxed text-white/50">{s.d}</p>
+                  <p className="mt-2 text-[0.85rem] leading-relaxed text-ink/50">{s.d}</p>
                 </div>
               </Bevel>
             </li>
           ))}
         </ol>
 
-        <p className="animate-rise mt-10 text-[0.85rem] text-white/40" style={{ animationDelay: "0.38s" }}>
-          <span className="font-semibold text-white/70">300+</span> businesses served · we reply within a day
+        <p className="animate-rise mt-10 text-[0.85rem] text-ink/40" style={{ animationDelay: "0.38s" }}>
+          <span className="font-semibold text-ink/70">300+</span> businesses served · we reply within a day
         </p>
       </div>
     </section>

@@ -5,6 +5,7 @@ import Services from "../components/Services";
 import Projects from "../components/Projects";
 import Cta from "../components/Cta";
 import Footer from "../components/Footer";
+import JsonLd from "../components/JsonLd";
 
 // The whole page is now React — no more injected legacy markup. <Nav> sits AFTER the hero so
 // it rests at the bottom of the first screen, then (position: sticky; top: 0) rises to stick
@@ -13,6 +14,7 @@ import Footer from "../components/Footer";
 export default function Home() {
   return (
     <>
+      <JsonLd />
       <Hero />
       <Nav />
       <main id="content">

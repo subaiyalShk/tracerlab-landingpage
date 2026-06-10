@@ -5,7 +5,10 @@ import "../globals.css";
 
 export const metadata: Metadata = {
   metadataBase: new URL("https://tracerlabs.io"),
-  title: "Tracerlabs | AI Development Agency",
+  title: {
+    default: "Tracerlabs | AI Development Agency",
+    template: "%s | Tracerlabs",
+  },
   description:
     "Transform your business with AI-powered digital solutions. We build cutting-edge web and mobile applications that drive real business results.",
   keywords: [
@@ -15,6 +18,7 @@ export const metadata: Metadata = {
     "business automation",
     "digital transformation",
   ],
+  alternates: { canonical: "/" },
   icons: {
     icon: "/assets/favicon.ico",
     apple: "/assets/apple-touch-icon.png",
@@ -22,17 +26,17 @@ export const metadata: Metadata = {
   openGraph: {
     type: "website",
     url: "https://tracerlabs.io",
+    siteName: "Tracerlabs",
+    locale: "en_US",
     title: "Tracerlabs | AI Development Agency",
     description:
       "Transform your business with AI-powered digital solutions. We build cutting-edge web and mobile applications that drive real business results.",
-    images: ["https://tracerlabs.ai/assets/Tracer.png"],
   },
   twitter: {
     card: "summary_large_image",
     title: "Tracerlabs | AI Development Agency",
     description:
       "Transform your business with AI-powered digital solutions. We build cutting-edge web and mobile applications that drive real business results.",
-    images: ["https://tracerlabs.ai/assets/Tracer.png"],
   },
 };
 

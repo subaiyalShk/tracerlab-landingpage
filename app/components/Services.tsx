@@ -112,7 +112,7 @@ function Badges({ items }: { items: string[] }) {
       {items.map((b) => (
         <li
           key={b}
-          className="bv-6 bg-white/[0.045] px-3 py-1 text-[0.72rem] font-medium tracking-wide text-white/55"
+          className="bv-6 bg-ink/[0.045] px-3 py-1 text-[0.72rem] font-medium tracking-wide text-ink/55"
         >
           {b}
         </li>
@@ -125,7 +125,7 @@ function Cta({ cta }: { cta: Service["cta"] }) {
   return (
     <a
       href={cta.href}
-      className="group/cta mt-6 inline-flex items-center gap-1.5 text-[0.85rem] font-semibold text-white/70 transition-colors hover:text-white"
+      className="group/cta mt-6 inline-flex items-center gap-1.5 text-[0.85rem] font-semibold text-ink/70 transition-colors hover:text-ink"
     >
       {cta.label}
       <svg className="h-3.5 w-3.5 transition-transform duration-300 group-hover/cta:translate-x-1" viewBox="0 0 16 16" fill="none" stroke="currentColor" strokeWidth="1.8">
@@ -177,7 +177,7 @@ export default function Services() {
   return (
     <section
       id="tl-services"
-      className="font-body relative isolate w-full overflow-hidden bg-black text-ink"
+      className="font-body relative isolate w-full overflow-hidden bg-page text-ink"
     >
       {/* Ambient brand glow — quieter than the hero so it reads as the same world, calmer */}
       <div
@@ -206,7 +206,7 @@ export default function Services() {
             </span>
           </h2>
           <p
-            className="animate-rise mt-5 max-w-[40rem] text-[1.02rem] leading-relaxed text-white/55"
+            className="animate-rise mt-5 max-w-[40rem] text-[1.02rem] leading-relaxed text-ink/55"
             style={{ animationDelay: "0.12s" }}
           >
             One team, end to end — we design, build, and ship the systems that
@@ -222,12 +222,12 @@ export default function Services() {
             <h3 className="font-display mt-6 text-[1.6rem] font-normal leading-tight tracking-tight sm:text-[1.9rem]">
               {FEATURED.title}
             </h3>
-            <p className="mt-4 max-w-[26rem] text-[0.98rem] leading-relaxed text-white/55">
+            <p className="mt-4 max-w-[26rem] text-[0.98rem] leading-relaxed text-ink/55">
               {FEATURED.blurb}
             </p>
             <ul className="mt-6 flex flex-col gap-3">
               {FEATURED.highlights.map((h) => (
-                <li key={h} className="flex items-start gap-2.5 text-[0.92rem] text-white/70">
+                <li key={h} className="flex items-start gap-2.5 text-[0.92rem] text-ink/70">
                   <svg className="mt-0.5 h-4 w-4 shrink-0 text-brand-pink" viewBox="0 0 16 16" fill="none" stroke="currentColor" strokeWidth="2">
                     <path d="M3.5 8.5l3 3 6-7" strokeLinecap="round" strokeLinejoin="round" />
                   </svg>
@@ -248,7 +248,7 @@ export default function Services() {
               <h3 className="font-display mt-5 text-[1.3rem] font-normal leading-tight tracking-tight">
                 {s.title}
               </h3>
-              <p className="mt-3 text-[0.95rem] leading-relaxed text-white/55">
+              <p className="mt-3 text-[0.95rem] leading-relaxed text-ink/55">
                 {s.blurb}
               </p>
               <Badges items={s.badges} />
@@ -263,7 +263,7 @@ export default function Services() {
               <h3 className="font-display text-[1.3rem] font-normal leading-tight tracking-tight">
                 {CUSTOM.title}
               </h3>
-              <p className="mt-3 max-w-[44rem] text-[0.95rem] leading-relaxed text-white/55">
+              <p className="mt-3 max-w-[44rem] text-[0.95rem] leading-relaxed text-ink/55">
                 {CUSTOM.blurb}
               </p>
             </div>
@@ -276,13 +276,13 @@ export default function Services() {
 
         {/* Section CTA → conversion */}
         <p
-          className="animate-rise mt-12 text-[0.98rem] text-white/55"
+          className="animate-rise mt-12 text-[0.98rem] text-ink/55"
           style={{ animationDelay: "0.46s" }}
         >
           Not sure what you need?{" "}
           <a
             href="#contact"
-            className="group/link inline-flex items-center gap-1.5 font-semibold text-white/80 transition-colors hover:text-white"
+            className="group/link inline-flex items-center gap-1.5 font-semibold text-ink/80 transition-colors hover:text-ink"
           >
             Let&apos;s figure it out together
             <svg className="h-3.5 w-3.5 transition-transform duration-300 group-hover/link:translate-x-1" viewBox="0 0 16 16" fill="none" stroke="currentColor" strokeWidth="1.8">

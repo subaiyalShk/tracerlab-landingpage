@@ -291,6 +291,22 @@ html {
   font-family: var(--font-body);
 }
 
+/* Heading color isolation. The legacy style.css `h1, h2, h3 { color: #fff }` targets headings
+   DIRECTLY (0,0,0,1), which beats the `text-ink` color our section roots set — headings have no
+   color utility of their own, they inherit it. That was invisible in dark (white matched the
+   theme) but renders white-on-light once the page flips. Re-scope heading color to inherit the
+   section's ink token; the id-level selector (0,1,0,1) outranks the legacy element rule. The
+   gradient-text focal words are <span>s carrying their own `text-transparent`, so they're
+   unaffected (this targets only the h1–h4 elements). */
+#tl-nav :is(h1, h2, h3, h4),
+#tl-hero :is(h1, h2, h3, h4),
+#tl-services :is(h1, h2, h3, h4),
+#tl-projects :is(h1, h2, h3, h4),
+#tl-cta :is(h1, h2, h3, h4),
+#tl-footer :is(h1, h2, h3, h4) {
+  color: inherit;
+}
+
 /* The #contact scroll-anchor lives inside #tl-cta. The legacy style.css `#contact` rule
    (padding:100px 0; blurred background) would otherwise apply to it — neutralize with a
    higher-specificity selector (#tl-cta #contact = 0,2,0,0 beats #contact = 0,1,0,0) and

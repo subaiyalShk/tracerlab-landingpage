@@ -17,9 +17,12 @@ export default function RootLayout({
 }: Readonly<{
   children: React.ReactNode;
 }>) {
+  // suppressHydrationWarning on <html>/<body>: the css-bootstrap script sets data-theme on
+  // <html> before React hydrates (the SSR markup intentionally lacks it), and browser
+  // extensions add attributes to <body>. Both are expected pre-hydration mutations, not bugs.
   return (
-    <html lang="en">
-      <body>
+    <html lang="en" suppressHydrationWarning>
+      <body suppressHydrationWarning>
         {/* Legacy stylesheet bootstrap for the main Tracerlabs site. Injected as plain
             (non-React-managed) <link>s so the theme toggle can swap #theme-stylesheet's
             href cleanly. Gated by pathname so standalone pages (e.g. /solar) never load

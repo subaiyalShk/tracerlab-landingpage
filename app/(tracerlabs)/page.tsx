@@ -6,14 +6,15 @@ import Projects from "../components/Projects";
 import Cta from "../components/Cta";
 import Footer from "../components/Footer";
 
-// The whole page is now React — no more injected legacy markup. <Nav> is the sticky top bar,
-// then <Hero>, then the content sections. <main id="content"> keeps the id the legacy
-// ScreenAnimation/canvas code references (it self-manages from there).
+// The whole page is now React — no more injected legacy markup. <Nav> sits AFTER the hero so
+// it rests at the bottom of the first screen, then (position: sticky; top: 0) rises to stick
+// at the top as you scroll — the original nav design. <main id="content"> keeps the id the
+// legacy ScreenAnimation/canvas code references (it self-manages from there).
 export default function Home() {
   return (
     <>
-      <Nav />
       <Hero />
+      <Nav />
       <main id="content">
         <TechBar />
         <Services />

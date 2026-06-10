@@ -70,7 +70,7 @@ export default function Hero() {
       />
 
       {/* ── Content ─────────────────────────────────────────────────── */}
-      <div className="mx-auto grid min-h-[90vh] w-full max-w-[1280px] grid-cols-1 items-center gap-14 px-6 py-24 sm:px-10 lg:grid-cols-[1.05fr_0.95fr] lg:gap-10 lg:py-20">
+      <div className="mx-auto grid min-h-[calc(100vh-4rem)] w-full max-w-[1280px] grid-cols-1 items-center gap-14 px-6 py-24 sm:px-10 lg:grid-cols-[1.05fr_0.95fr] lg:gap-10 lg:py-20">
         {/* Left: copy */}
         <div className="min-w-0 max-w-[42rem]">
           {/* Eyebrow */}

@@ -4,6 +4,7 @@
 // language: black canvas, glass, pink→blue brand accents, Duborics titles, animate-rise.
 // Video media is lazy + in-view-only via the ProjectVideo client component; everything
 // else is a static mockup/image or a styled UI panel. Scoped under #tl-projects.
+import Image from "next/image";
 import ProjectVideo from "./ProjectVideo";
 import Bevel, { GLASS_BORDER, GLASS_BG } from "./Bevel";
 import Eyebrow from "./Eyebrow";
@@ -172,12 +173,13 @@ function Frame({ media }: { media: Media }) {
           <ProjectVideo src={media.src} poster={media.poster} label={media.label} fit={media.fit} />
         )}
         {media.kind === "image" && (
-          // eslint-disable-next-line @next/next/no-img-element
-          <img
+          <Image
             src={media.src}
             alt={media.alt}
+            fill
+            sizes="(max-width: 1024px) 100vw, 20rem"
+            className={`object-${media.fit === "contain" ? "contain p-6" : "cover"}`}
             loading="lazy"
-            className={`absolute inset-0 h-full w-full ${media.fit === "contain" ? "object-contain p-6" : "object-cover"}`}
           />
         )}
         {media.kind === "panel" && <OpsPanel />}

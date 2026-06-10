@@ -2,6 +2,7 @@
 // Tailwind (no preflight) + brand tokens from globals.css. Keeps the legacy
 // <canvas id="screen-canvas"> so the existing ScreenAnimation JS (public/legacy/app.js)
 // drives the product-screen animation unchanged.
+import Image from "next/image";
 import Button from "./Button";
 import Bevel, { GLASS_BORDER, GLASS_BG } from "./Bevel";
 import Eyebrow from "./Eyebrow";
@@ -143,12 +144,11 @@ export default function Hero() {
                 {AVATARS.map((src, i) => (
                   <span
                     key={src}
-                    className="h-9 w-9 rounded-full border-2 border-page bg-cover bg-center ring-1 ring-ink/15"
-                    style={{
-                      backgroundImage: `url('${src}')`,
-                      marginLeft: i === 0 ? 0 : "-10px",
-                    }}
-                  />
+                    className="relative h-9 w-9 overflow-hidden rounded-full border-2 border-page ring-1 ring-ink/15"
+                    style={{ marginLeft: i === 0 ? 0 : "-10px" }}
+                  >
+                    <Image src={src} alt="" fill sizes="36px" className="object-cover" />
+                  </span>
                 ))}
               </div>
               <div className="flex flex-col">

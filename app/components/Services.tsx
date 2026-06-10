@@ -4,6 +4,9 @@
 // black canvas, glass tiles, pink→blue brand gradients, animate-rise entrance.
 // Scoped under #tl-services with a reset block in globals.css (mirrors #tl-hero).
 
+import Bevel, { GLASS_BORDER, GLASS_BG } from "./Bevel";
+import Eyebrow from "./Eyebrow";
+
 type Service = {
   title: string;
   blurb: string;
@@ -81,14 +84,24 @@ const CUSTOM: Service = {
   icon: ChipIcon,
 };
 
+// Dark metal plate with the icon raised as an emboss (replaces the old gradient tile).
 function IconTile({ children }: { children: React.ReactNode }) {
   return (
     <span
-      className="inline-flex h-11 w-11 shrink-0 items-center justify-center rounded-xl text-white shadow-[0_8px_24px_-8px_rgba(231,2,141,0.7)]"
-      style={{ backgroundImage: "linear-gradient(135deg,#e7028d,#056afc)" }}
+      className="bv-6 inline-flex h-11 w-11 shrink-0 items-center justify-center"
+      style={{
+        backgroundImage: "linear-gradient(145deg, #2b2c33, #16171b)",
+        boxShadow:
+          "inset 0 1px 1px rgba(255,255,255,0.14), inset 0 -2px 4px rgba(0,0,0,0.55), 0 6px 16px -8px rgba(0,0,0,0.7)",
+      }}
       aria-hidden
     >
-      {children}
+      <span
+        className="flex items-center justify-center text-[#e9eaef]"
+        style={{ filter: "drop-shadow(0 1px 1px rgba(0,0,0,0.75)) drop-shadow(0 -0.5px 0.5px rgba(255,255,255,0.3))" }}
+      >
+        {children}
+      </span>
     </span>
   );
 }
@@ -99,7 +112,7 @@ function Badges({ items }: { items: string[] }) {
       {items.map((b) => (
         <li
           key={b}
-          className="rounded-full border border-white/12 bg-white/[0.04] px-3 py-1 text-[0.72rem] font-medium tracking-wide text-white/55"
+          className="bv-6 bg-white/[0.045] px-3 py-1 text-[0.72rem] font-medium tracking-wide text-white/55"
         >
           {b}
         </li>
@@ -112,7 +125,7 @@ function Cta({ cta }: { cta: Service["cta"] }) {
   return (
     <a
       href={cta.href}
-      className="group/cta mt-6 inline-flex items-center gap-1.5 text-[0.85rem] font-semibold text-brand-pink transition-colors hover:text-white"
+      className="group/cta mt-6 inline-flex items-center gap-1.5 text-[0.85rem] font-semibold text-white/70 transition-colors hover:text-white"
     >
       {cta.label}
       <svg className="h-3.5 w-3.5 transition-transform duration-300 group-hover/cta:translate-x-1" viewBox="0 0 16 16" fill="none" stroke="currentColor" strokeWidth="1.8">
@@ -122,32 +135,41 @@ function Cta({ cta }: { cta: Service["cta"] }) {
   );
 }
 
-// Shared glass-tile shell with a hover lift + brand edge-glow.
+// Shared glass-tile shell — beveled (chamfered) panel with a hover lift + brand edge-glow.
+// `className` styles the grid item (bento spans); `contentClassName` styles the inner layout.
 function Tile({
   children,
   className = "",
+  contentClassName = "",
   delay = 0,
 }: {
   children: React.ReactNode;
   className?: string;
+  contentClassName?: string;
   delay?: number;
 }) {
   return (
-    <div
-      className={`group animate-rise relative flex flex-col overflow-hidden rounded-2xl border border-white/12 bg-white/[0.03] p-7 backdrop-blur-sm transition-[transform,border-color] duration-300 hover:-translate-y-1 hover:border-white/25 sm:p-8 ${className}`}
+    <Bevel
+      bevel={16}
+      border={GLASS_BORDER}
+      bg={GLASS_BG}
+      innerClassName="backdrop-blur-md"
+      className={`group animate-rise transition-transform duration-300 hover:-translate-y-1 ${className}`}
       style={{ animationDelay: `${delay}s` }}
     >
-      {/* edge glow on hover */}
-      <div
-        aria-hidden
-        className="pointer-events-none absolute inset-0 -z-10 opacity-0 transition-opacity duration-500 group-hover:opacity-100"
-        style={{
-          background:
-            "radial-gradient(80% 60% at 50% 0%, rgba(231,2,141,0.16), transparent 70%)",
-        }}
-      />
-      {children}
-    </div>
+      <div className={`relative flex h-full flex-col p-7 sm:p-8 ${contentClassName}`}>
+        {/* brand edge glow on hover */}
+        <div
+          aria-hidden
+          className="pointer-events-none absolute inset-0 -z-10 opacity-0 transition-opacity duration-500 group-hover:opacity-100"
+          style={{
+            background:
+              "radial-gradient(80% 60% at 50% 0%, rgba(231,2,141,0.14), transparent 70%)",
+          }}
+        />
+        {children}
+      </div>
+    </Bevel>
   );
 }
 
@@ -160,22 +182,17 @@ export default function Services() {
       {/* Ambient brand glow — quieter than the hero so it reads as the same world, calmer */}
       <div
         aria-hidden
-        className="pointer-events-none absolute left-1/2 top-0 -z-10 h-[40vw] w-[70vw] -translate-x-1/2 rounded-full opacity-40 blur-[130px]"
+        className="pointer-events-none absolute left-1/2 top-0 -z-10 h-[38vw] w-[64vw] -translate-x-1/2 rounded-full opacity-[0.16] blur-[140px]"
         style={{
           background:
-            "radial-gradient(circle, rgba(5,106,252,0.35) 0%, rgba(231,2,141,0.18) 45%, transparent 72%)",
+            "radial-gradient(circle, rgba(5,106,252,0.32) 0%, rgba(231,2,141,0.16) 45%, transparent 72%)",
         }}
       />
 
       <div className="mx-auto w-full max-w-[1280px] px-6 py-20 sm:px-10 sm:py-24 lg:py-28">
         {/* Header */}
         <div className="max-w-[44rem]">
-          <div className="animate-rise inline-flex items-center gap-2.5 rounded-full border border-white/12 bg-white/[0.04] py-1.5 pl-2.5 pr-4 backdrop-blur-sm">
-            <span className="h-1.5 w-1.5 rounded-full bg-brand-pink" />
-            <span className="text-[0.72rem] font-semibold uppercase tracking-[0.22em] text-white/70">
-              What we do
-            </span>
-          </div>
+          <Eyebrow>What we do</Eyebrow>
           <h2
             className="font-display animate-rise mt-6 text-[clamp(2rem,5vw,3.4rem)] font-normal uppercase leading-[0.98] tracking-tight"
             style={{ animationDelay: "0.06s" }}
@@ -200,7 +217,7 @@ export default function Services() {
         {/* Bento grid — mobile: 1 col stack; sm+: 2-col bento with a featured tile */}
         <div className="mt-12 grid grid-cols-1 gap-4 sm:grid-cols-2 lg:gap-5">
           {/* Featured — Voice Agents (spans both rows on the left at sm+) */}
-          <Tile className="sm:row-span-2 sm:p-9" delay={0.16}>
+          <Tile className="sm:row-span-2" delay={0.16}>
             <IconTile>{FEATURED.icon}</IconTile>
             <h3 className="font-display mt-6 text-[1.6rem] font-normal leading-tight tracking-tight sm:text-[1.9rem]">
               {FEATURED.title}
@@ -240,7 +257,7 @@ export default function Services() {
           ))}
 
           {/* Custom AI — full-width bar across the bottom at sm+ */}
-          <Tile className="sm:col-span-2 sm:flex-row sm:items-center sm:gap-7" delay={0.4}>
+          <Tile className="sm:col-span-2" contentClassName="sm:flex-row sm:items-center sm:gap-7" delay={0.4}>
             <IconTile>{CUSTOM.icon}</IconTile>
             <div className="mt-5 sm:mt-0 sm:flex-1">
               <h3 className="font-display text-[1.3rem] font-normal leading-tight tracking-tight">
@@ -265,7 +282,7 @@ export default function Services() {
           Not sure what you need?{" "}
           <a
             href="#contact"
-            className="group/link inline-flex items-center gap-1.5 font-semibold text-white transition-colors hover:text-brand-pink"
+            className="group/link inline-flex items-center gap-1.5 font-semibold text-white/80 transition-colors hover:text-white"
           >
             Let&apos;s figure it out together
             <svg className="h-3.5 w-3.5 transition-transform duration-300 group-hover/link:translate-x-1" viewBox="0 0 16 16" fill="none" stroke="currentColor" strokeWidth="1.8">

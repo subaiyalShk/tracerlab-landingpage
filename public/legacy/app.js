@@ -23,22 +23,13 @@
             }
 
             init() {
-                // Cache DOM elements
-                this.cacheElements();
-                
-                // Initialize components
-                this.initializeAOS();
-                this.initializeSmoothScroll();
-                this.initializeNav();
-                this.initializeRevealEffects();
-                this.initializeStepper();
-                this.initializeTestimonials();
-                this.initializeModal();
+                // The React app now owns the nav, scrolling, reveals, and section animations.
+                // This legacy class only still drives the hero <canvas> (ScreenAnimation, which
+                // self-manages its own resize). Everything else — AOS, JS smooth-scroll, the nav
+                // sticky toggle, reveal effects, and the removed stepper/testimonials/modal/iframe
+                // — is intentionally NOT initialized: those scroll handlers snapped programmatic
+                // scroll + broke anchor nav, and AOS mutated <body> (hydration mismatch).
                 this.initializeScreenAnimation();
-                this.initializeIframeEvents();
-                
-                // Setup unified scroll/resize handler
-                this.setupEventListeners();
             }
 
             cacheElements() {

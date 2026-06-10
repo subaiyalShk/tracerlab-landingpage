@@ -2,6 +2,9 @@
 // Tailwind (no preflight) + brand tokens from globals.css. Keeps the legacy
 // <canvas id="screen-canvas"> so the existing ScreenAnimation JS (public/legacy/app.js)
 // drives the product-screen animation unchanged.
+import Button from "./Button";
+import Bevel, { GLASS_BORDER, GLASS_BG } from "./Bevel";
+import Eyebrow from "./Eyebrow";
 
 const AVATARS = [
   "https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=64&h=64&fit=crop&crop=face&auto=format",
@@ -25,7 +28,7 @@ export default function Hero() {
       {/* Drifting brand auroras */}
       <div
         aria-hidden
-        className="animate-drift pointer-events-none absolute -top-[20%] -left-[10%] -z-10 h-[55vw] w-[55vw] rounded-full opacity-60 blur-[120px]"
+        className="animate-drift pointer-events-none absolute -top-[20%] -left-[10%] -z-10 h-[55vw] w-[55vw] rounded-full opacity-[0.32] blur-[120px]"
         style={{
           background:
             "radial-gradient(circle, rgba(231,2,141,0.55) 0%, rgba(231,2,141,0) 70%)",
@@ -33,7 +36,7 @@ export default function Hero() {
       />
       <div
         aria-hidden
-        className="animate-drift-slow pointer-events-none absolute -right-[12%] top-[18%] -z-10 h-[50vw] w-[50vw] rounded-full opacity-50 blur-[120px]"
+        className="animate-drift-slow pointer-events-none absolute -right-[12%] top-[18%] -z-10 h-[50vw] w-[50vw] rounded-full opacity-[0.28] blur-[120px]"
         style={{
           background:
             "radial-gradient(circle, rgba(5,106,252,0.50) 0%, rgba(5,106,252,0) 70%)",
@@ -71,18 +74,9 @@ export default function Hero() {
         {/* Left: copy */}
         <div className="min-w-0 max-w-[42rem]">
           {/* Eyebrow */}
-          <div
-            className="animate-rise inline-flex items-center gap-2.5 rounded-full border border-white/12 bg-white/[0.04] py-1.5 pl-2.5 pr-4 backdrop-blur-sm"
-            style={{ animationDelay: "0.05s" }}
-          >
-            <span className="relative flex h-2 w-2">
-              <span className="absolute inline-flex h-full w-full animate-ping rounded-full bg-brand-pink opacity-70" />
-              <span className="relative inline-flex h-2 w-2 rounded-full bg-brand-pink" />
-            </span>
-            <span className="text-[0.72rem] font-semibold uppercase tracking-[0.22em] text-white/70">
-              Tracerlabs · AI Development Studio
-            </span>
-          </div>
+          <Eyebrow style={{ animationDelay: "0.05s" }}>
+            Tracerlabs · AI Development Studio
+          </Eyebrow>
 
           {/* Headline */}
           <h1
@@ -118,37 +112,12 @@ export default function Hero() {
             className="animate-rise mt-9 flex flex-wrap items-center gap-4"
             style={{ animationDelay: "0.28s" }}
           >
-            <a
-              href="#contact"
-              className="group relative inline-flex items-center gap-2 overflow-hidden rounded-full px-7 py-3.5 text-[0.95rem] font-semibold text-white shadow-[0_10px_40px_-8px_rgba(231,2,141,0.6)] transition-transform duration-300 hover:-translate-y-0.5"
-              style={{
-                backgroundImage: "linear-gradient(100deg,#e21949,#e7028d)",
-              }}
-            >
-              <span
-                aria-hidden
-                className="absolute inset-0 -z-10 opacity-0 transition-opacity duration-300 group-hover:opacity-100"
-                style={{
-                  backgroundImage: "linear-gradient(100deg,#e7028d,#056afc)",
-                }}
-              />
+            <Button href="#contact" variant="primary">
               Start your project
-              <svg
-                className="h-4 w-4 transition-transform duration-300 group-hover:translate-x-1"
-                viewBox="0 0 16 16"
-                fill="none"
-                stroke="currentColor"
-                strokeWidth="1.8"
-              >
-                <path d="M3 8h10M9 4l4 4-4 4" strokeLinecap="round" strokeLinejoin="round" />
-              </svg>
-            </a>
-            <a
-              href="#projects"
-              className="inline-flex items-center gap-2 rounded-full border border-white/15 px-6 py-3.5 text-[0.95rem] font-semibold text-white/80 transition-colors duration-300 hover:border-white/35 hover:text-white"
-            >
+            </Button>
+            <Button href="#projects" variant="secondary">
               See our work
-            </a>
+            </Button>
           </div>
 
           {/* Capability strip */}
@@ -208,14 +177,20 @@ export default function Hero() {
           {/* Glow behind the window */}
           <div
             aria-hidden
-            className="pointer-events-none absolute -inset-6 -z-10 rounded-[2rem] opacity-70 blur-3xl"
+            className="pointer-events-none absolute -inset-6 -z-10 rounded-[2rem] opacity-[0.45] blur-3xl"
             style={{
               background:
-                "radial-gradient(60% 60% at 70% 30%, rgba(231,2,141,0.35), transparent 70%), radial-gradient(60% 60% at 20% 80%, rgba(5,106,252,0.30), transparent 70%)",
+                "radial-gradient(60% 60% at 70% 30%, rgba(231,2,141,0.26), transparent 70%), radial-gradient(60% 60% at 20% 80%, rgba(5,106,252,0.22), transparent 70%)",
             }}
           />
-          {/* Window */}
-          <div className="overflow-hidden rounded-2xl border border-white/12 bg-white/[0.03] shadow-[0_40px_120px_-30px_rgba(0,0,0,0.9)] backdrop-blur-sm">
+          {/* Window — beveled to match the site's angular language */}
+          <Bevel
+            bevel={18}
+            border={GLASS_BORDER}
+            bg={GLASS_BG}
+            innerClassName="backdrop-blur-md"
+            className="shadow-[0_40px_120px_-30px_rgba(0,0,0,0.9)]"
+          >
             {/* Top chrome */}
             <div className="flex items-center gap-2 border-b border-white/8 px-4 py-3">
               <span className="h-3 w-3 rounded-full bg-white/15" />
@@ -235,6 +210,7 @@ export default function Hero() {
             <div className="relative aspect-[16/11] w-full overflow-hidden bg-black">
               <canvas
                 id="screen-canvas"
+                suppressHydrationWarning
                 className="absolute inset-0 block h-full w-full"
               />
               {/* faint inner reflection */}
@@ -247,7 +223,7 @@ export default function Hero() {
                 }}
               />
             </div>
-          </div>
+          </Bevel>
         </div>
       </div>
 

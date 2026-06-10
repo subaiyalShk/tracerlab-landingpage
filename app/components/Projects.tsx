@@ -5,6 +5,8 @@
 // Video media is lazy + in-view-only via the ProjectVideo client component; everything
 // else is a static mockup/image or a styled UI panel. Scoped under #tl-projects.
 import ProjectVideo from "./ProjectVideo";
+import Bevel, { GLASS_BORDER, GLASS_BG } from "./Bevel";
+import Eyebrow from "./Eyebrow";
 
 type Media =
   | { kind: "video"; src: string; poster: string; fit?: "cover" | "contain"; label: string }
@@ -36,7 +38,7 @@ const PROJECTS: Project[] = [
       kind: "video",
       src: "/assets/solar-funnel.mp4",
       poster: "/assets/solar-funnel-poster.jpg",
-      fit: "contain",
+      fit: "cover",
       label: "Demo reel of the solar lead-gen funnel that books appointments daily.",
     },
   },
@@ -53,7 +55,7 @@ const PROJECTS: Project[] = [
       kind: "video",
       src: "/assets/offset-canvassing.mp4",
       poster: "/assets/offset-canvassing-poster.jpg",
-      fit: "contain",
+      fit: "cover",
       label: "Demo reel of the Offset Canvassing GIS app and companion mobile CRM for door-to-door teams.",
     },
   },
@@ -92,7 +94,7 @@ const PROJECTS: Project[] = [
       kind: "video",
       src: "/assets/reel-aivideo.mp4",
       poster: "/assets/reel-aivideo-poster.jpg",
-      fit: "contain",
+      fit: "cover",
       label: "AI-generated cinematic car advertisement reel.",
     },
   },
@@ -106,60 +108,82 @@ function Arrow() {
   );
 }
 
-// Styled ops-board motif for the (image-less, anonymized) meat-processing project.
+// Portrait mobile-ops-list motif for the (image-less, anonymized) meat-processing project.
+// Reads like the staff app: a vertical list of orders with status pills — fits the 9:16 card.
 function OpsPanel() {
-  const cols = [
-    { h: "Drop-off", n: 3 },
-    { h: "Processing", n: 2 },
-    { h: "Ready", n: 2 },
-  ];
+  const STATUS = {
+    drop: { label: "Drop-off", color: "#8a8a93" },
+    proc: { label: "Processing", color: "#e7028d" },
+    ready: { label: "Ready", color: "#056afc" },
+  } as const;
+  const orders: (keyof typeof STATUS)[] = ["ready", "proc", "proc", "drop", "ready", "drop", "proc"];
   return (
-    <div className="absolute inset-0 flex flex-col gap-3 p-5 sm:p-7">
-      <div className="flex items-center gap-2 text-[0.62rem] font-semibold uppercase tracking-[0.18em] text-white/45">
-        <span className="h-1.5 w-1.5 rounded-full bg-brand-pink" />
-        Processing board
+    <div className="absolute inset-0 flex flex-col gap-3 p-4">
+      <div className="flex items-center justify-between">
+        <span className="inline-flex items-center gap-1.5 text-[0.62rem] font-semibold uppercase tracking-[0.16em] text-white/55">
+          <span className="h-1.5 w-1.5 rounded-full bg-brand-pink" />
+          Processing board
+        </span>
+        <span className="text-[0.55rem] font-medium uppercase tracking-wide text-white/30">Today</span>
       </div>
-      <div className="grid flex-1 grid-cols-3 gap-2.5">
-        {cols.map((c) => (
-          <div key={c.h} className="flex flex-col gap-2 rounded-lg border border-white/12 bg-white/[0.03] p-2.5">
-            <span className="text-[0.6rem] font-medium text-white/40">{c.h}</span>
-            {Array.from({ length: c.n }).map((_, i) => (
-              <div key={i} className="rounded-md border border-white/12 bg-white/[0.04] p-2">
-                <div className="mb-1.5 h-1.5 w-3/4 rounded-full bg-white/15" />
-                <div className="h-1.5 w-1/2 rounded-full bg-white/10" />
+      <div className="flex flex-1 flex-col gap-2 overflow-hidden">
+        {orders.map((k, i) => {
+          const s = STATUS[k];
+          return (
+            <div key={i} className="bv-6 flex items-center gap-2.5 bg-white/[0.045] p-2.5">
+              <span className="bv-6 h-7 w-7 shrink-0 bg-white/[0.09]" />
+              <div className="min-w-0 flex-1">
+                <div className="h-1.5 w-3/4 rounded-full bg-white/18" />
+                <div className="mt-1.5 h-1.5 w-1/2 rounded-full bg-white/10" />
               </div>
-            ))}
-          </div>
-        ))}
+              <span
+                className="bv-6 shrink-0 px-2 py-0.5 text-[0.55rem] font-semibold"
+                style={{ color: s.color, backgroundColor: `${s.color}22` }}
+              >
+                {s.label}
+              </span>
+            </div>
+          );
+        })}
       </div>
     </div>
   );
 }
 
+const FRAME_CLIP =
+  "polygon(0 0, calc(100% - 16px) 0, 100% 16px, 100% 100%, 16px 100%, 0 calc(100% - 16px))";
+
+// Beveled media panel: outer = border edge, inner (inset-px) = fill + media, both chamfered.
 function Frame({ media }: { media: Media }) {
   return (
     <div
-      className="relative aspect-[16/10] w-full overflow-hidden rounded-2xl border border-white/12 shadow-[0_40px_120px_-40px_rgba(0,0,0,0.9)]"
-      style={{
-        backgroundImage:
-          "radial-gradient(70% 70% at 70% 25%, rgba(231,2,141,0.18), transparent 70%), radial-gradient(70% 70% at 25% 80%, rgba(5,106,252,0.16), transparent 70%), linear-gradient(160deg,#101014,#0a0a0d)",
-      }}
+      className="relative aspect-[9/16] w-full shadow-[0_40px_120px_-40px_rgba(0,0,0,0.9)]"
+      style={{ clipPath: FRAME_CLIP, backgroundColor: GLASS_BORDER }}
     >
-      {media.kind === "video" && (
-        <ProjectVideo src={media.src} poster={media.poster} label={media.label} fit={media.fit} />
-      )}
-      {media.kind === "image" && (
-        // eslint-disable-next-line @next/next/no-img-element
-        <img
-          src={media.src}
-          alt={media.alt}
-          loading="lazy"
-          className={`absolute inset-0 h-full w-full ${media.fit === "contain" ? "object-contain p-6" : "object-cover"}`}
-        />
-      )}
-      {media.kind === "panel" && <OpsPanel />}
-      {/* inner top sheen */}
-      <div aria-hidden className="pointer-events-none absolute inset-0" style={{ background: "linear-gradient(160deg, rgba(255,255,255,0.06) 0%, transparent 28%)" }} />
+      <div
+        className="absolute inset-px overflow-hidden"
+        style={{
+          clipPath: FRAME_CLIP,
+          backgroundImage:
+            "radial-gradient(80% 60% at 70% 20%, rgba(255,255,255,0.05), transparent 70%), linear-gradient(160deg,#121216,#0a0a0d)",
+        }}
+      >
+        {media.kind === "video" && (
+          <ProjectVideo src={media.src} poster={media.poster} label={media.label} fit={media.fit} />
+        )}
+        {media.kind === "image" && (
+          // eslint-disable-next-line @next/next/no-img-element
+          <img
+            src={media.src}
+            alt={media.alt}
+            loading="lazy"
+            className={`absolute inset-0 h-full w-full ${media.fit === "contain" ? "object-contain p-6" : "object-cover"}`}
+          />
+        )}
+        {media.kind === "panel" && <OpsPanel />}
+        {/* inner top sheen */}
+        <div aria-hidden className="pointer-events-none absolute inset-0" style={{ background: "linear-gradient(160deg, rgba(255,255,255,0.05) 0%, transparent 28%)" }} />
+      </div>
     </div>
   );
 }
@@ -170,17 +194,14 @@ export default function Projects() {
       {/* ambient brand glow */}
       <div
         aria-hidden
-        className="pointer-events-none absolute right-0 top-1/4 -z-10 h-[45vw] w-[55vw] rounded-full opacity-30 blur-[140px]"
-        style={{ background: "radial-gradient(circle, rgba(231,2,141,0.30) 0%, rgba(5,106,252,0.16) 45%, transparent 72%)" }}
+        className="pointer-events-none absolute right-0 top-1/4 -z-10 h-[42vw] w-[50vw] rounded-full opacity-[0.13] blur-[150px]"
+        style={{ background: "radial-gradient(circle, rgba(231,2,141,0.28) 0%, rgba(5,106,252,0.14) 45%, transparent 72%)" }}
       />
 
       <div className="mx-auto w-full max-w-[1280px] px-6 py-20 sm:px-10 sm:py-24 lg:py-28">
         {/* header */}
         <div className="max-w-[44rem]">
-          <div className="animate-rise inline-flex items-center gap-2.5 rounded-full border border-white/12 bg-white/[0.04] py-1.5 pl-2.5 pr-4 backdrop-blur-sm">
-            <span className="h-1.5 w-1.5 rounded-full bg-brand-pink" />
-            <span className="text-[0.72rem] font-semibold uppercase tracking-[0.22em] text-white/70">Recent work</span>
-          </div>
+          <Eyebrow>Recent work</Eyebrow>
           <h2 className="font-display animate-rise mt-6 text-[clamp(2rem,5vw,3.4rem)] font-normal uppercase leading-[1.0] tracking-tight" style={{ animationDelay: "0.06s" }}>
             Work we&apos;ve{" "}
             <span className="bg-clip-text text-transparent" style={{ backgroundImage: "linear-gradient(100deg,#e7028d,#056afc)" }}>shipped</span>
@@ -195,44 +216,58 @@ export default function Projects() {
           {PROJECTS.map((p, i) => {
             const mediaRight = i % 2 === 1; // alternate sides on lg
             return (
-              <article key={p.id} className="animate-rise grid grid-cols-1 items-center gap-8 lg:grid-cols-2 lg:gap-14">
-                {/* media (first in DOM → on top on mobile; reordered on lg for odd rows) */}
-                <div className={mediaRight ? "lg:order-2" : ""}>
+              <article
+                key={p.id}
+                className={`animate-rise flex flex-col gap-9 lg:flex-row lg:items-stretch lg:gap-14 ${mediaRight ? "lg:flex-row-reverse" : ""}`}
+              >
+                {/* media — full width on mobile (tall 9:16 reel), phone-width on lg.
+                    With flex-row(-reverse) + default justify, the slack falls to the outer edge,
+                    so each media+copy cluster sits toward the inner side (alternating). */}
+                <div className="w-full lg:w-[20rem] lg:shrink-0">
                   <Frame media={p.media} />
                 </div>
-                {/* copy */}
-                <div className="min-w-0">
-                  <div className="text-[0.72rem] font-semibold uppercase tracking-[0.2em] text-brand-pink/90">{p.client}</div>
-                  <h3 className="font-display mt-3 text-[clamp(1.4rem,2.6vw,1.9rem)] font-normal leading-tight tracking-tight">{p.title}</h3>
-                  <p className="mt-4 max-w-[34rem] text-[0.98rem] leading-relaxed text-white/55">{p.blurb}</p>
+                {/* copy — carded in the same dark-glass Bevel as the Services tiles, so each
+                    row reads as two matching panels (media frame + copy card) instead of
+                    panel-plus-loose-text. Stretches to the media height for an even row. */}
+                <Bevel
+                  bevel={16}
+                  border={GLASS_BORDER}
+                  bg={GLASS_BG}
+                  innerClassName="backdrop-blur-md"
+                  className="w-full min-w-0 lg:flex-1"
+                >
+                  <div className="flex h-full flex-col justify-center p-7 sm:p-10">
+                    <div className="text-[0.72rem] font-semibold uppercase tracking-[0.2em] text-white/40">{p.client}</div>
+                    <h3 className="font-display mt-3 text-[clamp(1.4rem,2.6vw,1.9rem)] font-normal leading-tight tracking-tight">{p.title}</h3>
+                    <p className="mt-4 text-[0.98rem] leading-relaxed text-white/55 lg:max-w-[42rem]">{p.blurb}</p>
 
-                  {/* metric chips */}
-                  <ul className="mt-6 flex flex-wrap gap-2">
-                    {p.metrics.map((m) => (
-                      <li key={m} className="inline-flex items-center gap-1.5 rounded-full border border-brand-pink/25 bg-brand-pink/[0.07] px-3 py-1 text-[0.78rem] font-medium text-white/80">
-                        <span className="h-1 w-1 rounded-full bg-brand-pink" />
-                        {m}
-                      </li>
-                    ))}
-                  </ul>
+                    {/* metric chips — neutral beveled glass (restraint: accent lives at focal points, not here) */}
+                    <ul className="mt-6 flex flex-wrap gap-2">
+                      {p.metrics.map((m) => (
+                        <li key={m} className="bv-6 inline-flex items-center bg-white/[0.06] px-3 py-1 text-[0.78rem] font-medium text-white/80">
+                          {m}
+                        </li>
+                      ))}
+                    </ul>
 
-                  {/* tech badges */}
-                  <ul className="mt-4 flex flex-wrap gap-2">
-                    {p.tech.map((t) => (
-                      <li key={t} className="rounded-full border border-white/12 bg-white/[0.04] px-3 py-1 text-[0.72rem] font-medium tracking-wide text-white/50">{t}</li>
-                    ))}
-                  </ul>
+                    {/* tech badges */}
+                    <ul className="mt-4 flex flex-wrap gap-2">
+                      {p.tech.map((t) => (
+                        <li key={t} className="bv-6 bg-white/[0.045] px-3 py-1 text-[0.72rem] font-medium tracking-wide text-white/50">{t}</li>
+                      ))}
+                    </ul>
 
-                  {/* link */}
-                  <a
-                    href={p.link.href}
-                    {...(p.link.external ? { target: "_blank", rel: "noopener noreferrer" } : {})}
-                    className="group/lk mt-7 inline-flex items-center gap-1.5 text-[0.88rem] font-semibold text-brand-pink transition-colors hover:text-white"
-                  >
-                    {p.link.label}
-                    <Arrow />
-                  </a>
-                </div>
+                    {/* link */}
+                    <a
+                      href={p.link.href}
+                      {...(p.link.external ? { target: "_blank", rel: "noopener noreferrer" } : {})}
+                      className="group/lk mt-7 inline-flex items-center gap-1.5 text-[0.88rem] font-semibold text-white/70 transition-colors hover:text-white"
+                    >
+                      {p.link.label}
+                      <Arrow />
+                    </a>
+                  </div>
+                </Bevel>
               </article>
             );
           })}
@@ -241,7 +276,7 @@ export default function Projects() {
         {/* section CTA → conversion */}
         <p className="animate-rise mt-16 text-[0.98rem] text-white/55">
           Have something like this in mind?{" "}
-          <a href="#contact" className="group/lk inline-flex items-center gap-1.5 font-semibold text-white transition-colors hover:text-brand-pink">
+          <a href="#contact" className="group/lk inline-flex items-center gap-1.5 font-semibold text-white/80 transition-colors hover:text-white">
             Tell us what you&apos;re building
             <Arrow />
           </a>

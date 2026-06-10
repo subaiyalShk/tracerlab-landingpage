@@ -90,6 +90,41 @@
   }
 }
 
+/* ── Angular geometry ("bevel") ───────────────────────────────────────────────
+   The site's shape language: chamfered top-right + bottom-left corners (matching the
+   CONTACT US button). `.bv-*` = clip only (for small fill-only chips/pills). For bordered
+   panels, wrap content in a Bevel component (outer = border color, inner inset-px = bg) —
+   clip-path can't render a clean border on the diagonal cut on its own. */
+.bv-6 {
+  clip-path: polygon(0 0, calc(100% - 6px) 0, 100% 6px, 100% 100%, 6px 100%, 0 calc(100% - 6px));
+}
+.bv-9 {
+  clip-path: polygon(0 0, calc(100% - 9px) 0, 100% 9px, 100% 100%, 9px 100%, 0 calc(100% - 9px));
+}
+
+/* Smooth anchor scrolling (replaces the legacy app.js JS smooth-scroll we removed), and a
+   scroll-margin so jumping to a section clears the sticky 64px nav. */
+html {
+  scroll-behavior: smooth;
+}
+#tl-services,
+#tl-projects {
+  scroll-margin-top: 4.75rem;
+}
+
+/* TechBar logo marquee */
+@keyframes marquee {
+  from {
+    transform: translateX(0);
+  }
+  to {
+    transform: translateX(-50%);
+  }
+}
+.animate-marquee {
+  animation: marquee 42s linear infinite;
+}
+
 /* Scoped reset for the componentized hero + services (we run Tailwind without preflight,
    so they need border-box + zeroed default margins; legacy sections are untouched).
 
@@ -145,28 +180,36 @@
    section roots carry the body font, descendants inherit (so heading <span>s pick up
    Duborics from their <h1>/<h2>, and <p>/badges pick up Plus Jakarta from the root),
    and the font utilities are re-scoped under the ids so they outrank `#tl-* *`. */
+#tl-nav,
 #tl-hero,
 #tl-services,
 #tl-projects,
-#tl-cta {
+#tl-cta,
+#tl-footer {
   font-family: var(--font-body);
 }
+#tl-nav *,
 #tl-hero *,
 #tl-services *,
 #tl-projects *,
-#tl-cta * {
+#tl-cta *,
+#tl-footer * {
   font-family: inherit;
 }
+#tl-nav .font-display,
 #tl-hero .font-display,
 #tl-services .font-display,
 #tl-projects .font-display,
-#tl-cta .font-display {
+#tl-cta .font-display,
+#tl-footer .font-display {
   font-family: var(--font-display);
 }
+#tl-nav .font-body,
 #tl-hero .font-body,
 #tl-services .font-body,
 #tl-projects .font-body,
-#tl-cta .font-body {
+#tl-cta .font-body,
+#tl-footer .font-body {
   font-family: var(--font-body);
 }
 

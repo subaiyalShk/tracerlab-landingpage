@@ -1,29 +1,25 @@
+import Nav from "../components/Nav";
 import Hero from "../components/Hero";
+import TechBar from "../components/TechBar";
 import Services from "../components/Services";
 import Projects from "../components/Projects";
 import Cta from "../components/Cta";
-import { MARKUP_TOP, MARKUP_BOTTOM } from "../_landing/markup";
+import Footer from "../components/Footer";
 
-// Hero, Services, Projects, and the CTA (in-browser voice agent) are React components.
-// Only the nav/tech-bar (top) and footer (bottom) remain as injected legacy markup. The
-// <main id="content"> wrapper lives here so the React sections sit between those chunks.
-// The legacy contact section + "dealflow" modal were replaced by <Cta />.
+// The whole page is now React — no more injected legacy markup. <Nav> is the sticky top bar,
+// then <Hero>, then the content sections. <main id="content"> keeps the id the legacy
+// ScreenAnimation/canvas code references (it self-manages from there).
 export default function Home() {
   return (
     <>
+      <Nav />
       <Hero />
       <main id="content">
-        <div
-          style={{ display: "contents" }}
-          dangerouslySetInnerHTML={{ __html: MARKUP_TOP }}
-        />
+        <TechBar />
         <Services />
         <Projects />
         <Cta />
-        <div
-          style={{ display: "contents" }}
-          dangerouslySetInnerHTML={{ __html: MARKUP_BOTTOM }}
-        />
+        <Footer />
       </main>
     </>
   );

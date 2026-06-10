@@ -1,6 +1,7 @@
 "use client";
 
 import { useCallback, useRef, useState } from "react";
+import Button from "./Button";
 
 // In-browser voice agent for the CTA. Click → mint a short-lived token from /api/retell/web-call
 // → start a WebRTC voice call with the Retell agent (lazy-imported, browser-only). The agent runs
@@ -17,19 +18,10 @@ type RetellClient = {
 
 function BookFallback({ url, note }: { url: string; note?: string }) {
   return (
-    <div className="flex flex-col items-center gap-2">
-      <a
-        href={url}
-        target="_blank"
-        rel="noopener noreferrer"
-        className="group inline-flex items-center gap-2 rounded-full px-7 py-3.5 text-[0.95rem] font-semibold text-white shadow-[0_10px_40px_-8px_rgba(231,2,141,0.6)] transition-transform duration-300 hover:-translate-y-0.5"
-        style={{ backgroundImage: "linear-gradient(100deg,#e21949,#e7028d)" }}
-      >
+    <div className="flex flex-col items-center gap-3">
+      <Button href={url} external variant="primary">
         Book a call
-        <svg className="h-4 w-4 transition-transform duration-300 group-hover:translate-x-1" viewBox="0 0 16 16" fill="none" stroke="currentColor" strokeWidth="1.8">
-          <path d="M3 8h10M9 4l4 4-4 4" strokeLinecap="round" strokeLinejoin="round" />
-        </svg>
-      </a>
+      </Button>
       {note && <p className="text-[0.8rem] text-white/45">{note}</p>}
     </div>
   );
@@ -127,33 +119,49 @@ export default function VoiceWidget({
         aria-label={inCall ? "End the voice call" : "Talk to our AI"}
         className="group relative flex h-28 w-28 items-center justify-center rounded-full outline-none"
       >
+        {/* glow */}
+        <span
+          aria-hidden
+          className={`absolute inset-0 rounded-full blur-2xl transition-opacity duration-500 ${inCall ? "opacity-100" : "opacity-50 group-hover:opacity-95"}`}
+          style={{ background: "radial-gradient(circle, rgba(226,25,73,0.7), transparent 70%)" }}
+        />
         {/* speaking ripple */}
         {speaking && (
           <span
             aria-hidden
-            className="animate-orb-ripple absolute inset-0 rounded-full"
-            style={{ background: "radial-gradient(circle, rgba(231,2,141,0.45), transparent 70%)" }}
+            className="animate-orb-ripple absolute inset-1 rounded-full"
+            style={{ background: "radial-gradient(circle, rgba(226,25,73,0.45), transparent 70%)" }}
           />
         )}
-        {/* glow */}
+        {/* core — machined red-anodized metal: a conic spun-metal sheen + a polished
+            reflection highlight + curvature shadows, with the mic raised as an emboss */}
         <span
-          aria-hidden
-          className={`absolute inset-0 rounded-full blur-xl transition-opacity duration-500 ${inCall ? "opacity-90" : "opacity-60 group-hover:opacity-90"}`}
-          style={{ background: "radial-gradient(circle, rgba(231,2,141,0.6), rgba(5,106,252,0.4) 60%, transparent 75%)" }}
-        />
-        {/* core */}
-        <span
-          className={`relative flex h-20 w-20 items-center justify-center rounded-full border border-white/20 text-white shadow-[0_10px_40px_-8px_rgba(231,2,141,0.7)] transition-transform duration-300 group-hover:scale-105 ${state === "listening" ? "animate-orb-pulse" : ""}`}
-          style={{ backgroundImage: "linear-gradient(135deg,#e7028d,#056afc)" }}
+          className={`relative flex h-20 w-20 items-center justify-center rounded-full transition-transform duration-300 group-hover:scale-105 ${state === "listening" ? "animate-orb-pulse" : ""}`}
+          style={{
+            backgroundColor: "#cf1640",
+            backgroundImage:
+              "radial-gradient(circle at 36% 26%, rgba(255,255,255,0.5) 0%, rgba(255,255,255,0) 44%), conic-gradient(from 218deg at 50% 48%, #ff6379 0deg, #b21036 64deg, #ff6379 132deg, #8b0c2b 198deg, #ff6379 270deg, #b21036 330deg, #ff6379 360deg)",
+            boxShadow:
+              "0 16px 44px -12px rgba(226,25,73,0.8), inset 0 2px 2px rgba(255,255,255,0.55), inset 0 -10px 16px rgba(75,3,19,0.6), inset 0 0 0 1px rgba(0,0,0,0.18)",
+          }}
         >
           {state === "connecting" ? (
-            <span className="h-5 w-5 animate-spin rounded-full border-2 border-white/40 border-t-white" />
+            <span className="h-5 w-5 animate-spin rounded-full border-2 border-white/45 border-t-white" />
           ) : inCall ? (
-            // stop square
-            <span className="h-5 w-5 rounded-[3px] bg-white" />
+            // stop square (embossed)
+            <span className="h-5 w-5 rounded-[3px] bg-[#ffe7ec]" style={{ filter: "drop-shadow(0 1.5px 1px rgba(70,2,18,0.7))" }} />
           ) : (
-            // mic icon
-            <svg className="h-7 w-7" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round">
+            // mic icon — raised emboss
+            <svg
+              className="h-7 w-7"
+              viewBox="0 0 24 24"
+              fill="none"
+              stroke="rgba(255,236,241,0.95)"
+              strokeWidth="2"
+              strokeLinecap="round"
+              strokeLinejoin="round"
+              style={{ filter: "drop-shadow(0 1.5px 1px rgba(70,2,18,0.75)) drop-shadow(0 -0.5px 0.5px rgba(255,255,255,0.5))" }}
+            >
               <rect x="9" y="3" width="6" height="11" rx="3" />
               <path d="M5 11a7 7 0 0 0 14 0M12 18v3" />
             </svg>
@@ -175,7 +183,7 @@ export default function VoiceWidget({
         {state === "ended" && (
           <>
             <span className="text-[1.02rem] font-semibold text-white">Thanks — talk soon.</span>
-            <button type="button" onClick={() => setState("idle")} className="text-[0.85rem] font-semibold text-brand-pink hover:text-white">
+            <button type="button" onClick={() => setState("idle")} className="text-[0.85rem] font-semibold text-white/70 transition-colors hover:text-white">
               Start over
             </button>
           </>

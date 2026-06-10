@@ -3,6 +3,8 @@
 // a boolean + the Cal.com fallback URL to the client widget (no secrets reach the browser).
 // Scoped #tl-cta; carries a neutralized #contact anchor so existing #contact links land here.
 import VoiceWidget from "./VoiceWidget";
+import Bevel, { GLASS_BORDER, GLASS_BG } from "./Bevel";
+import Eyebrow from "./Eyebrow";
 
 const STEPS = [
   { n: 1, t: "Talk to our AI", d: "A 2-minute voice chat — it asks what you're building." },
@@ -22,18 +24,12 @@ export default function Cta() {
       {/* ambient brand glow, centered behind the orb */}
       <div
         aria-hidden
-        className="pointer-events-none absolute left-1/2 top-1/3 -z-10 h-[55vw] w-[70vw] -translate-x-1/2 -translate-y-1/2 rounded-full opacity-45 blur-[150px]"
-        style={{ background: "radial-gradient(circle, rgba(231,2,141,0.40) 0%, rgba(5,106,252,0.22) 45%, transparent 72%)" }}
+        className="pointer-events-none absolute left-1/2 top-1/3 -z-10 h-[52vw] w-[64vw] -translate-x-1/2 -translate-y-1/2 rounded-full opacity-[0.28] blur-[150px]"
+        style={{ background: "radial-gradient(circle, rgba(231,2,141,0.34) 0%, rgba(5,106,252,0.18) 45%, transparent 72%)" }}
       />
 
-      <div className="mx-auto flex w-full max-w-[820px] flex-col items-center px-6 py-24 text-center sm:px-10 sm:py-32">
-        <div className="animate-rise inline-flex items-center gap-2.5 rounded-full border border-white/12 bg-white/[0.04] py-1.5 pl-2.5 pr-4 backdrop-blur-sm">
-          <span className="relative flex h-2 w-2">
-            <span className="absolute inline-flex h-full w-full animate-ping rounded-full bg-brand-pink opacity-70" />
-            <span className="relative inline-flex h-2 w-2 rounded-full bg-brand-pink" />
-          </span>
-          <span className="text-[0.72rem] font-semibold uppercase tracking-[0.22em] text-white/70">Let&apos;s build</span>
-        </div>
+      <div className="mx-auto flex w-full max-w-[820px] flex-col items-center px-6 py-20 text-center sm:px-10 sm:py-24 lg:py-28">
+        <Eyebrow>Let&apos;s build</Eyebrow>
 
         <h2
           className="font-display animate-rise mt-7 text-[clamp(2.1rem,5.5vw,3.6rem)] font-normal uppercase leading-[1.02] tracking-tight"
@@ -58,15 +54,24 @@ export default function Cta() {
         {/* What happens next */}
         <ol className="animate-rise mt-16 grid w-full grid-cols-1 gap-4 text-left sm:grid-cols-3" style={{ animationDelay: "0.3s" }}>
           {STEPS.map((s) => (
-            <li key={s.n} className="rounded-2xl border border-white/12 bg-white/[0.03] p-5 backdrop-blur-sm">
-              <span
-                className="inline-flex h-7 w-7 items-center justify-center rounded-full text-[0.8rem] font-bold text-white"
-                style={{ backgroundImage: "linear-gradient(135deg,#e7028d,#056afc)" }}
-              >
-                {s.n}
-              </span>
-              <h3 className="font-display mt-4 text-[1.05rem] font-normal leading-tight tracking-tight">{s.t}</h3>
-              <p className="mt-2 text-[0.85rem] leading-relaxed text-white/50">{s.d}</p>
+            <li key={s.n}>
+              <Bevel bevel={12} border={GLASS_BORDER} bg={GLASS_BG} innerClassName="backdrop-blur-md" className="h-full">
+                <div className="p-5">
+                  <span
+                    className="bv-6 inline-flex h-7 w-7 items-center justify-center text-[0.8rem] font-bold text-[#e9eaef]"
+                    style={{
+                      backgroundImage: "linear-gradient(145deg, #2b2c33, #16171b)",
+                      boxShadow:
+                        "inset 0 1px 1px rgba(255,255,255,0.14), inset 0 -2px 3px rgba(0,0,0,0.55), 0 4px 12px -6px rgba(0,0,0,0.6)",
+                      textShadow: "0 1px 1px rgba(0,0,0,0.75), 0 -0.5px 0.5px rgba(255,255,255,0.3)",
+                    }}
+                  >
+                    {s.n}
+                  </span>
+                  <h3 className="font-display mt-4 text-[1.05rem] font-normal leading-tight tracking-tight">{s.t}</h3>
+                  <p className="mt-2 text-[0.85rem] leading-relaxed text-white/50">{s.d}</p>
+                </div>
+              </Bevel>
             </li>
           ))}
         </ol>

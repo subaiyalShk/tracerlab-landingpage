@@ -59,5 +59,21 @@ export const metadata: Metadata = {
 export default function TracerlabsLayout({
   children,
 }: Readonly<{ children: React.ReactNode }>) {
-  return <div className={`${jakarta.variable} ${duborics.variable}`}>{children}</div>;
+  // The next/font CSS vars (--font-jakarta/--font-duborics) are defined ON this wrapper by the
+  // .variable classes. Redefine the Tailwind font tokens HERE too (not in globals @theme, which
+  // is declared on :root — an ancestor that can't see these descendant vars) so var(--font-*)
+  // resolves to the self-hosted fonts and inherits into every #tl-* section.
+  return (
+    <div
+      className={`${jakarta.variable} ${duborics.variable}`}
+      style={
+        {
+          "--font-display": 'var(--font-duborics), "Plus Jakarta Sans", sans-serif',
+          "--font-body": 'var(--font-jakarta), system-ui, sans-serif',
+        } as React.CSSProperties
+      }
+    >
+      {children}
+    </div>
+  );
 }

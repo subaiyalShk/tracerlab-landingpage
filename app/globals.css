@@ -28,9 +28,11 @@ a {
   --color-muted: #8a8a93;
   --color-faint: #5a5a63;
 
-  /* Fonts self-hosted via next/font (in app/(tracerlabs)/layout.tsx); --font-jakarta/--font-duborics injected on the wrapper div. */
-  --font-display: var(--font-duborics), "Duborics", "Plus Jakarta Sans", sans-serif;
-  --font-body: var(--font-jakarta), "Plus Jakarta Sans", system-ui, sans-serif;
+  /* Fonts self-hosted via next/font; the actual family vars (--font-jakarta/--font-duborics) live
+     on the (tracerlabs) wrapper div, which redefines --font-display/--font-body to reference them.
+     These literals are only the :root fallback (and let Tailwind generate the font-* utilities). */
+  --font-display: "Duborics", "Plus Jakarta Sans", sans-serif;
+  --font-body: "Plus Jakarta Sans", system-ui, sans-serif;
 
   /* Hero entrance + ambient motion */
   --animate-rise: rise 0.9s cubic-bezier(0.16, 1, 0.3, 1) both;

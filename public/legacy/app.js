@@ -491,7 +491,9 @@
                 this.time = 0;
                 this.message = "Follow the red buttons";
                 this.isRunning = false;
-                
+                this.io = null;
+                this.prefersReducedMotion = !!(window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches);
+
                 // Instead of detecting the theme here, we'll do it in init()
                 this.isLightMode = false;
                 this.transitionProgress = 1; // 0 to 1 for transition
@@ -521,17 +523,18 @@
                     }, 250);
                 });
                 
-                // Listen for theme changes
-                document.getElementById('theme-toggle-checkbox').addEventListener('change', (e) => {
-                    this.updateTheme(!e.target.checked);
-                });
-                
-                // Also listen for the custom event
-                document.addEventListener('themeChanged', (e) => {
-                    if (e.detail && e.detail.isLightMode !== undefined) {
-                        this.updateTheme(e.detail.isLightMode);
-                    }
-                });
+                // Pause the requestAnimationFrame loop when the hero canvas scrolls out of view
+                // (saves battery + main-thread/INP); resume when it returns. NOTE: the old theme
+                // listeners that lived here referenced a #theme-toggle-checkbox that no longer
+                // exists in the React app — they threw a TypeError on every load and are removed.
+                // ThemeToggle.tsx owns theme now and the canvas intentionally stays dark.
+                if ('IntersectionObserver' in window) {
+                    this.io = new IntersectionObserver((entries) => {
+                        if (entries[0].isIntersecting) this.start();
+                        else this.stop();
+                    }, { threshold: 0 });
+                    this.io.observe(this.canvas);
+                }
             }
             
             // Update the updateTheme method to start transition
@@ -588,7 +591,11 @@
                 this.isRunning = true;
                 this.animate();
             }
-            
+
+            stop() {
+                this.isRunning = false;
+            }
+
             animate() {
                 if (!this.isRunning) return;
                 
@@ -632,8 +639,9 @@
                 
                 // Draw text with glow effect
                 this.drawText();
-                
-                requestAnimationFrame(() => this.animate());
+
+                // Under prefers-reduced-motion, render a single static frame instead of looping.
+                if (!this.prefersReducedMotion) requestAnimationFrame(() => this.animate());
             }
             
             drawScanLines() {
@@ -727,56 +735,5 @@
 
         // Initialize everything when DOM is ready
         onDomReady(() => new DevForgeSite());
-
-
-        onDomReady(function() {
-            const themeToggleCheckbox = document.getElementById('theme-toggle-checkbox');
-            const themeStylesheet = document.getElementById('theme-stylesheet');
-            const logoImage = document.querySelector('.logo-img');
-            
-            // Check if user has a saved preference
-            const savedTheme = localStorage.getItem('theme');
-            let isLightMode = savedTheme === 'light';
-            
-            // Set initial theme and logo
-            if (isLightMode) {
-                themeStylesheet.href = 'light-mode.css';
-                themeToggleCheckbox.checked = false;
-                logoImage.src = './assets/logo-light.png'; // Light logo for light mode
-            } else {
-                // Default to dark if no preference or preference is dark
-                themeStylesheet.href = 'style.css';
-                themeToggleCheckbox.checked = true;
-                logoImage.src = './assets/logo-dark.png'; // Dark logo for dark mode
-            }
-            
-            // Dispatch initial theme state for any components that need it
-            setTimeout(() => {
-                document.dispatchEvent(new CustomEvent('themeChanged', { 
-                    detail: { isLightMode: isLightMode } 
-                }));
-            }, 100);
-            
-            themeToggleCheckbox.addEventListener('change', function() {
-                const isLightMode = !this.checked;
-                
-                if (!isLightMode) {
-                    // Dark mode
-                    themeStylesheet.href = 'style.css';
-                    localStorage.setItem('theme', 'dark');
-                    logoImage.src = './assets/logo-dark.png'; // Dark logo for dark mode
-                } else {
-                    // Light mode
-                    themeStylesheet.href = 'light-mode.css';
-                    localStorage.setItem('theme', 'light');
-                    logoImage.src = './assets/logo-light.png'; // Light logo for light mode
-                }
-                
-                // Dispatch a custom event with the theme state
-                document.dispatchEvent(new CustomEvent('themeChanged', { 
-                    detail: { isLightMode: isLightMode } 
-                }));
-            });
-        });
 
         } // end /solar guard

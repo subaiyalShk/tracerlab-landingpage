@@ -2,6 +2,22 @@ import type { Metadata } from "next";
 // Tailwind (no-preflight) + the componentized hero styles + legacy coexistence rules.
 // Scoped to the main Tracerlabs site so it never touches standalone pages like /solar.
 import "../globals.css";
+import { Plus_Jakarta_Sans } from "next/font/google";
+import localFont from "next/font/local";
+
+const jakarta = Plus_Jakarta_Sans({
+  subsets: ["latin"],
+  weight: ["400", "500", "600", "700"],
+  variable: "--font-jakarta",
+  display: "swap",
+});
+
+const duborics = localFont({
+  src: "../../public/fonts/DuboricsRegular.woff2",
+  variable: "--font-duborics",
+  display: "swap",
+  weight: "400",
+});
 
 export const metadata: Metadata = {
   metadataBase: new URL("https://tracerlabs.io"),
@@ -43,5 +59,5 @@ export const metadata: Metadata = {
 export default function TracerlabsLayout({
   children,
 }: Readonly<{ children: React.ReactNode }>) {
-  return children;
+  return <div className={`${jakarta.variable} ${duborics.variable}`}>{children}</div>;
 }

@@ -22,7 +22,7 @@ function BookFallback({ url, note }: { url: string; note?: string }) {
       <Button href={url} external variant="primary">
         Book a call
       </Button>
-      {note && <p className="text-[0.8rem] text-white/45">{note}</p>}
+      {note && <p className="text-[0.8rem] text-ink/45">{note}</p>}
     </div>
   );
 }
@@ -173,17 +173,17 @@ export default function VoiceWidget({
       <div className="flex flex-col items-center gap-1" aria-live="polite">
         {state === "idle" && (
           <>
-            <span className="text-[1.02rem] font-semibold text-white">Talk to our AI</span>
-            <span className="text-[0.82rem] text-white/45">~2 minutes · it books your call</span>
+            <span className="text-[1.02rem] font-semibold text-ink">Talk to our AI</span>
+            <span className="text-[0.82rem] text-ink/45">~2 minutes · it books your call</span>
           </>
         )}
-        {state === "connecting" && <span className="text-[0.95rem] font-medium text-white/80">Connecting…</span>}
-        {state === "listening" && <span className="text-[0.95rem] font-medium text-white/80">Listening… <span className="text-white/45">(tap to end)</span></span>}
-        {state === "speaking" && <span className="text-[0.95rem] font-medium text-white/80">Speaking… <span className="text-white/45">(tap to end)</span></span>}
+        {state === "connecting" && <span className="text-[0.95rem] font-medium text-ink/80">Connecting…</span>}
+        {state === "listening" && <span className="text-[0.95rem] font-medium text-ink/80">Listening… <span className="text-ink/45">(tap to end)</span></span>}
+        {state === "speaking" && <span className="text-[0.95rem] font-medium text-ink/80">Speaking… <span className="text-ink/45">(tap to end)</span></span>}
         {state === "ended" && (
           <>
-            <span className="text-[1.02rem] font-semibold text-white">Thanks — talk soon.</span>
-            <button type="button" onClick={() => setState("idle")} className="text-[0.85rem] font-semibold text-white/70 transition-colors hover:text-white">
+            <span className="text-[1.02rem] font-semibold text-ink">Thanks — talk soon.</span>
+            <button type="button" onClick={() => setState("idle")} className="text-[0.85rem] font-semibold text-ink/70 transition-colors hover:text-ink">
               Start over
             </button>
           </>

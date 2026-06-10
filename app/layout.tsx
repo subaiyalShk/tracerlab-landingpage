@@ -1,4 +1,4 @@
-import type { Metadata } from "next";
+import type { Metadata, Viewport } from "next";
 import Script from "next/script";
 
 // Root layout: only <html>/<body> and the site-wide beforeInteractive scripts
@@ -8,8 +8,14 @@ import Script from "next/script";
 // each area stays fully isolated.
 
 export const metadata: Metadata = {
+  metadataBase: new URL("https://tracerlabs.io"),
   title: "Tracerlabs",
   description: "AI products, web & mobile apps, and growth systems by Tracerlabs.",
+};
+
+export const viewport: Viewport = {
+  themeColor: "#000000",
+  colorScheme: "dark light",
 };
 
 export default function RootLayout({

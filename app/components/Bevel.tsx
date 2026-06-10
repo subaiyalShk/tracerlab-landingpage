@@ -3,9 +3,8 @@ import type { CSSProperties, ReactNode } from "react";
 // Shared dark-glass recipe for card panels (Services tiles, Hero window, Projects copy cards).
 // Centralized so the look can't drift. Tuned to sit QUIETLY on the near-black page — a
 // near-black fill + faint bevel edge + whisper of top sheen, so cards recede, not pop.
-export const GLASS_BORDER = "rgba(255,255,255,0.10)";
-export const GLASS_BG =
-  "linear-gradient(160deg, rgba(255,255,255,0.045) 0%, rgba(255,255,255,0.01) 35%, rgba(255,255,255,0) 70%), rgba(7,8,10,0.82)";
+export const GLASS_BORDER = "var(--tl-card-border)";
+export const GLASS_BG = "var(--tl-card-bg)";
 
 // Bordered chamfered panel. clip-path can't draw a clean border along the diagonal cut, so
 // we stack two clipped layers: the outer is the border color, the inner is inset by 1px with
@@ -18,8 +17,8 @@ function clip(size: number) {
 export default function Bevel({
   children,
   bevel = 14,
-  border = "rgba(255,255,255,0.14)",
-  bg = "#0b0b0e",
+  border = "var(--tl-card-border)",
+  bg = "var(--tl-surface)",
   className = "",
   innerClassName = "",
   style,
@@ -34,7 +33,7 @@ export default function Bevel({
 }) {
   const c = clip(bevel);
   return (
-    <div className={`relative ${className}`} style={{ clipPath: c, backgroundColor: border, ...style }}>
+    <div className={`relative ${className}`} style={{ filter: "var(--tl-card-shadow, none)", clipPath: c, backgroundColor: border, ...style }}>
       <div
         className={`absolute inset-px overflow-hidden ${innerClassName}`}
         style={{ clipPath: c, background: bg }}

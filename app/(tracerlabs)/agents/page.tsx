@@ -4,6 +4,10 @@ import Footer from "../../components/Footer";
 import AgentsHero from "./_components/AgentsHero";
 import TrustStrip from "./_components/TrustStrip";
 import AutopilotSystem from "./_components/AutopilotSystem";
+import AiWorkforce from "./_components/AiWorkforce";
+import WhatThisReplaces from "./_components/WhatThisReplaces";
+import FinancialImpact from "./_components/FinancialImpact";
+import AgentsCta from "./_components/AgentsCta";
 
 export const metadata: Metadata = {
   title: "Custom AI Products & Agents",
@@ -27,9 +31,11 @@ export const metadata: Metadata = {
   },
 };
 
-// Server component. (The Retell env reads for VoiceWidget are added in Task 8, alongside the
-// CTA that consumes them — keeping page.tsx lint-clean here with no unused vars.)
 export default function AgentsPage() {
+  const voiceEnabled = Boolean(process.env.RETELL_API_KEY && process.env.RETELL_AGENT_ID);
+  const calcomUrl =
+    process.env.NEXT_PUBLIC_CAL_BOOKING_LINK || "https://cal.com/team/tracerlabs/discovery-call";
+
   return (
     <>
       <Nav />
@@ -40,6 +46,10 @@ export default function AgentsPage() {
         <AgentsHero />
         <TrustStrip />
         <AutopilotSystem />
+        <AiWorkforce />
+        <WhatThisReplaces />
+        <FinancialImpact />
+        <AgentsCta voiceEnabled={voiceEnabled} calcomUrl={calcomUrl} />
       </main>
       <Footer />
     </>

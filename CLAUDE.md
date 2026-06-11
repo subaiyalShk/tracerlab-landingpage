@@ -45,9 +45,13 @@ Components (`app/components/`):
 (preflight would clobber the legacy `public/style.css`, incl. its `* { margin:0 }`). Consequences:
 - A base `a { color: inherit; text-decoration: none }` reset lives in globals — without it,
   links get the browser-default underline + blue. Use the `underline` utility if you ever want one.
-- The legacy `* { font-family: 'Inter' }` still leaks. Brand fonts are restored by a font-isolation
-  block in globals that scopes `#tl-nav/#tl-hero/#tl-services/#tl-projects/#tl-cta/#tl-footer`.
-  **Any new top-level React section MUST add its `#tl-*` id to that block** or it renders in Inter.
+- **Fonts (updated by the perf work):** the legacy `* { font-family: 'Inter' }` leak is **gone** —
+  `public/style.css` was slimmed to just the universal box reset. Brand fonts now come from
+  `next/font` on the `(tracerlabs)` wrapper (`--font-display`/`--font-body`). A new top-level
+  section just needs to **inherit `font-body`** (place it under a `font-body` container — the home
+  page sections and `app/(tracerlabs)/agents/<main className="font-body">` do this) and put
+  `font-display` on its headings. The old `#tl-*` font-isolation block in globals still exists but
+  is now vestigial — **new sections no longer need a `#tl-*` id** to get the right font.
 
 ## Legacy JS
 `public/legacy/app.js` (`DevForgeSite`) is stripped to **only** initialize `ScreenAnimation`

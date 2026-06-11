@@ -1,6 +1,9 @@
 import type { Metadata } from "next";
 import Nav from "../../components/Nav";
 import Footer from "../../components/Footer";
+import AgentsHero from "./_components/AgentsHero";
+import TrustStrip from "./_components/TrustStrip";
+import AutopilotSystem from "./_components/AutopilotSystem";
 
 export const metadata: Metadata = {
   title: "Custom AI Products & Agents",
@@ -34,7 +37,9 @@ export default function AgentsPage() {
           needed — the legacy *{font-family:Inter} leak was removed in the perf work). Headings
           use the font-display utility. */}
       <main id="content" className="font-body bg-page text-ink">
-        {/* sections added in Tasks 2–8 */}
+        <AgentsHero />
+        <TrustStrip />
+        <AutopilotSystem />
       </main>
       <Footer />
     </>

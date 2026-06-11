@@ -1,5 +1,8 @@
+import type { ReactNode } from "react";
 import Bevel, { GLASS_BORDER, GLASS_BG } from "../../../components/Bevel";
 import Eyebrow from "../../../components/Eyebrow";
+import Reveal from "./Reveal";
+import CallMockup from "./CallMockup";
 
 type Visual =
   | { kind: "chat"; lines: { who: "them" | "ai"; text: string }[] }
@@ -81,7 +84,7 @@ function StageVisual({ v }: { v: Visual }) {
   );
 }
 
-function StageCard({ s, mediaRight }: { s: Stage; mediaRight: boolean }) {
+function StageCard({ s, mediaRight, mockup }: { s: Stage; mediaRight: boolean; mockup?: ReactNode }) {
   return (
     <article className={`animate-rise flex flex-col gap-6 lg:flex-row lg:items-center lg:gap-12 ${mediaRight ? "" : "lg:flex-row-reverse"}`}>
       <div className="lg:w-[46%]">
@@ -99,11 +102,15 @@ function StageCard({ s, mediaRight }: { s: Stage; mediaRight: boolean }) {
         <p className="mt-3 text-[0.98rem] leading-relaxed text-ink/55">{s.desc}</p>
       </div>
       <div className="lg:flex-1">
-        <Bevel bevel={14} border={GLASS_BORDER} bg={GLASS_BG} innerClassName="backdrop-blur-md">
-          <div className="p-5 sm:p-6">
-            <StageVisual v={s.visual} />
-          </div>
-        </Bevel>
+        {mockup ? (
+          <Reveal>{mockup}</Reveal>
+        ) : (
+          <Bevel bevel={14} border={GLASS_BORDER} bg={GLASS_BG} innerClassName="backdrop-blur-md">
+            <div className="p-5 sm:p-6">
+              <StageVisual v={s.visual} />
+            </div>
+          </Bevel>
+        )}
       </div>
     </article>
   );
@@ -125,7 +132,7 @@ export default function AutopilotSystem() {
         </div>
         <div className="mt-14 flex flex-col gap-14 sm:gap-16">
           {STAGES.map((s, i) => (
-            <StageCard key={s.n} s={s} mediaRight={i % 2 === 0} />
+            <StageCard key={s.n} s={s} mediaRight={i % 2 === 0} mockup={s.n === 3 ? <CallMockup /> : undefined} />
           ))}
         </div>
       </div>

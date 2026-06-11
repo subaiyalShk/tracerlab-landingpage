@@ -2,6 +2,7 @@ import type { ReactNode } from "react";
 import Bevel, { GLASS_BORDER, GLASS_BG } from "../../../components/Bevel";
 import Eyebrow from "../../../components/Eyebrow";
 import CallMockup from "./CallMockup";
+import AutopilotCarousel from "./AutopilotCarousel";
 
 type Visual =
   | { kind: "chat"; lines: { who: "them" | "ai"; text: string }[] }
@@ -83,10 +84,10 @@ function StageVisual({ v }: { v: Visual }) {
   );
 }
 
-function StageCard({ s, mediaRight, mockup }: { s: Stage; mediaRight: boolean; mockup?: ReactNode }) {
+function StageSlide({ s, mockup }: { s: Stage; mockup?: ReactNode }) {
   return (
-    <article className={`animate-rise flex flex-col gap-6 lg:flex-row lg:items-center lg:gap-12 ${mediaRight ? "" : "lg:flex-row-reverse"}`}>
-      <div className="lg:w-[46%]">
+    <article className="flex h-full flex-col gap-6 lg:flex-row lg:items-center lg:gap-10">
+      <div className="lg:w-[40%]">
         <span
           className="bv-6 inline-flex h-9 w-9 items-center justify-center text-[0.85rem] font-bold text-[#e9eaef]"
           style={{
@@ -100,7 +101,7 @@ function StageCard({ s, mediaRight, mockup }: { s: Stage; mediaRight: boolean; m
         <h3 className="font-display mt-4 text-[clamp(1.3rem,2.4vw,1.7rem)] font-normal leading-tight tracking-tight">{s.title}</h3>
         <p className="mt-3 text-[0.98rem] leading-relaxed text-ink/55">{s.desc}</p>
       </div>
-      <div className="lg:flex-1">
+      <div className="w-full lg:flex-1">
         {mockup ?? (
           <Bevel bevel={14} border={GLASS_BORDER} bg={GLASS_BG} innerClassName="backdrop-blur-md">
             <div className="p-5 sm:p-6">
@@ -127,10 +128,12 @@ export default function AutopilotSystem() {
             Fourteen AI-powered stages working 24/7 to generate, convert, and retain customers — without lifting a finger.
           </p>
         </div>
-        <div className="mt-14 flex flex-col gap-14 sm:gap-16">
-          {STAGES.map((s, i) => (
-            <StageCard key={s.n} s={s} mediaRight={i % 2 === 0} mockup={s.n === 3 ? <CallMockup /> : undefined} />
-          ))}
+        <div className="mt-12">
+          <AutopilotCarousel labels={STAGES.map((s) => s.title)}>
+            {STAGES.map((s) => (
+              <StageSlide key={s.n} s={s} mockup={s.n === 3 ? <CallMockup /> : undefined} />
+            ))}
+          </AutopilotCarousel>
         </div>
       </div>
     </section>

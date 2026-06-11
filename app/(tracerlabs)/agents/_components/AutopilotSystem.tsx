@@ -1,7 +1,6 @@
 import type { ReactNode } from "react";
 import Bevel, { GLASS_BORDER, GLASS_BG } from "../../../components/Bevel";
 import Eyebrow from "../../../components/Eyebrow";
-import Reveal from "./Reveal";
 import CallMockup from "./CallMockup";
 
 type Visual =
@@ -102,9 +101,7 @@ function StageCard({ s, mediaRight, mockup }: { s: Stage; mediaRight: boolean; m
         <p className="mt-3 text-[0.98rem] leading-relaxed text-ink/55">{s.desc}</p>
       </div>
       <div className="lg:flex-1">
-        {mockup ? (
-          <Reveal>{mockup}</Reveal>
-        ) : (
+        {mockup ?? (
           <Bevel bevel={14} border={GLASS_BORDER} bg={GLASS_BG} innerClassName="backdrop-blur-md">
             <div className="p-5 sm:p-6">
               <StageVisual v={s.visual} />

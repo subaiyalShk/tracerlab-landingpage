@@ -7,6 +7,7 @@ import AutopilotSystem from "./_components/AutopilotSystem";
 import AiWorkforce from "./_components/AiWorkforce";
 import WhatThisReplaces from "./_components/WhatThisReplaces";
 import FinancialImpact from "./_components/FinancialImpact";
+import Deployments from "./_components/Deployments";
 import AgentsCta from "./_components/AgentsCta";
 
 export const metadata: Metadata = {
@@ -49,6 +50,7 @@ export default function AgentsPage() {
         <AiWorkforce />
         <WhatThisReplaces />
         <FinancialImpact />
+        <Deployments />
         <AgentsCta voiceEnabled={voiceEnabled} calcomUrl={calcomUrl} />
       </main>
       <Footer />

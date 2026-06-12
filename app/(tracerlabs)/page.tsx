@@ -6,6 +6,7 @@ import Projects from "../components/Projects";
 import Cta from "../components/Cta";
 import Footer from "../components/Footer";
 import JsonLd from "../components/JsonLd";
+import StickyCtaBar from "../components/StickyCtaBar";
 
 // The whole page is now React — no more injected legacy markup. <Nav> sits AFTER the hero so
 // it rests at the bottom of the first screen, then (position: sticky; top: 0) rises to stick
@@ -22,6 +23,13 @@ export default function Home() {
         <Services />
         <Projects />
         <Cta />
+        <StickyCtaBar
+          heroId="tl-hero"
+          ctaId="tl-cta"
+          message="Let's build your AI"
+          buttonLabel="Start your project"
+          buttonHref="#contact"
+        />
         <Footer />
       </main>
     </>

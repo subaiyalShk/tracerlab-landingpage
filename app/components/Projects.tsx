@@ -8,6 +8,7 @@ import Image from "next/image";
 import ProjectVideo from "./ProjectVideo";
 import Bevel, { GLASS_BORDER, GLASS_BG } from "./Bevel";
 import Eyebrow from "./Eyebrow";
+import { Kinetic, Reveal } from "./motion";
 
 type Media =
   | { kind: "video"; src: string; poster: string; fit?: "cover" | "contain"; label: string }
@@ -204,13 +205,15 @@ export default function Projects() {
         {/* header */}
         <div className="max-w-[44rem]">
           <Eyebrow>Recent work</Eyebrow>
-          <h2 className="font-display animate-rise mt-6 text-[clamp(2rem,5vw,3.4rem)] font-normal uppercase leading-[1.0] tracking-tight" style={{ animationDelay: "0.06s" }}>
-            Work we&apos;ve{" "}
-            <span className="bg-clip-text text-transparent" style={{ backgroundImage: "linear-gradient(100deg,#e7028d,#056afc)" }}>shipped</span>
-          </h2>
-          <p className="animate-rise mt-5 max-w-[40rem] text-[1.02rem] leading-relaxed text-ink/55" style={{ animationDelay: "0.12s" }}>
-            Real products in production — voice agents, field-sales platforms, operations software, and AI video. A sample of what we&apos;ve built for the businesses we work with.
-          </p>
+          <Kinetic
+            segments={[{ text: "Work we've " }, { text: "shipped", gradient: true }]}
+            className="font-display mt-6 text-[clamp(2rem,5vw,3.4rem)] font-normal uppercase leading-[1.0] tracking-tight"
+          />
+          <Reveal delay={0.15}>
+            <p className="mt-5 max-w-[40rem] text-[1.02rem] leading-relaxed text-ink/55">
+              Real products in production — voice agents, field-sales platforms, operations software, and AI video. A sample of what we&apos;ve built for the businesses we work with.
+            </p>
+          </Reveal>
         </div>
 
         {/* alternating rows */}
@@ -218,9 +221,9 @@ export default function Projects() {
           {PROJECTS.map((p, i) => {
             const mediaRight = i % 2 === 1; // alternate sides on lg
             return (
+              <Reveal key={p.id} y={36} amount={0.12}>
               <article
-                key={p.id}
-                className={`animate-rise flex flex-col gap-9 lg:flex-row lg:items-stretch lg:gap-14 ${mediaRight ? "lg:flex-row-reverse" : ""}`}
+                className={`flex flex-col gap-9 lg:flex-row lg:items-stretch lg:gap-14 ${mediaRight ? "lg:flex-row-reverse" : ""}`}
               >
                 {/* media — full width on mobile (tall 9:16 reel), phone-width on lg.
                     With flex-row(-reverse) + default justify, the slack falls to the outer edge,
@@ -271,18 +274,21 @@ export default function Projects() {
                   </div>
                 </Bevel>
               </article>
+              </Reveal>
             );
           })}
         </div>
 
         {/* section CTA → conversion */}
-        <p className="animate-rise mt-16 text-[0.98rem] text-ink/55">
-          Have something like this in mind?{" "}
-          <a href="#contact" className="group/lk inline-flex items-center gap-1.5 font-semibold text-ink/80 transition-colors hover:text-ink">
-            Tell us what you&apos;re building
-            <Arrow />
-          </a>
-        </p>
+        <Reveal amount={0.6} y={14}>
+          <p className="mt-16 text-[0.98rem] text-ink/55">
+            Have something like this in mind?{" "}
+            <a href="#contact" className="group/lk inline-flex items-center gap-1.5 font-semibold text-ink/80 transition-colors hover:text-ink">
+              Tell us what you&apos;re building
+              <Arrow />
+            </a>
+          </p>
+        </Reveal>
       </div>
     </section>
   );

@@ -6,6 +6,7 @@
 
 import Bevel, { GLASS_BORDER, GLASS_BG } from "./Bevel";
 import Eyebrow from "./Eyebrow";
+import { Kinetic, Reveal } from "./motion";
 
 type Service = {
   title: string;
@@ -136,7 +137,10 @@ function Cta({ cta }: { cta: Service["cta"] }) {
 }
 
 // Shared glass-tile shell — beveled (chamfered) panel with a hover lift + brand edge-glow.
-// `className` styles the grid item (bento spans); `contentClassName` styles the inner layout.
+// `className` styles the grid item (bento spans — it lands on the Reveal wrapper, which IS
+// the grid item); `contentClassName` styles the inner layout. Entrance is scroll-triggered
+// (Reveal) so the stagger actually plays when the section enters view, instead of finishing
+// off-screen on page load like the old animate-rise did.
 function Tile({
   children,
   className = "",
@@ -149,13 +153,12 @@ function Tile({
   delay?: number;
 }) {
   return (
+    <Reveal delay={delay} y={30} amount={0.2} className={className}>
     <Bevel
       bevel={16}
       border={GLASS_BORDER}
       bg={GLASS_BG}
-      innerClassName="backdrop-blur-md"
-      className={`group animate-rise transition-transform duration-300 hover:-translate-y-1 ${className}`}
-      style={{ animationDelay: `${delay}s` }}
+      className="group h-full transition-transform duration-300 hover:-translate-y-1"
     >
       <div className={`relative flex h-full flex-col p-7 sm:p-8 ${contentClassName}`}>
         {/* brand edge glow on hover */}
@@ -170,6 +173,7 @@ function Tile({
         {children}
       </div>
     </Bevel>
+    </Reveal>
   );
 }
 
@@ -193,25 +197,16 @@ export default function Services() {
         {/* Header */}
         <div className="max-w-[44rem]">
           <Eyebrow>What we do</Eyebrow>
-          <h2
-            className="font-display animate-rise mt-6 text-[clamp(2rem,5vw,3.4rem)] font-normal uppercase leading-[0.98] tracking-tight"
-            style={{ animationDelay: "0.06s" }}
-          >
-            Four ways we put{" "}
-            <span
-              className="bg-clip-text text-transparent"
-              style={{ backgroundImage: "linear-gradient(100deg,#e7028d,#056afc)" }}
-            >
-              AI to work
-            </span>
-          </h2>
-          <p
-            className="animate-rise mt-5 max-w-[40rem] text-[1.02rem] leading-relaxed text-ink/55"
-            style={{ animationDelay: "0.12s" }}
-          >
-            One team, end to end — we design, build, and ship the systems that
-            answer your calls, run on your phone, and grow your pipeline.
-          </p>
+          <Kinetic
+            segments={[{ text: "Four ways we put " }, { text: "AI to work", gradient: true }]}
+            className="font-display mt-6 text-[clamp(2rem,5vw,3.4rem)] font-normal uppercase leading-[0.98] tracking-tight"
+          />
+          <Reveal delay={0.15}>
+            <p className="mt-5 max-w-[40rem] text-[1.02rem] leading-relaxed text-ink/55">
+              One team, end to end — we design, build, and ship the systems that
+              answer your calls, run on your phone, and grow your pipeline.
+            </p>
+          </Reveal>
         </div>
 
         {/* Bento grid — mobile: 1 col stack; sm+: 2-col bento with a featured tile */}
@@ -275,10 +270,8 @@ export default function Services() {
         </div>
 
         {/* Section CTA → conversion */}
-        <p
-          className="animate-rise mt-12 text-[0.98rem] text-ink/55"
-          style={{ animationDelay: "0.46s" }}
-        >
+        <Reveal amount={0.6} y={14}>
+        <p className="mt-12 text-[0.98rem] text-ink/55">
           Not sure what you need?{" "}
           <a
             href="#contact"
@@ -290,6 +283,7 @@ export default function Services() {
             </svg>
           </a>
         </p>
+        </Reveal>
       </div>
     </section>
   );

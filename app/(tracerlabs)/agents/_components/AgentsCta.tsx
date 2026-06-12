@@ -1,6 +1,7 @@
 import VoiceWidget from "../../../components/VoiceWidget";
 import Button from "../../../components/Button";
 import Eyebrow from "../../../components/Eyebrow";
+import { Kinetic, Reveal } from "../../../components/motion";
 
 export default function AgentsCta({ voiceEnabled, calcomUrl }: { voiceEnabled: boolean; calcomUrl: string }) {
   return (
@@ -14,19 +15,26 @@ export default function AgentsCta({ voiceEnabled, calcomUrl }: { voiceEnabled: b
         <div className="flex justify-center">
           <Eyebrow>Let&apos;s build</Eyebrow>
         </div>
-        <h2 className="font-display animate-rise mt-7 text-[clamp(2.1rem,5.5vw,3.6rem)] font-normal uppercase leading-[1.02] tracking-tight">
-          Ready to put your business on{" "}
-          <span className="bg-clip-text text-transparent" style={{ backgroundImage: "linear-gradient(100deg,#e7028d,#056afc)" }}>autopilot?</span>
-        </h2>
-        <p className="animate-rise mt-6 max-w-[36rem] text-[1.05rem] leading-relaxed text-ink/55">
-          Talk to our AI agent right now, or book a demo to see the full system deployed for your business in days, not months.
-        </p>
-        <div className="animate-rise mt-12">
-          <VoiceWidget voiceEnabled={voiceEnabled} calcomUrl={calcomUrl} />
-        </div>
-        <div className="animate-rise mt-10">
-          <Button href={calcomUrl} variant="secondary" external>Book a Demo</Button>
-        </div>
+        <Kinetic
+          segments={[{ text: "Ready to put your business on " }, { text: "autopilot?", gradient: true }]}
+          className="font-display mt-7 text-[clamp(2.1rem,5.5vw,3.6rem)] font-normal uppercase leading-[1.02] tracking-tight"
+        />
+        <Reveal delay={0.2}>
+          <p className="mt-6 max-w-[36rem] text-[1.05rem] leading-relaxed text-ink/55">
+            Talk to our AI agent right now, or book a demo to see the full system deployed for your business in days, not months.
+          </p>
+        </Reveal>
+        <Reveal delay={0.35} amount={0.2}>
+          <div className="mt-12">
+            <VoiceWidget voiceEnabled={voiceEnabled} calcomUrl={calcomUrl} />
+          </div>
+        </Reveal>
+        <Reveal delay={0.45} amount={0.2}>
+          <div className="mt-10 flex flex-col items-center gap-3">
+            <Button href={calcomUrl} variant="secondary" external>Book a Demo</Button>
+            <span className="text-[0.78rem] text-ink/35">Deployed in days, not months.</span>
+          </div>
+        </Reveal>
       </div>
     </section>
   );

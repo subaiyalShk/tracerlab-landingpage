@@ -9,6 +9,7 @@ import WhatThisReplaces from "./_components/WhatThisReplaces";
 import FinancialImpact from "./_components/FinancialImpact";
 import Deployments from "./_components/Deployments";
 import AgentsCta from "./_components/AgentsCta";
+import StickyCtaBar from "../../components/StickyCtaBar";
 
 export const metadata: Metadata = {
   title: "Custom AI Products & Agents",
@@ -39,12 +40,23 @@ export default function AgentsPage() {
 
   return (
     <>
-      <Nav />
+      {/* Hero before Nav: the hero fills the first screen (100vh - 5rem) and the sticky nav
+          rests at the bottom of it, rising to the top on scroll — same choreography as the
+          home page. Nav links point at THIS page's section ids (the home anchors don't exist
+          here). */}
+      <AgentsHero />
+      <Nav
+        links={[
+          { label: "How It Works", href: "#tl-ag-system" },
+          { label: "Your AI Team", href: "#tl-ag-workforce" },
+          { label: "Results", href: "#tl-ag-deployments" },
+        ]}
+        contactHref="#tl-ag-cta"
+      />
       {/* font-body so all new sections inherit the brand body font (no #tl-* isolation edit
           needed — the legacy *{font-family:Inter} leak was removed in the perf work). Headings
           use the font-display utility. */}
       <main id="content" className="font-body bg-page text-ink">
-        <AgentsHero />
         <TrustStrip />
         <AutopilotSystem />
         <AiWorkforce />
@@ -52,6 +64,12 @@ export default function AgentsPage() {
         <FinancialImpact />
         <Deployments />
         <AgentsCta voiceEnabled={voiceEnabled} calcomUrl={calcomUrl} />
+        <StickyCtaBar
+          heroId="tl-ag-hero"
+          ctaId="tl-ag-cta"
+          message="Your business, on autopilot"
+          buttonHref="#tl-ag-cta"
+        />
       </main>
       <Footer />
     </>

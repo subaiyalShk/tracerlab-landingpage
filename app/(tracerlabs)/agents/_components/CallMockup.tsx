@@ -20,8 +20,8 @@ const card: Variants = {
   show: { transition: { staggerChildren: 0.14, delayChildren: 0.05 } },
 };
 const item: Variants = {
-  hidden: { opacity: 0, y: 16, filter: "blur(6px)" },
-  show: { opacity: 1, y: 0, filter: "blur(0px)", transition: { type: "spring", stiffness: 230, damping: 22 } },
+  hidden: { opacity: 0, y: 16 },
+  show: { opacity: 1, y: 0, transition: { type: "spring", stiffness: 230, damping: 22 } },
 };
 const script: Variants = {
   hidden: {},
@@ -36,24 +36,16 @@ const confirm: Variants = {
   show: { opacity: 1, scale: 1, y: 0, transition: { type: "spring", stiffness: 380, damping: 15 } },
 };
 
-export default function CallMockup() {
+export default function CallMockup({ frameless = false }: { frameless?: boolean }) {
   const ref = useRef<HTMLDivElement>(null);
+  // NOTE: `ref` must be attached in BOTH branches — useScroll({ target }) throws if the ref
+  // never lands on an element (kills motion's frame loop page-wide).
   const { scrollYProgress } = useScroll({ target: ref, offset: ["start end", "end start"] });
   const y = useSpring(useTransform(scrollYProgress, [0, 1], [34, -34]), { stiffness: 90, damping: 24, mass: 0.4 });
   const rotateX = useTransform(scrollYProgress, [0, 0.5, 1], [5, 0, -4]);
 
-  return (
-    <MotionConfig reducedMotion="user">
-      <motion.div ref={ref} style={{ y }} className="[perspective:1200px]">
-        <motion.div
-          style={{ rotateX, transformStyle: "preserve-3d" }}
-          variants={card}
-          initial="hidden"
-          whileInView="show"
-          viewport={{ once: true, amount: 0.4 }}
-        >
-          <Bevel bevel={14} border={GLASS_BORDER} bg={GLASS_BG} innerClassName="backdrop-blur-md">
-            <div className="flex flex-col gap-4 p-5 sm:p-6">
+  const panel = (
+    <div className="flex flex-col gap-4 p-5 sm:p-6">
               {/* header */}
               <motion.div variants={item} className="flex items-center justify-between gap-3">
                 <div>
@@ -108,7 +100,33 @@ export default function CallMockup() {
                   <span className="text-brand-blue">✓</span> Appointment booked — Thursday, 2:00 PM
                 </motion.div>
               </motion.div>
-            </div>
+    </div>
+  );
+
+  // Inside the pinned console the screen frame already exists and the panel is always on
+  // screen — render just the content with the entrance cascade, no parallax/tilt/Bevel.
+  if (frameless) {
+    return (
+      <MotionConfig reducedMotion="user">
+        <motion.div ref={ref} variants={card} initial="hidden" animate="show">
+          {panel}
+        </motion.div>
+      </MotionConfig>
+    );
+  }
+
+  return (
+    <MotionConfig reducedMotion="user">
+      <motion.div ref={ref} style={{ y }} className="[perspective:1200px]">
+        <motion.div
+          style={{ rotateX, transformStyle: "preserve-3d" }}
+          variants={card}
+          initial="hidden"
+          whileInView="show"
+          viewport={{ once: true, amount: 0.4 }}
+        >
+          <Bevel bevel={14} border={GLASS_BORDER} bg={GLASS_BG}>
+            {panel}
           </Bevel>
         </motion.div>
       </motion.div>

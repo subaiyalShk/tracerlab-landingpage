@@ -5,6 +5,7 @@
 import VoiceWidget from "./VoiceWidget";
 import Bevel, { GLASS_BORDER, GLASS_BG } from "./Bevel";
 import Eyebrow from "./Eyebrow";
+import { CountUp, Kinetic, Reveal } from "./motion";
 
 const STEPS = [
   { n: 1, t: "Talk to our AI", d: "A 2-minute voice chat — it asks what you're building." },
@@ -31,31 +32,31 @@ export default function Cta() {
       <div className="mx-auto flex w-full max-w-[820px] flex-col items-center px-6 py-20 text-center sm:px-10 sm:py-24 lg:py-28">
         <Eyebrow>Let&apos;s build</Eyebrow>
 
-        <h2
-          className="font-display animate-rise mt-7 text-[clamp(2.1rem,5.5vw,3.6rem)] font-normal uppercase leading-[1.02] tracking-tight"
-          style={{ animationDelay: "0.06s" }}
-        >
-          Ready to put{" "}
-          <span className="bg-clip-text text-transparent" style={{ backgroundImage: "linear-gradient(100deg,#e7028d,#056afc)" }}>
-            AI to work?
-          </span>
-        </h2>
+        <Kinetic
+          segments={[{ text: "Ready to put " }, { text: "AI to work?", gradient: true }]}
+          className="font-display mt-7 text-[clamp(2.1rem,5.5vw,3.6rem)] font-normal uppercase leading-[1.02] tracking-tight"
+        />
 
-        <p className="animate-rise mt-6 max-w-[34rem] text-[1.05rem] leading-relaxed text-ink/55" style={{ animationDelay: "0.12s" }}>
-          Talk to our AI for two minutes — it&apos;ll learn what you&apos;re building and book your
-          call on the spot. Yes, it&apos;s one of ours.
-        </p>
+        <Reveal delay={0.2}>
+          <p className="mt-6 max-w-[34rem] text-[1.05rem] leading-relaxed text-ink/55">
+            Talk to our AI for two minutes — it&apos;ll learn what you&apos;re building and book your
+            call on the spot. Yes, it&apos;s one of ours.
+          </p>
+        </Reveal>
 
         {/* The voice agent */}
-        <div className="animate-rise mt-12" style={{ animationDelay: "0.2s" }}>
-          <VoiceWidget voiceEnabled={voiceEnabled} calcomUrl={calcomUrl} />
-        </div>
+        <Reveal delay={0.35} amount={0.2}>
+          <div className="mt-12">
+            <VoiceWidget voiceEnabled={voiceEnabled} calcomUrl={calcomUrl} />
+          </div>
+        </Reveal>
 
         {/* What happens next */}
-        <ol className="animate-rise mt-16 grid w-full grid-cols-1 gap-4 text-left sm:grid-cols-3" style={{ animationDelay: "0.3s" }}>
-          {STEPS.map((s) => (
+        <ol className="mt-16 grid w-full grid-cols-1 gap-4 text-left sm:grid-cols-3">
+          {STEPS.map((s, i) => (
             <li key={s.n}>
-              <Bevel bevel={12} border={GLASS_BORDER} bg={GLASS_BG} innerClassName="backdrop-blur-md" className="h-full">
+              <Reveal delay={i * 0.12} y={24} amount={0.3} className="h-full">
+              <Bevel bevel={12} border={GLASS_BORDER} bg={GLASS_BG} className="h-full">
                 <div className="p-5">
                   <span
                     className="bv-6 inline-flex h-7 w-7 items-center justify-center text-[0.8rem] font-bold text-[#e9eaef]"
@@ -72,13 +73,19 @@ export default function Cta() {
                   <p className="mt-2 text-[0.85rem] leading-relaxed text-ink/50">{s.d}</p>
                 </div>
               </Bevel>
+              </Reveal>
             </li>
           ))}
         </ol>
 
-        <p className="animate-rise mt-10 text-[0.85rem] text-ink/40" style={{ animationDelay: "0.38s" }}>
-          <span className="font-semibold text-ink/70">300+</span> businesses served · we reply within a day
-        </p>
+        <Reveal amount={0.6} y={12}>
+          <p className="mt-10 text-[0.85rem] text-ink/40">
+            <span className="font-semibold text-ink/70">
+              <CountUp value={300} suffix="+" />
+            </span>{" "}
+            businesses served · we reply within a day
+          </p>
+        </Reveal>
       </div>
     </section>
   );

@@ -1,5 +1,6 @@
 import Bevel, { GLASS_BORDER, GLASS_BG } from "../../../components/Bevel";
 import Eyebrow from "../../../components/Eyebrow";
+import { Kinetic, Reveal } from "../../../components/motion";
 
 const GROUPS: { category: string; agents: { name: string; role: string }[] }[] = [
   { category: "Front-End", agents: [{ name: "AI Marketer", role: "Ads & Leads" }, { name: "AI Receptionist", role: "Instant Answers" }, { name: "AI Voice Agent", role: "Calls & Qualifies" }] },
@@ -28,7 +29,6 @@ function AgentCard({ name, role, delay }: { name: string; role: string; delay: n
         border={GLASS_BORDER}
         bg={GLASS_BG}
         className="transition-transform duration-300 ease-[cubic-bezier(0.4,0,0.2,1)] group-hover:-translate-y-1"
-        innerClassName="backdrop-blur-md"
       >
         <div className="relative flex items-center justify-between gap-2 overflow-hidden p-4">
           {/* light sheen that sweeps across on hover */}
@@ -61,7 +61,7 @@ function AgentCard({ name, role, delay }: { name: string; role: string; delay: n
 
 export default function AiWorkforce() {
   return (
-    <section id="tl-ag-workforce" className="relative isolate w-full overflow-hidden bg-page">
+    <section id="tl-ag-workforce" className="relative isolate w-full overflow-hidden bg-page" style={{ scrollMarginTop: "5rem" }}>
       {/* ambient drifting brand glow */}
       <div
         aria-hidden
@@ -71,27 +71,38 @@ export default function AiWorkforce() {
       <div className="mx-auto w-full max-w-[1180px] px-6 py-20 sm:px-10 sm:py-24 lg:py-28">
         <div className="max-w-[44rem]">
           <Eyebrow>Your AI workforce</Eyebrow>
-          <h2 className="font-display animate-rise mt-6 text-[clamp(2rem,5vw,3.4rem)] font-normal uppercase leading-[1.0] tracking-tight">Meet your AI team</h2>
-          <p className="animate-rise mt-5 max-w-[40rem] text-[1.02rem] leading-relaxed text-ink/55">A fully automated company working 24/7 to run and grow your business.</p>
+          <Kinetic
+            segments={[{ text: "Meet your AI " }, { text: "team.", gradient: true }]}
+            className="font-display mt-6 text-[clamp(2rem,5vw,3.4rem)] font-normal uppercase leading-[1.0] tracking-tight"
+          />
+          <Reveal delay={0.15}>
+            <p className="mt-5 max-w-[40rem] text-[1.02rem] leading-relaxed text-ink/55">A fully automated company working 24/7 to run and grow your business.</p>
+          </Reveal>
         </div>
         <div className="mt-12 flex flex-col gap-8">
           {GROUPS.map((g, gi) => (
             <div key={g.category}>
-              <div className="mb-3 flex items-center gap-3 text-[0.72rem] font-semibold uppercase tracking-[0.2em] text-ink/40">
-                <span aria-hidden className="h-px w-5 bg-gradient-to-r from-brand-pink/70 to-transparent" />
-                {g.category}
-              </div>
+              <Reveal amount={0.5} y={14}>
+                <div className="mb-3 flex items-center gap-3 text-[0.72rem] font-semibold uppercase tracking-[0.2em] text-ink/40">
+                  <span aria-hidden className="h-px w-5 bg-gradient-to-r from-brand-pink/70 to-transparent" />
+                  {g.category}
+                </div>
+              </Reveal>
               <div className="grid grid-cols-2 gap-3 sm:grid-cols-3 lg:grid-cols-4">
                 {g.agents.map((a, ai) => (
-                  <AgentCard key={a.name} name={a.name} role={a.role} delay={((gi + ai) % 5) * 0.3} />
+                  <Reveal key={a.name} delay={ai * 0.07} y={20} amount={0.2}>
+                    <AgentCard name={a.name} role={a.role} delay={((gi + ai) % 5) * 0.3} />
+                  </Reveal>
                 ))}
               </div>
             </div>
           ))}
         </div>
-        <p className="animate-rise mt-12 max-w-[40rem] text-[1.1rem] font-medium leading-snug text-ink/80">
-          Now you run the business. The business doesn&apos;t run you.
-        </p>
+        <Kinetic
+          as="p"
+          segments={[{ text: "Now you run the business. " }, { text: "The business doesn't run you.", gradient: true }]}
+          className="font-display mt-14 max-w-[26ch] text-[clamp(1.5rem,3.2vw,2.2rem)] font-normal uppercase leading-[1.1] tracking-tight"
+        />
       </div>
     </section>
   );

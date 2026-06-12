@@ -1,4 +1,4 @@
-// Shared autopilot-stage data + the default "screen" renderer, used by AutopilotConsole.
+// Shared autopilot-stage data + the default "screen" renderer, used by ConsoleView.
 export type Visual =
   | { kind: "chat"; lines: { who: "them" | "ai"; text: string }[] }
   | { kind: "rows"; rows: { label: string; value: string; tone?: "pink" | "blue" | "muted" }[] }
@@ -45,7 +45,7 @@ export function StageVisual({ v }: { v: Visual }) {
   if (v.kind === "stat") {
     return (
       <div className="flex flex-col items-start justify-center">
-        <div className="font-display bg-clip-text text-[2.6rem] leading-none text-transparent" style={{ backgroundImage: "linear-gradient(100deg,#e7028d,#056afc)" }}>{v.big}</div>
+        <div className="font-body bg-clip-text text-[2.4rem] font-bold leading-none tracking-tight text-transparent" style={{ backgroundImage: "linear-gradient(100deg,#e7028d,#056afc)" }}>{v.big}</div>
         <div className="mt-2 text-[0.78rem] uppercase tracking-wide text-ink/45">{v.label}</div>
       </div>
     );

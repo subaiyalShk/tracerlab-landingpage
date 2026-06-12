@@ -6,14 +6,14 @@ import Image from "next/image";
 import Button from "./Button";
 import Bevel, { GLASS_BORDER, GLASS_BG } from "./Bevel";
 import Eyebrow from "./Eyebrow";
+import { CountUp } from "./motion";
+import { KineticHeading } from "./Kinetic";
 
 const AVATARS = [
   "https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=64&h=64&fit=crop&crop=face&auto=format",
   "https://images.unsplash.com/photo-1438761681033-6461ffad8d80?w=64&h=64&fit=crop&crop=face&auto=format",
   "https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?w=64&h=64&fit=crop&crop=face&auto=format",
 ];
-
-const CAPABILITIES = ["Voice agents", "Web & mobile apps", "AI GTM"];
 
 // SVG grain, base64-free data URI — adds film-grain texture over the gradients.
 const GRAIN =
@@ -71,7 +71,10 @@ export default function Hero() {
       />
 
       {/* ── Content ─────────────────────────────────────────────────── */}
-      <div className="mx-auto grid min-h-[calc(100vh-5rem)] w-full max-w-[1280px] grid-cols-1 items-center gap-14 px-6 py-24 sm:px-10 lg:grid-cols-[1.05fr_0.95fr] lg:gap-10 lg:py-20">
+      {/* Vertical rhythm is deliberately tight (and the headline vh-clamped): the hero must
+          fit inside (100vh - 5rem) so the sticky nav rests visibly at the bottom of the
+          first screen — overflow pushes it below the fold. */}
+      <div className="mx-auto grid min-h-[calc(100vh-5rem)] w-full max-w-[1280px] grid-cols-1 items-center gap-10 px-6 py-14 sm:px-10 lg:grid-cols-[1.05fr_0.95fr] lg:py-8">
         {/* Left: copy */}
         <div className="min-w-0 max-w-[42rem]">
           {/* Eyebrow */}
@@ -79,28 +82,21 @@ export default function Hero() {
             Tracerlabs · AI Development Studio
           </Eyebrow>
 
-          {/* Headline */}
-          <h1
-            className="font-display animate-rise mt-7 text-[clamp(1.9rem,4.4vw,3.5rem)] font-normal uppercase leading-[1.04] tracking-tight"
-            style={{ animationDelay: "0.12s" }}
-          >
-            <span className="block">We build the AI</span>
-            <span
-              className="animate-shimmer block bg-clip-text text-transparent"
-              style={{
-                backgroundImage:
-                  "linear-gradient(100deg,#e7028d,#9b30ff 35%,#056afc 70%,#e7028d)",
-                backgroundSize: "200% auto",
-              }}
-            >
-              that runs
-            </span>
-            <span className="block">your business.</span>
-          </h1>
+          {/* Headline — kinetic word-cascade, same treatment as /agents. Server-rendered
+              CSS animation: this is the LCP element, it must not wait for hydration. */}
+          <KineticHeading
+            as="h1"
+            segments={[
+              { text: "We build the AI", block: true },
+              { text: "that runs", gradient: true, block: true },
+              { text: "your business.", block: true },
+            ]}
+            className="font-display mt-5 text-[clamp(1.9rem,min(4.4vw,8vh),3.5rem)] font-normal uppercase leading-[1.04] tracking-tight"
+          />
 
           {/* Subcopy */}
           <p
-            className="animate-rise mt-7 max-w-[34rem] text-[1.05rem] leading-relaxed text-ink/55"
+            className="animate-rise mt-5 max-w-[34rem] text-[1.05rem] leading-relaxed text-ink/55"
             style={{ animationDelay: "0.2s" }}
           >
             From voice agents that answer every call to custom web &amp; mobile
@@ -110,7 +106,7 @@ export default function Hero() {
 
           {/* CTAs */}
           <div
-            className="animate-rise mt-9 flex flex-wrap items-center gap-4"
+            className="animate-rise mt-7 flex flex-wrap items-center gap-4"
             style={{ animationDelay: "0.28s" }}
           >
             <Button href="#contact" variant="primary">
@@ -121,23 +117,11 @@ export default function Hero() {
             </Button>
           </div>
 
-          {/* Capability strip */}
-          <ul
-            className="animate-rise mt-10 flex flex-wrap items-center gap-x-3 gap-y-2 text-[0.8rem] font-medium text-ink/45"
-            style={{ animationDelay: "0.34s" }}
-          >
-            {CAPABILITIES.map((c, i) => (
-              <li key={c} className="flex items-center gap-3">
-                {i > 0 && <span className="h-1 w-1 rounded-full bg-ink/25" />}
-                <span>{c}</span>
-              </li>
-            ))}
-          </ul>
-
-          {/* Trust row */}
+          {/* Trust row — directly under the CTAs (the old capability strip was cut so the
+              hero fits one screen and the social proof reads sooner) */}
           <div
-            className="animate-rise mt-9 flex flex-wrap items-center gap-x-6 gap-y-4 border-t border-ink/8 pt-7"
-            style={{ animationDelay: "0.42s" }}
+            className="animate-rise mt-8 flex flex-wrap items-center gap-x-6 gap-y-4 border-t border-ink/8 pt-6"
+            style={{ animationDelay: "0.38s" }}
           >
             <div className="flex items-center gap-3">
               <div className="flex">
@@ -156,15 +140,19 @@ export default function Hero() {
                   ★★★★★
                 </span>
                 <span className="mt-1 text-[0.78rem] text-ink/45">
-                  <span className="font-semibold text-ink/80">4.9</span> avg
-                  rating
+                  <span className="font-semibold text-ink/80">
+                    <CountUp value={4.9} decimals={1} />
+                  </span>{" "}
+                  avg rating
                 </span>
               </div>
             </div>
             <div className="h-9 w-px bg-ink/10" />
             <p className="text-[0.85rem] text-ink/55">
-              <span className="font-semibold text-ink">300+</span> businesses
-              served
+              <span className="font-semibold text-ink">
+                <CountUp value={300} suffix="+" />
+              </span>{" "}
+              businesses served
             </p>
           </div>
         </div>

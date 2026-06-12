@@ -1,6 +1,7 @@
 "use client";
 
 import { useEffect, useRef, useState } from "react";
+import Image from "next/image";
 import { useMotionValueEvent, useReducedMotion, useScroll } from "motion/react";
 import ConsoleView from "./ConsoleView";
 import { STAGES } from "./stages";
@@ -55,6 +56,20 @@ export default function AutopilotScrolly() {
   return (
     <div ref={trackRef} className="relative" style={{ height: `${total * STAGE_VH + 100}vh` }}>
       <div className="sticky top-0 flex h-screen flex-col justify-center pt-20">
+        {/* ambient mission-control backdrop (dark theme only) — pinned with the console */}
+        <div aria-hidden className="tl-dark-only pointer-events-none absolute inset-0 -z-10">
+          <Image
+            src="/assets/agents/gen/backdrop-console.png"
+            alt=""
+            fill
+            sizes="100vw"
+            className="object-cover opacity-20"
+            style={{
+              maskImage: "radial-gradient(ellipse 85% 75% at 50% 55%, black 35%, transparent 80%)",
+              WebkitMaskImage: "radial-gradient(ellipse 85% 75% at 50% 55%, black 35%, transparent 80%)",
+            }}
+          />
+        </div>
         <ConsoleView active={active} onSelect={scrollToStage} fineProgress={scrollYProgress} cinematic />
       </div>
     </div>

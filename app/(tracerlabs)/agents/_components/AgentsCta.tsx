@@ -1,3 +1,4 @@
+import Image from "next/image";
 import VoiceWidget from "../../../components/VoiceWidget";
 import Button from "../../../components/Button";
 import Eyebrow from "../../../components/Eyebrow";
@@ -6,6 +7,22 @@ import { Kinetic, Reveal } from "../../../components/motion";
 export default function AgentsCta({ voiceEnabled, calcomUrl }: { voiceEnabled: boolean; calcomUrl: string }) {
   return (
     <section id="tl-ag-cta" className="relative isolate w-full overflow-hidden bg-page" style={{ scrollMarginTop: "5rem" }}>
+      {/* circuit-horizon backdrop (dark theme only) — its glowing core sits behind the voice orb */}
+      <div aria-hidden className="tl-dark-only pointer-events-none absolute inset-0 -z-20">
+        {/* versioned filename: the Next/Vercel image-optimizer cache persists across deploys
+            keyed by source URL, so regenerated assets need a new name to actually update */}
+        <Image
+          src="/assets/agents/gen/backdrop-cta-v3.png"
+          alt=""
+          fill
+          sizes="100vw"
+          className="object-cover object-[center_70%] opacity-35"
+          style={{
+            maskImage: "linear-gradient(to bottom, transparent 0%, black 30%, black 78%, transparent 100%)",
+            WebkitMaskImage: "linear-gradient(to bottom, transparent 0%, black 30%, black 78%, transparent 100%)",
+          }}
+        />
+      </div>
       <div
         aria-hidden
         className="pointer-events-none absolute left-1/2 top-1/3 -z-10 h-[52vw] w-[64vw] -translate-x-1/2 -translate-y-1/2 rounded-full opacity-[0.22] blur-[150px]"

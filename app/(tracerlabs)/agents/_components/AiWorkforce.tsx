@@ -1,14 +1,17 @@
+import Image from "next/image";
 import Bevel, { GLASS_BORDER, GLASS_BG } from "../../../components/Bevel";
 import Eyebrow from "../../../components/Eyebrow";
 import { Kinetic, Reveal } from "../../../components/motion";
 
-const GROUPS: { category: string; agents: { name: string; role: string }[] }[] = [
-  { category: "Front-End", agents: [{ name: "AI Marketer", role: "Ads & Leads" }, { name: "AI Receptionist", role: "Instant Answers" }, { name: "AI Voice Agent", role: "Calls & Qualifies" }] },
-  { category: "Sales", agents: [{ name: "AI Text Agent", role: "SMS Convos" }, { name: "AI Email Agent", role: "Follow-ups" }, { name: "AI Closer", role: "Closes Deals" }, { name: "AI Proposals", role: "Custom Docs" }] },
-  { category: "Operations", agents: [{ name: "AI Project Manager", role: "Tasks & Timelines" }, { name: "Scheduler", role: "Auto Booking" }, { name: "Ops Dashboard", role: "Real-time View" }] },
-  { category: "Support", agents: [{ name: "AI Support", role: "24/7 Help" }] },
-  { category: "Growth", agents: [{ name: "AI Referrals", role: "Grows Network" }, { name: "AI Reviews", role: "5-Star Ratings" }] },
-  { category: "Finance", agents: [{ name: "AI Accountant", role: "P&L Reports" }] },
+// Category emblems are nano-banana generations (scripts/gen-agents-images.mjs) — neon
+// pink→blue icons on dark-metal plates, matching the site's embossed-plate language.
+const GROUPS: { category: string; emblem: string; agents: { name: string; role: string }[] }[] = [
+  { category: "Front-End", emblem: "/assets/agents/gen/emblem-front-end.png", agents: [{ name: "AI Marketer", role: "Ads & Leads" }, { name: "AI Receptionist", role: "Instant Answers" }, { name: "AI Voice Agent", role: "Calls & Qualifies" }] },
+  { category: "Sales", emblem: "/assets/agents/gen/emblem-sales.png", agents: [{ name: "AI Text Agent", role: "SMS Convos" }, { name: "AI Email Agent", role: "Follow-ups" }, { name: "AI Closer", role: "Closes Deals" }, { name: "AI Proposals", role: "Custom Docs" }] },
+  { category: "Operations", emblem: "/assets/agents/gen/emblem-operations.png", agents: [{ name: "AI Project Manager", role: "Tasks & Timelines" }, { name: "Scheduler", role: "Auto Booking" }, { name: "Ops Dashboard", role: "Real-time View" }] },
+  { category: "Support", emblem: "/assets/agents/gen/emblem-support.png", agents: [{ name: "AI Support", role: "24/7 Help" }] },
+  { category: "Growth", emblem: "/assets/agents/gen/emblem-growth.png", agents: [{ name: "AI Referrals", role: "Grows Network" }, { name: "AI Reviews", role: "5-Star Ratings" }] },
+  { category: "Finance", emblem: "/assets/agents/gen/emblem-finance.png", agents: [{ name: "AI Accountant", role: "P&L Reports" }] },
 ];
 
 // One agent card. All motion is pure CSS:
@@ -79,13 +82,36 @@ export default function AiWorkforce() {
             <p className="mt-5 max-w-[40rem] text-[1.02rem] leading-relaxed text-ink/55">A fully automated company working 24/7 to run and grow your business.</p>
           </Reveal>
         </div>
+
+        {/* the team, assembled — cinematic lineup (nano-banana) framed like the site's panels */}
+        <Reveal amount={0.2} y={30} className="mt-10">
+          <Bevel bevel={16} border={GLASS_BORDER} bg={GLASS_BG}>
+            <div className="relative aspect-[16/9] w-full overflow-hidden sm:aspect-[21/9]">
+              <Image
+                src="/assets/agents/gen/team-lineup.png"
+                alt="A lineup of sleek AI agent figures standing ready, lit in the Tracerlabs pink and blue"
+                fill
+                sizes="(max-width: 1180px) 100vw, 1100px"
+                className="object-cover object-[center_38%]"
+              />
+              {/* ground the figures into the panel */}
+              <div aria-hidden className="absolute inset-x-0 bottom-0 h-20 bg-gradient-to-t from-black/70 to-transparent" />
+              <div className="absolute bottom-4 left-5 flex items-center gap-2 text-[0.62rem] font-semibold uppercase tracking-[0.22em] text-white/60">
+                <span aria-hidden className="h-1.5 w-1.5 rounded-full bg-brand-pink" />
+                14 agents · always on
+              </div>
+            </div>
+          </Bevel>
+        </Reveal>
+
         <div className="mt-12 flex flex-col gap-8">
           {GROUPS.map((g, gi) => (
             <div key={g.category}>
               <Reveal amount={0.5} y={14}>
                 <div className="mb-3 flex items-center gap-3 text-[0.72rem] font-semibold uppercase tracking-[0.2em] text-ink/40">
-                  <span aria-hidden className="h-px w-5 bg-gradient-to-r from-brand-pink/70 to-transparent" />
+                  <Image src={g.emblem} alt="" width={36} height={36} className="bv-6 h-9 w-9 object-cover" />
                   {g.category}
+                  <span aria-hidden className="h-px w-10 bg-gradient-to-r from-brand-pink/70 to-transparent" />
                 </div>
               </Reveal>
               <div className="grid grid-cols-2 gap-3 sm:grid-cols-3 lg:grid-cols-4">

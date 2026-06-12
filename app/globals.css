@@ -139,6 +139,12 @@ html body {
   background-color: var(--tl-page, #000);
 }
 
+/* Generated ambient backdrop imagery is tuned for the dark theme (near-black, low
+   opacity); over the light page it reads as a muddy wash — hide it there. */
+html[data-theme="light"] .tl-dark-only {
+  display: none;
+}
+
 /* Per-theme logo swap. Nav renders both <img>s tagged data-logo; CSS shows the right one
    (no client JS, no flash). */
 html[data-theme="light"] [data-logo="dark"] { display: none; }

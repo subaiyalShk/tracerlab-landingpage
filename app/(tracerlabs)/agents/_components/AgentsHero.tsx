@@ -7,10 +7,11 @@ import { KineticHeading, ScrollCue } from "../../../components/Kinetic";
 // Cinematic opening scene: asymmetric split — kinetic copy on the left, the live agent
 // network "booting up" on the right — over a dot-grid + ambient brand glow. Quantified
 // proof sits above the fold (conversion: claims before scroll).
+// Labels kept short so the three stats sit on one compact line (no wrap).
 const PROOF: { value: number; prefix?: string; suffix?: string; decimals?: number; label: string }[] = [
-  { value: 11.28, prefix: "$", suffix: "M", decimals: 2, label: "Client revenue generated" },
-  { value: 83, suffix: "%", label: "Show-up rate on AI-booked calls" },
-  { value: 500, suffix: "+", label: "Active users on our platforms" },
+  { value: 11.28, prefix: "$", suffix: "M", decimals: 2, label: "Revenue generated" },
+  { value: 83, suffix: "%", label: "Call show-up rate" },
+  { value: 500, suffix: "+", label: "Active users" },
 ];
 
 export default function AgentsHero() {
@@ -61,17 +62,17 @@ export default function AgentsHero() {
             <Button href="#tl-ag-system" variant="secondary">See How It Works</Button>
           </div>
 
-          {/* proof row */}
-          <dl className="animate-rise mt-8 flex flex-wrap gap-x-10 gap-y-6 border-t border-ink/10 pt-5 [animation-delay:0.8s]">
+          {/* proof row — one compact line: number over a short single-line label */}
+          <dl className="animate-rise mt-7 flex flex-nowrap items-start gap-x-6 border-t border-ink/10 pt-4 [animation-delay:0.8s] sm:gap-x-9">
             {PROOF.map((p) => (
               // dt precedes dd in source (spec order); flex order paints the number first
-              <div key={p.label} className="flex min-w-[8rem] flex-col">
-                <dt className="order-2 mt-2 max-w-[12rem] text-[0.72rem] font-semibold uppercase tracking-[0.14em] text-ink/40">
+              <div key={p.label} className="flex flex-col">
+                <dt className="order-2 mt-1.5 whitespace-nowrap text-[0.62rem] font-semibold uppercase tracking-[0.12em] text-ink/40">
                   {p.label}
                 </dt>
                 {/* numbers use the body font — Duborics digits (slashed zeros etc.) read as
                     glitches in data; Jakarta bold + tabular-nums keeps them crisp */}
-                <dd className="order-1 font-body m-0 text-[1.8rem] font-bold leading-none tracking-tight">
+                <dd className="order-1 font-body m-0 whitespace-nowrap text-[1.45rem] font-bold leading-none tracking-tight">
                   <CountUp value={p.value} prefix={p.prefix} suffix={p.suffix} decimals={p.decimals} />
                 </dd>
               </div>

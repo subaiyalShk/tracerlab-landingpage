@@ -56,7 +56,7 @@ const FEATURED: Service & { highlights: string[] } = {
     "Sounds human — not a clunky phone tree",
   ],
   badges: ["Retell", "LiveKit", "Twilio"],
-  cta: { label: "Hear it live", href: "#projects" },
+  cta: { label: "Learn more", href: "/voice-agents" },
   icon: PhoneIcon,
 };
 

@@ -1,9 +1,10 @@
 import Eyebrow from "../../../components/Eyebrow";
 import Button from "../../../components/Button";
 import { Kinetic, Reveal } from "../../../components/motion";
-import VoiceWidget from "../../../components/VoiceWidget";
 
-export default function CloseSlide({ voiceEnabled, calcomUrl }: { voiceEnabled: boolean; calcomUrl: string }) {
+const DEMO_URL = "https://crestline-insurance-six.vercel.app";
+
+export default function CloseSlide({ calcomUrl }: { calcomUrl: string }) {
   return (
     <section
       data-slide
@@ -23,19 +24,14 @@ export default function CloseSlide({ voiceEnabled, calcomUrl }: { voiceEnabled: 
         />
         <Reveal delay={0.2}>
           <p className="mt-5 max-w-[34rem] text-[1.05rem] leading-relaxed text-ink/55">
-            Talk to the agent one more time, or book a call and we&apos;ll deploy your agent and dashboard in
-            days, not months.
+            Book a call and we&apos;ll deploy your agent and dashboard — built for your agency — in days,
+            not months.
           </p>
         </Reveal>
         <Reveal delay={0.35} amount={0.2}>
-          <div className="mt-10">
-            <VoiceWidget voiceEnabled={voiceEnabled} calcomUrl={calcomUrl} />
-          </div>
-        </Reveal>
-        <Reveal delay={0.45} amount={0.2}>
           <div className="mt-9 flex flex-wrap items-center justify-center gap-4">
             <Button href={calcomUrl} variant="primary" external>Book a call</Button>
-            <Button href="#tl-ins-pricing" variant="secondary">See pricing</Button>
+            <Button href={DEMO_URL} variant="secondary" external>See the live demo</Button>
           </div>
         </Reveal>
       </div>

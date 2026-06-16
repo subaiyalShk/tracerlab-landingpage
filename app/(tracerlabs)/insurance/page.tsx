@@ -32,7 +32,6 @@ export const metadata: Metadata = {
 };
 
 export default function InsurancePage() {
-  const voiceEnabled = Boolean(process.env.RETELL_API_KEY && process.env.RETELL_AGENT_ID);
   const calcomUrl =
     process.env.NEXT_PUBLIC_CAL_BOOKING_LINK || "https://cal.com/team/tracerlabs/discovery-call";
 
@@ -59,10 +58,10 @@ export default function InsurancePage() {
         <CoverSlide />
         <ProblemSlide />
         <SolutionSlide />
-        <ExperienceSlide voiceEnabled={voiceEnabled} calcomUrl={calcomUrl} />
+        <ExperienceSlide />
         <ProofSlide />
         <PricingSlide calcomUrl={calcomUrl} />
-        <CloseSlide voiceEnabled={voiceEnabled} calcomUrl={calcomUrl} />
+        <CloseSlide calcomUrl={calcomUrl} />
       </Deck>
     </div>
   );

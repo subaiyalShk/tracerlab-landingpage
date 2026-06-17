@@ -49,7 +49,7 @@ export default function InsurancePage() {
               <img src="/assets/logo-light.png" alt="Tracerlabs" data-logo="light" className="h-[128px] w-auto max-w-none translate-y-[0.5px]" />
             </span>
           </Link>
-          <Button href={calcomUrl} external variant="primary" size="sm">Book a call</Button>
+          <Button href="#tl-ins-pricing" variant="primary" size="sm">Get started</Button>
         </div>
       </header>
 

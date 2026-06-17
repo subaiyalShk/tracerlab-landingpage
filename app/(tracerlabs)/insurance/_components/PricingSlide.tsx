@@ -65,8 +65,8 @@ const TIERS: Tier[] = [
       "Replaces your patchwork of tools with one system",
       "Multi-location, dedicated team — you focus on scaling",
     ],
-    cta: "Contact sales",
-    contact: true,
+    cta: "Get started",
+    href: "https://buy.stripe.com/dRm6oG2Hg5S345R4NveEo0s",
   },
 ];
 

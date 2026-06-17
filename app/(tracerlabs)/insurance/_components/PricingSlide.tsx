@@ -135,6 +135,15 @@ export default function PricingSlide({ calcomUrl }: { calcomUrl: string }) {
             to running the entire business on autopilot. Custom-built and fully managed; no long-term contract.
           </p>
         </Reveal>
+        <Reveal delay={0.22}>
+          <div className="bv-6 mt-5 flex max-w-[42rem] items-start gap-2.5 bg-ink/[0.05] px-4 py-3 text-[0.92rem] leading-relaxed text-ink/70">
+            <span aria-hidden className="mt-1 h-3.5 w-px shrink-0 bg-gradient-to-b from-brand-pink to-brand-blue" />
+            <span>
+              <span className="font-medium text-ink/90">Pays for itself.</span> Recover just ~4 missed calls a
+              month at your average policy value and the plan is covered — most agencies miss far more.
+            </span>
+          </div>
+        </Reveal>
       </div>
 
       <div className="mt-9 grid grid-cols-1 gap-5 md:grid-cols-3">
@@ -144,8 +153,21 @@ export default function PricingSlide({ calcomUrl }: { calcomUrl: string }) {
           </Reveal>
         ))}
       </div>
+
+      <Reveal delay={0.15}>
+        <div className="mt-6 flex flex-wrap items-center gap-x-5 gap-y-2.5">
+          {["No setup fee", "Live in ~3 weeks", "Cancel anytime", "14-day money-back"].map((b) => (
+            <span key={b} className="inline-flex items-center gap-2 text-[0.85rem] text-ink/65">
+              <svg className="h-4 w-4 shrink-0 text-brand-pink" viewBox="0 0 16 16" fill="none" stroke="currentColor" strokeWidth="2">
+                <path d="M3.5 8.5l3 3 6-7" strokeLinecap="round" strokeLinejoin="round" />
+              </svg>
+              {b}
+            </span>
+          ))}
+        </div>
+      </Reveal>
       <Reveal delay={0.2}>
-        <p className="mt-5 text-[0.74rem] text-ink/35">
+        <p className="mt-4 text-[0.74rem] text-ink/35">
           Additional minutes at $0.25/min. Numbers, carrier, and SMS pass-through billed at cost.
         </p>
       </Reveal>

@@ -7,6 +7,7 @@ import ProblemSlide from "./_components/ProblemSlide";
 import SolutionSlide from "./_components/SolutionSlide";
 import ExperienceSlide from "./_components/ExperienceSlide";
 import ProofSlide from "./_components/ProofSlide";
+import TimelineSlide from "./_components/TimelineSlide";
 import PricingSlide from "./_components/PricingSlide";
 
 export const metadata: Metadata = {
@@ -53,12 +54,13 @@ export default function InsurancePage() {
         </div>
       </header>
 
-      <Deck count={6}>
+      <Deck count={7}>
         <CoverSlide />
         <ProblemSlide />
         <SolutionSlide />
         <ExperienceSlide />
         <ProofSlide />
+        <TimelineSlide />
         <PricingSlide calcomUrl={calcomUrl} />
       </Deck>
     </div>

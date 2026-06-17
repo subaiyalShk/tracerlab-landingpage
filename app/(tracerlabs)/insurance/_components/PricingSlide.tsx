@@ -9,7 +9,6 @@ type Tier = {
   result: string; // the outcome this tier buys you
   forWhom: string;
   monthly: string;
-  setup: string;
   minutes: string;
   features: string[];
   cta: string;
@@ -23,7 +22,6 @@ const TIERS: Tier[] = [
     result: "Never miss a call.",
     forWhom: "Voice automation",
     monthly: "$1,500",
-    setup: "$2,500 build",
     minutes: "~1,000 talk-min / mo",
     features: [
       "Every call answered in under two rings, 24/7",
@@ -38,7 +36,6 @@ const TIERS: Tier[] = [
     result: "See everything. Serve clients on autopilot.",
     forWhom: "Voice + live dashboard",
     monthly: "$3,000",
-    setup: "$5,000 build",
     minutes: "~3,000 talk-min / mo",
     features: [
       "Everything in Starter, plus —",
@@ -56,7 +53,6 @@ const TIERS: Tier[] = [
     result: "Your whole business on autopilot.",
     forWhom: "Complete automation",
     monthly: "$5,000+",
-    setup: "from $7,500 build",
     minutes: "High volume · custom",
     features: [
       "Everything in Growth, plus —",
@@ -90,7 +86,7 @@ function TierCard({ t, calcomUrl }: { t: Tier; calcomUrl: string }) {
           <span className="font-body text-[2.3rem] font-bold leading-none tracking-tight">{t.monthly}</span>
           {t.monthly.startsWith("$") && <span className="pb-1 text-[0.8rem] text-ink/45">/mo</span>}
         </div>
-        <div className="mt-1.5 text-[0.78rem] text-ink/45">{t.setup} · {t.minutes}</div>
+        <div className="mt-1.5 text-[0.78rem] text-ink/45">{t.minutes}</div>
 
         <ul className="mt-6 flex flex-1 flex-col gap-2.5">
           {t.features.map((f) => (

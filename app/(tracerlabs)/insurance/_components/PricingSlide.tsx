@@ -12,6 +12,7 @@ type Tier = {
   minutes: string;
   features: string[];
   cta: string;
+  href?: string; // Stripe Payment Link (self-serve tiers); contact tiers fall back to book-a-call
   featured?: boolean;
   contact?: boolean;
 };
@@ -30,6 +31,7 @@ const TIERS: Tier[] = [
       "1 dedicated number",
     ],
     cta: "Get started",
+    href: "https://buy.stripe.com/8x2fZg0z8a8jeKv4NveEo0q",
   },
   {
     name: "Growth",
@@ -46,6 +48,7 @@ const TIERS: Tier[] = [
       "AMS / CRM integration",
     ],
     cta: "Get started",
+    href: "https://buy.stripe.com/6oU14m81Aeoz0TF5RzeEo0r",
     featured: true,
   },
   {
@@ -99,11 +102,11 @@ function TierCard({ t, calcomUrl }: { t: Tier; calcomUrl: string }) {
           ))}
         </ul>
 
-        {/* TODO(stripe): replace href with onClick -> POST /api/checkout (Stripe Checkout Session)
-            for the self-serve tiers. Stubbed to book-a-call for now. */}
+        {/* Self-serve tiers link to a Stripe Payment Link (recurring monthly); contact tiers
+            fall back to book-a-call. */}
         <div className="mt-7">
           <Button
-            href={calcomUrl}
+            href={t.href ?? calcomUrl}
             external
             variant={t.featured ? "primary" : "secondary"}
             className="w-full"

@@ -12,7 +12,7 @@ const STATS: { value: number; suffix?: string; label: string }[] = [
 
 export default function ProblemSlide() {
   return (
-    <Slide id="tl-ins-problem">
+    <Slide id="tl-ins-problem" bgSrc="/assets/insurance/gen/problem-v2.png" bgOpacity={0.32}>
       <div className="max-w-[44rem]">
         <Eyebrow>The leak</Eyebrow>
         <Kinetic

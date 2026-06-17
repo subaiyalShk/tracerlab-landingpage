@@ -19,25 +19,30 @@ type Tier = {
 const TIERS: Tier[] = [
   {
     name: "Starter",
-    forWhom: "Solo / small agency",
-    monthly: "$399",
-    setup: "$1,000 setup",
-    minutes: "~500 talk-min / mo",
-    features: ["24/7 inbound answering", "Smart call routing", "Live owner dashboard", "Texts insurance cards (SMS)", "1 dedicated number"],
+    forWhom: "Single agency · core",
+    monthly: "$1,500",
+    setup: "$2,500 build",
+    minutes: "~1,000 talk-min / mo",
+    features: [
+      "24/7 inbound answering + smart routing",
+      "Live owner dashboard — calls, transcripts, activity",
+      "Texts insurance cards & documents (SMS)",
+      "1 dedicated number",
+    ],
     cta: "Get started",
   },
   {
     name: "Growth",
-    forWhom: "Growing agency",
-    monthly: "$799",
-    setup: "$1,500 setup",
-    minutes: "~1,500 talk-min / mo",
+    forWhom: "Growing agency · full service line",
+    monthly: "$3,000",
+    setup: "$5,000 build",
+    minutes: "~3,000 talk-min / mo",
     features: [
       "Everything in Starter",
       "Caller identity verification",
       "Policy & billing lookup",
       "COI sending + claim (FNOL) intake",
-      "Up to 4 department transfers",
+      "AMS / CRM integration",
       "Priority support",
     ],
     cta: "Get started",
@@ -45,11 +50,17 @@ const TIERS: Tier[] = [
   },
   {
     name: "Agency",
-    forWhom: "Multi-location / high volume",
-    monthly: "Custom",
-    setup: "from $1,499 / mo",
-    minutes: "High volume",
-    features: ["Everything in Growth", "AMS / CRM integration", "Multiple agents & locations", "Custom workflows", "Dedicated success manager"],
+    forWhom: "Multi-location · full automation",
+    monthly: "$5,000+",
+    setup: "from $7,500 build",
+    minutes: "High volume · custom",
+    features: [
+      "Everything in Growth",
+      "End-to-end automation: bookings, payments, invoicing",
+      "Step-by-step SMS updates + online payments",
+      "Multiple locations & agents",
+      "Dedicated team + success manager",
+    ],
     cta: "Contact sales",
     contact: true,
   },
@@ -105,7 +116,7 @@ function TierCard({ t, calcomUrl }: { t: Tier; calcomUrl: string }) {
 
 export default function PricingSlide({ calcomUrl }: { calcomUrl: string }) {
   return (
-    <Slide id="tl-ins-pricing">
+    <Slide id="tl-ins-pricing" bgSrc="/assets/insurance/gen/pricing-v1.png" bgOpacity={0.24}>
       <div className="max-w-[46rem]">
         <Eyebrow>Pricing</Eyebrow>
         <Kinetic
@@ -114,8 +125,8 @@ export default function PricingSlide({ calcomUrl }: { calcomUrl: string }) {
         />
         <Reveal delay={0.15}>
           <p className="mt-5 max-w-[40rem] text-[1.02rem] leading-relaxed text-ink/55">
-            Less than a part-time receptionist — fully built, integrated, and managed for your agency. No
-            contracts; cancel anytime.
+            Custom-built, integrated, and fully managed for your agency — your phones answered 24/7 for less
+            than a full-time front desk. No long-term contract.
           </p>
         </Reveal>
       </div>
@@ -129,7 +140,7 @@ export default function PricingSlide({ calcomUrl }: { calcomUrl: string }) {
       </div>
       <Reveal delay={0.2}>
         <p className="mt-5 text-[0.74rem] text-ink/35">
-          Additional minutes at $0.20/min. Numbers, carrier, and SMS pass-through billed at cost.
+          Additional minutes at $0.25/min. Numbers, carrier, and SMS pass-through billed at cost.
         </p>
       </Reveal>
     </Slide>

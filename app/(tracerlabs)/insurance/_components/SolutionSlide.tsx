@@ -44,7 +44,7 @@ function Column({ kind, title, items }: { kind: string; title: string; items: st
 
 export default function SolutionSlide() {
   return (
-    <Slide id="tl-ins-solution">
+    <Slide id="tl-ins-solution" bgSrc="/assets/insurance/gen/solution-v1.png" bgOpacity={0.26}>
       <div className="max-w-[46rem]">
         <Eyebrow>The solution</Eyebrow>
         <Kinetic

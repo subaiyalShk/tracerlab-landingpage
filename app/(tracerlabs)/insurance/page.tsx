@@ -8,7 +8,6 @@ import SolutionSlide from "./_components/SolutionSlide";
 import ExperienceSlide from "./_components/ExperienceSlide";
 import ProofSlide from "./_components/ProofSlide";
 import PricingSlide from "./_components/PricingSlide";
-import CloseSlide from "./_components/CloseSlide";
 
 export const metadata: Metadata = {
   title: "AI Voice Agents for Insurance Agencies",
@@ -54,14 +53,13 @@ export default function InsurancePage() {
         </div>
       </header>
 
-      <Deck count={7}>
+      <Deck count={6}>
         <CoverSlide />
         <ProblemSlide />
         <SolutionSlide />
         <ExperienceSlide />
         <ProofSlide />
         <PricingSlide calcomUrl={calcomUrl} />
-        <CloseSlide calcomUrl={calcomUrl} />
       </Deck>
     </div>
   );

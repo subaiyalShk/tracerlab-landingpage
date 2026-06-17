@@ -1,85 +1,85 @@
 import Slide from "./Slide";
 import Bevel, { GLASS_BORDER, GLASS_BG } from "../../../components/Bevel";
 import Eyebrow from "../../../components/Eyebrow";
-import { CountUp, Kinetic, Reveal } from "../../../components/motion";
+import { BRAND_GRADIENT, CountUp, Kinetic, Reveal } from "../../../components/motion";
 
-type Stat = { value: number; prefix?: string; suffix?: string; k: string };
-type Case = { badge: string; origin: string; live: boolean; title: string; line: string; stats: Stat[] };
-
-const CASES: Case[] = [
-  {
-    badge: "Inbound · prospect calls",
-    origin: "Real client · anonymized",
-    live: true,
-    title: "A family-run farm & butcher",
-    line: "Orders came by phone while the team worked the floor; after-hours calls went to voicemail. The agent now answers every one and books pickups.",
-    stats: [
-      { value: 100, suffix: "%", k: "Calls answered" },
-      { value: 2, prefix: "~", suffix: " in 5", k: "Were after-hours" },
-      { value: 20, prefix: "~", suffix: " hrs/wk", k: "Phone time back" },
-    ],
-  },
-  {
-    badge: "Support · existing clients",
-    origin: "Illustrative scenario",
-    live: false,
-    title: "A personal-lines insurance agency",
-    line: "Clients call all day for cards, billing, COIs, and claims. The agent verifies them, handles the routine, and routes the rest — every step logged.",
-    stats: [
-      { value: 70, suffix: "%", k: "Routine calls handled" },
-      { value: 24, suffix: "/7", k: "Service coverage" },
-      { value: 2, prefix: "<", suffix: " rings", k: "To pick up" },
-    ],
-  },
+// Single REAL case study (Harbs Farm, kept anonymized per the client's request). These are
+// the owner's reported outcomes — not illustrative.
+const STATS: { value: number; prefix?: string; suffix?: string; k: string }[] = [
+  { value: 5, suffix: " hrs", k: "Max owner phone time / week" },
+  { value: 24, suffix: "/7", k: "Agent answers every call" },
+  { value: 100, suffix: "%", k: "Orders get SMS status updates" },
 ];
+
+const AUTOMATED = ["Bookings", "Payments", "Invoicing", "Order-status answers", "Step-by-step SMS updates", "Online payments"];
 
 export default function ProofSlide() {
   return (
-    <Slide id="tl-ins-proof">
+    <Slide id="tl-ins-proof" bgSrc="/assets/insurance/gen/proof-v1.png" bgOpacity={0.3}>
       <div className="max-w-[46rem]">
-        <Eyebrow>Proof</Eyebrow>
+        <Eyebrow>Proof · live client</Eyebrow>
         <Kinetic
-          segments={[{ text: "Two owners. Two problems. " }, { text: "One system.", gradient: true }]}
+          segments={[{ text: "Already live. Already " }, { text: "scaling.", gradient: true }]}
           className="font-display mt-6 text-[clamp(1.9rem,4.8vw,3.2rem)] font-normal uppercase leading-[1.0] tracking-tight"
         />
       </div>
-      <div className="mt-9 grid grid-cols-1 gap-5 lg:grid-cols-2">
-        {CASES.map((c, i) => (
-          <Reveal key={c.title} delay={i * 0.12} y={30} amount={0.15} className="h-full">
-            <Bevel bevel={16} border={GLASS_BORDER} bg={GLASS_BG} className="h-full">
-              <div className="flex h-full flex-col p-6 sm:p-7">
-                <div className="flex flex-wrap items-center gap-2">
-                  <span className="inline-flex items-center gap-1.5 text-[0.64rem] font-semibold uppercase tracking-[0.16em] text-brand-pink">
-                    <span aria-hidden className="h-1.5 w-1.5 rounded-full bg-brand-pink" />
-                    {c.badge}
-                  </span>
-                  <span className="text-ink/20">·</span>
-                  <span className="bv-6 inline-flex items-center gap-1.5 bg-ink/[0.05] px-2.5 py-1 text-[0.6rem] font-semibold uppercase tracking-[0.14em] text-ink/50">
-                    <span aria-hidden className={`h-1.5 w-1.5 rounded-full ${c.live ? "bg-brand-pink" : "bg-ink/30"}`} />
-                    {c.origin}
-                  </span>
-                </div>
-                <h3 className="font-display mt-4 text-[1.35rem] font-normal leading-tight tracking-tight">{c.title}</h3>
-                <p className="mt-3 flex-1 text-[0.9rem] leading-relaxed text-ink/55">{c.line}</p>
-                <div className="mt-5 flex items-center gap-2">
-                  <span className="text-[0.6rem] font-semibold uppercase tracking-[0.18em] text-ink/35">Impact</span>
-                  <span className="bv-6 bg-ink/[0.05] px-1.5 py-0.5 text-[0.54rem] font-semibold uppercase tracking-[0.12em] text-ink/40">Illustrative</span>
-                </div>
-                <dl className="mt-3 grid grid-cols-3 gap-3 border-t border-ink/10 pt-4">
-                  {c.stats.map((s) => (
-                    <div key={s.k} className="flex flex-col">
-                      <dd className="font-body order-1 text-[1.25rem] font-bold leading-none tracking-tight tabular-nums">
-                        <CountUp value={s.value} prefix={s.prefix} suffix={s.suffix} />
-                      </dd>
-                      <dt className="order-2 mt-1.5 text-[0.58rem] uppercase tracking-wide text-ink/40">{s.k}</dt>
-                    </div>
-                  ))}
-                </dl>
+
+      <Reveal delay={0.12} y={30} amount={0.12} className="mt-9">
+        <Bevel bevel={18} border={GLASS_BORDER} bg={GLASS_BG}>
+          <div className="grid grid-cols-1 gap-8 p-6 sm:p-8 lg:grid-cols-[minmax(0,1.18fr)_minmax(0,0.82fr)] lg:gap-10">
+            {/* story */}
+            <div>
+              <div className="flex flex-wrap items-center gap-2">
+                <span className="inline-flex items-center gap-1.5 text-[0.64rem] font-semibold uppercase tracking-[0.16em] text-brand-pink">
+                  <span aria-hidden className="h-1.5 w-1.5 rounded-full bg-brand-pink" />
+                  Agriculture · direct-to-consumer
+                </span>
+                <span className="text-ink/20">·</span>
+                <span className="bv-6 inline-flex items-center gap-1.5 bg-ink/[0.05] px-2.5 py-1 text-[0.6rem] font-semibold uppercase tracking-[0.14em] text-ink/50">
+                  <span aria-hidden className="h-1.5 w-1.5 rounded-full bg-brand-pink" />
+                  Real client
+                </span>
               </div>
-            </Bevel>
-          </Reveal>
-        ))}
-      </div>
+              <h3 className="font-display mt-4 text-[1.5rem] font-normal leading-tight tracking-tight">A family-run farm &amp; butcher</h3>
+              <div className="mt-5 space-y-3.5 text-[0.95rem] leading-relaxed text-ink/60">
+                <p>
+                  <span className="font-medium text-ink/80">Before:</span> the owner was on the phone all day — order
+                  status, bookings, payments, the same questions on repeat.
+                </p>
+                <p>
+                  <span className="font-medium text-ink/80">Now:</span> the AI agent answers every call, 24/7, and we
+                  automated the whole flow end-to-end. Bookings, payments, and invoicing run themselves, and customers
+                  get an SMS at every step — so they stop calling to ask &ldquo;where&apos;s my order?&rdquo;
+                </p>
+                <p>
+                  <span className="font-medium text-ink/80">Result:</span> the owner is down to about five hours a week
+                  on the phone, has full visibility into what customers want, and is finally focused on scaling.
+                </p>
+              </div>
+              <div className="mt-6 flex flex-wrap gap-1.5">
+                {AUTOMATED.map((a) => (
+                  <span key={a} className="bv-6 bg-ink/[0.045] px-2.5 py-1 text-[0.72rem] text-ink/60">{a}</span>
+                ))}
+              </div>
+            </div>
+
+            {/* the numbers */}
+            <div className="flex flex-col justify-center gap-6 border-t border-ink/10 pt-6 lg:border-l lg:border-t-0 lg:pl-10 lg:pt-0">
+              {STATS.map((s) => (
+                <div key={s.k}>
+                  <div
+                    className="font-body bg-clip-text text-[2.5rem] font-bold leading-none tracking-tight text-transparent"
+                    style={{ backgroundImage: BRAND_GRADIENT }}
+                  >
+                    <CountUp value={s.value} prefix={s.prefix} suffix={s.suffix} />
+                  </div>
+                  <div className="mt-1.5 text-[0.82rem] text-ink/50">{s.k}</div>
+                </div>
+              ))}
+            </div>
+          </div>
+        </Bevel>
+      </Reveal>
     </Slide>
   );
 }

@@ -11,7 +11,7 @@ const DEMO_NUMBER = "+1 (737) 358-5242";
 
 export default function ExperienceSlide() {
   return (
-    <Slide id="tl-ins-demo">
+    <Slide id="tl-ins-demo" bgSrc="/assets/insurance/gen/experience-v1.png" bgOpacity={0.2}>
       <div
         aria-hidden
         className="pointer-events-none absolute left-1/2 top-1/2 -z-10 h-[46vw] w-[58vw] -translate-x-1/2 -translate-y-1/2 rounded-full opacity-[0.16] blur-[150px]"

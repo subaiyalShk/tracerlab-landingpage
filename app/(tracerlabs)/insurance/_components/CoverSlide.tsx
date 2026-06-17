@@ -1,13 +1,14 @@
 import Button from "../../../components/Button";
 import Eyebrow from "../../../components/Eyebrow";
 import { KineticHeading } from "../../../components/Kinetic";
+import SlideBackdrop from "./SlideBackdrop";
 
 export default function CoverSlide() {
   return (
     <section
       data-slide
       id="tl-ins-cover"
-      className="relative flex min-h-[100dvh] w-full snap-start flex-col items-center justify-center overflow-hidden bg-page text-center text-ink"
+      className="relative isolate flex min-h-[100dvh] w-full snap-start flex-col items-center justify-center overflow-hidden bg-page text-center text-ink"
     >
       {/* dot grid + ambient glow */}
       <div
@@ -25,6 +26,7 @@ export default function CoverSlide() {
         className="pointer-events-none absolute left-1/2 top-1/3 -z-10 h-[52vw] w-[60vw] -translate-x-1/2 -translate-y-1/2 rounded-full opacity-[0.18] blur-[150px]"
         style={{ background: "radial-gradient(circle, rgba(231,2,141,0.4) 0%, rgba(5,106,252,0.2) 45%, transparent 72%)" }}
       />
+      <SlideBackdrop src="/assets/insurance/gen/cover-v1.png" opacity={0.4} />
 
       <div className="mx-auto w-full max-w-[1000px] px-6 sm:px-10">
         <div className="flex justify-center">

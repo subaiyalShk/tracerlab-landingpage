@@ -5,8 +5,8 @@ import { Kinetic, Reveal } from "../../../components/motion";
 
 const STEPS = [
   {
-    title: "Ad click → personalized funnel",
-    body: "A homeowner taps your ad and sees their own solar savings in about 60 seconds — bad-fit leads are filtered but still captured.",
+    title: "A lead lands",
+    body: "From your ads, a 60-second savings funnel, or a rep at the door — every lead drops into one pipeline, bad-fit ones filtered but still captured.",
   },
   {
     title: "Captured → contacted in seconds",
@@ -33,9 +33,9 @@ export default function HowItWorksSlide() {
         />
         <Reveal delay={0.15}>
           <p className="mt-5 max-w-[42rem] text-[1.02rem] leading-relaxed text-ink/55">
-            At Tier 1 we fill the calendar. At Tier 2, AI makes sure no lead goes cold and the calendar fills
-            itself. At Tier 3, a door-to-door channel and a self-running back office carry the deal all the way
-            to installable.
+            Tier 1 contacts and books every lead in seconds, 24/7 — the flow below. Tier 2 carries each booking
+            through design, permitting, and paperwork to installable. Tier 3 adds the demand engine — ads, a
+            converting funnel, and canvassing — that fills the pipeline in the first place.
           </p>
         </Reveal>
       </div>
@@ -60,9 +60,9 @@ export default function HowItWorksSlide() {
         <div className="bv-6 mt-5 flex items-start gap-3 bg-ink/[0.05] px-5 py-4 text-[0.95rem] leading-relaxed text-ink/70">
           <span aria-hidden className="mt-1 h-4 w-px shrink-0 bg-gradient-to-b from-brand-pink to-brand-blue" />
           <span>
-            <span className="font-medium text-ink/90">Tier 3 — add the field.</span> Offset Canvassing feeds the
-            same pipeline from your door-to-door team, and CAD design, permitting, and ops automation move every
-            sold deal to an installable job.
+            <span className="font-medium text-ink/90">One pipeline, one partner.</span> Whether a lead comes from
+            paid ads or a knock on the door, it runs through the same system — contacted, booked, designed,
+            permitted, and tracked end to end.
           </span>
         </div>
       </Reveal>

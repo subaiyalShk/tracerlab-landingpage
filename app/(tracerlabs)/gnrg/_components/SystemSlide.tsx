@@ -7,39 +7,39 @@ type Stage = { tier: string; kind: string; title: string; items: string[] };
 
 const STAGES: Stage[] = [
   {
-    tier: "Tier 1+",
-    kind: "Capture",
-    title: "Turn ad clicks into booked appointments",
-    items: [
-      "Branded conversion funnel + solar savings calculator (real Google Solar data)",
-      "Smart qualification — renters & out-of-area leads still captured",
-      "Meta ad campaigns, fully managed",
-      "Meta Pixel + Conversions API + GA4 tracking",
-      "CRM integration (GoHighLevel)",
-      "Live admin dashboard — funnel drop-off, sources, A/B",
-    ],
-  },
-  {
-    tier: "Tier 2+",
-    kind: "Convert",
-    title: "Contact every lead in seconds, book on autopilot",
+    tier: "Tier 1",
+    kind: "Operations",
+    title: "Automate how you handle every lead",
     items: [
       "AI Appointment Setter — texts in seconds, then an AI voice call",
       "Qualifies the lead and books straight onto your calendar",
       "No-answer retry over the following days, automatically",
       "AI Welcome Call Agent for new & booked customers",
+      "GoHighLevel CRM integration + live admin dashboard",
       "Thank-you SMS + secure power-bill upload",
     ],
   },
   {
-    tier: "Tier 3",
-    kind: "Operate",
-    title: "Carry the deal to an installable job",
+    tier: "Tier 2",
+    kind: "Back office",
+    title: "Move every deal from sold to installable",
     items: [
-      "Offset Canvassing — GIS map + mobile CRM for your D2D reps",
       "CAD / system design via Aurora Solar",
       "Permitting automation across your AHJs",
       "Proposals, e-signature, project & install scheduling — automated",
+      "Automated customer status updates, sold to installed",
+    ],
+  },
+  {
+    tier: "Tier 3",
+    kind: "Growth",
+    title: "Fill the top of the funnel",
+    items: [
+      "Managed Meta ad campaigns + branded conversion funnel",
+      "Solar savings calculator (real Google Solar data)",
+      "Meta Pixel + Conversions API + GA4 tracking",
+      "Offset Canvassing — GIS map + mobile CRM for your D2D reps",
+      "One accountable partner across the entire funnel",
     ],
   },
 ];
@@ -81,7 +81,7 @@ export default function SystemSlide() {
         <Reveal delay={0.15}>
           <p className="mt-5 max-w-[44rem] text-[1.02rem] leading-relaxed text-ink/55">
             We have already built this for a solar company. For GNRG we deploy the proven system — branded to
-            you, wired to your CRM, fully managed. Three stages, and you choose how far down the funnel we own.
+            you, wired to your CRM, fully managed. Three layers that stack — you choose how much of the engine we run.
           </p>
         </Reveal>
       </div>

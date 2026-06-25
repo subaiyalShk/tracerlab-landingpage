@@ -71,7 +71,7 @@ export default function RoasSlide() {
                 $75 in revenue for every $1 of ad spend.
               </p>
               <p className="mt-2 text-[0.92rem] leading-relaxed text-ink/55">
-                $225,000 in revenue against $3,000 in ad spend — the full demand engine plus AI ops (Tier 3),
+                $225,000 in revenue against $3,000 in ad spend — the full marketing engine (Tier 1),
                 working every lead the moment it lands.
               </p>
             </div>

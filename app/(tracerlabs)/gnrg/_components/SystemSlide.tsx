@@ -8,38 +8,36 @@ type Stage = { tier: string; kind: string; title: string; items: string[] };
 const STAGES: Stage[] = [
   {
     tier: "Tier 1",
-    kind: "Operations",
-    title: "Automate how you handle every lead",
+    kind: "Marketing",
+    title: "Fill the calendar with booked appointments",
     items: [
-      "AI Appointment Setter — texts in seconds, then an AI voice call",
-      "Qualifies the lead and books straight onto your calendar",
-      "No-answer retry over the following days, automatically",
-      "AI Welcome Call Agent for new & booked customers",
-      "GoHighLevel CRM integration + live admin dashboard",
-      "Thank-you SMS + secure power-bill upload",
+      "Managed marketing campaigns that drive demand to a branded funnel",
+      "Solar savings calculator + Meta Pixel / CAPI / GA4 tracking",
+      "AI Appointment Setter — texts, then an AI voice call, qualifies & books",
+      "CRM, calendar & booking flow — built and maintained by us",
+      "All the technical infrastructure to deliver booked appointments",
     ],
   },
   {
     tier: "Tier 2",
-    kind: "Back office",
-    title: "Move every deal from sold to installable",
+    kind: "Operations",
+    title: "Automate the back office, in sprints",
     items: [
-      "CAD / system design via Aurora Solar",
-      "Permitting automation across your AHJs",
-      "Proposals, e-signature, project & install scheduling — automated",
-      "Automated customer status updates, sold to installed",
+      "Finance & permitting operations automation",
+      "CAD / system design + proposals, e-sign & scheduling (sold-to-installable)",
+      "Installation-day operations automation",
+      "Dispatcher AI — routes, prioritizes & assigns leads by capacity",
+      "Disposition — automatically re-engages dead leads",
     ],
   },
   {
     tier: "Tier 3",
-    kind: "Growth",
-    title: "Fill the top of the funnel",
+    kind: "Full Partnership",
+    title: "Add the field — and run all of it",
     items: [
-      "Managed Meta ad campaigns + branded conversion funnel",
-      "Solar savings calculator (real Google Solar data)",
-      "Meta Pixel + Conversions API + GA4 tracking",
-      "Offset Canvassing — GIS map + mobile CRM for your D2D reps",
-      "One accountable partner across the entire funnel",
+      "Everything in Marketing + Operations, combined",
+      "Offset Canvassing — door-knocking GIS app + mobile CRM for D2D reps",
+      "One accountable partner across your entire business",
     ],
   },
 ];
@@ -81,7 +79,8 @@ export default function SystemSlide() {
         <Reveal delay={0.15}>
           <p className="mt-5 max-w-[44rem] text-[1.02rem] leading-relaxed text-ink/55">
             We have already built this for a solar company. For GNRG we deploy the proven system — branded to
-            you, wired to your CRM, fully managed. Three layers that stack — you choose how much of the engine we run.
+            you, integrated into your existing tools, fully managed. You choose how much we run — marketing,
+            operations, or the full partnership.
           </p>
         </Reveal>
       </div>

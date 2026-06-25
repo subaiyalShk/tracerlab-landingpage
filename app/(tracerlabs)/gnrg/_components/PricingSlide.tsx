@@ -26,50 +26,49 @@ const STRIPE_LINKS = {
 
 const TIERS: Tier[] = [
   {
-    name: "Tier 1 · Operations Automation",
-    result: "Automate your lead-to-booking ops.",
-    forWhom: "AI setter + CRM + SMS",
+    name: "Tier 1 · Marketing",
+    result: "Booked appointments on your calendar.",
+    forWhom: "Demand-to-booking, fully managed",
     monthly: "$5,000",
     payback: "Pays for itself at ~1 closed install / mo",
     features: [
-      "AI Appointment Setter — texts in seconds, then an AI voice call",
-      "Qualifies & books straight onto your calendar — no-answer retry built in",
-      "AI Welcome Call Agent for new & booked customers",
-      "GoHighLevel CRM integration + live admin dashboard",
-      "Thank-you SMS + secure power-bill upload + instant team alerts",
+      "Managed marketing campaigns that drive demand to a branded funnel",
+      "Solar savings calculator + Meta Pixel / CAPI / GA4 conversion tracking",
+      "AI Appointment Setter — texts in seconds, then an AI voice call, qualifies & books",
+      "CRM, calendar & booking flow — built and maintained by us",
+      "All the technical infrastructure to deliver booked appointments, end to end",
     ],
     cta: "Get started",
     href: STRIPE_LINKS.tier1,
   },
   {
-    name: "Tier 2 · + Back-Office Operations",
-    result: "Run sold-to-installable on autopilot.",
-    forWhom: "+ CAD, permitting & business automation",
+    name: "Tier 2 · Ops & Back-Office Automation",
+    result: "Automate your operations, in sprints.",
+    forWhom: "Sprint-built · you set the priorities",
     monthly: "$7,000",
     payback: "Pays for itself at ~2 closed installs / mo",
     features: [
-      "Everything in Tier 1, plus —",
-      "CAD / system design via Aurora Solar",
-      "Permitting automation across your AHJs",
-      "Proposals, e-sign, scheduling — full business automation",
-      "Automated customer status updates, sold to installed",
+      "Built in 2-week sprints — ~2 new automations / month, you set priority",
+      "Finance & permitting operations automation",
+      "CAD / system design + proposals, e-sign & scheduling (sold-to-installable)",
+      "Dispatcher AI — routes, prioritizes & assigns leads by capacity",
+      "Disposition — automatically re-engages dead leads after they go cold",
     ],
     cta: "Get started",
     href: STRIPE_LINKS.tier2,
     featured: true,
   },
   {
-    name: "Tier 3 · + Growth & Marketing",
-    result: "Add the demand engine on top.",
-    forWhom: "+ Ads, funnel & D2D canvassing",
+    name: "Tier 3 · Full Partnership",
+    result: "Marketing, operations, and field — all of it.",
+    forWhom: "Everything, one accountable partner",
     monthly: "$12,000+",
     payback: "Pays for itself at ~3 closed installs / mo",
     features: [
-      "Everything in Tier 2, plus —",
-      "Managed Meta ad campaigns + branded conversion funnel",
-      "Solar savings calculator + Meta Pixel / CAPI / GA4 tracking",
-      "Offset Canvassing — door-knocking GIS app + mobile CRM",
-      "One accountable partner across the entire funnel",
+      "Everything in Tier 1 — marketing → booked appointments",
+      "Everything in Tier 2 — operations automation, sprint-built",
+      "Offset Canvassing — door-knocking GIS app + mobile CRM for your D2D team",
+      "One accountable partner across your entire business",
     ],
     cta: "Get started",
     href: STRIPE_LINKS.tier3,
@@ -140,9 +139,9 @@ export default function PricingSlide({ calcomUrl }: { calcomUrl: string }) {
         />
         <Reveal delay={0.15}>
           <p className="mt-5 max-w-[42rem] text-[1.02rem] leading-relaxed text-ink/55">
-            Three levels — from automating how you handle the leads you already get, to running your entire
-            back office sold-to-installable, to adding the demand engine that fills the top of the funnel.
-            Flat monthly retainer, no build fee.
+            Three levels — from marketing that fills your calendar with booked appointments, to operations
+            automation that runs your back office, to the full partnership that does both plus your
+            door-to-door field team. Flat monthly retainer, no build fee.
           </p>
         </Reveal>
         <Reveal delay={0.22}>

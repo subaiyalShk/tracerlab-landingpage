@@ -33,9 +33,9 @@ export default function HowItWorksSlide() {
         />
         <Reveal delay={0.15}>
           <p className="mt-5 max-w-[42rem] text-[1.02rem] leading-relaxed text-ink/55">
-            Tier 1 contacts and books every lead in seconds, 24/7 — the flow below. Tier 2 carries each booking
-            through design, permitting, and paperwork to installable. Tier 3 adds the demand engine — ads, a
-            converting funnel, and canvassing — that fills the pipeline in the first place.
+            Tier 1 (Marketing) turns ad spend into booked appointments — the flow below. Tier 2 (Operations)
+            automates the back office that turns those deals into installs. Tier 3 (Full Partnership) runs both,
+            plus your door-to-door field team.
           </p>
         </Reveal>
       </div>

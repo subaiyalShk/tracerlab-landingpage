@@ -1,17 +1,17 @@
 "use client";
 
-// Standalone internal Sales Team SOP / playbook for sales reps. Faithful port of the
-// self-contained source app (light theme, inline styles) into the Next.js site as an
-// isolated route at /sales-sop. Deliberately does NOT use the dark (tracerlabs) chrome,
-// design system, Nav, or Footer — it lives outside the (tracerlabs) route group (like
-// /solar) and is noindex/URL-only (see ./layout.tsx).
+// Standalone internal Sales Team SOP / playbook for sales reps. Lives outside the (tracerlabs)
+// route group (like /solar) so it never inherits the dark site chrome; it's noindex/URL-only
+// (see ./layout.tsx). All styling lives in ./sop.css (real classes + media queries) so the
+// layout is fully responsive; per-section accent (blue/amber/green) is switched via
+// data-accent="..." wrappers that feed the --accent-* custom properties.
 
-import { useState, type CSSProperties } from "react";
+import { useState } from "react";
 
 type Metric = { label: string; desc: string };
 type Step = { title: string; body: string; callout?: string | null; metrics?: Metric[] };
 type ColorKey = "blue" | "amber" | "green";
-type Section = { id: string; label: string; icon: string; color: ColorKey; steps: Step[] };
+type Section = { id: string; label: string; icon: string; color: ColorKey; intro: string; steps: Step[] };
 
 const sections: Section[] = [
   {
@@ -19,6 +19,8 @@ const sections: Section[] = [
     label: "Maximize Opportunities",
     icon: "🎯",
     color: "blue",
+    intro:
+      "A salesperson's first job is to maximize the number of opportunities they have. Volume is the foundation. Everything else multiplies on top of it.",
     steps: [
       {
         title: "1. Be Available More Than Anyone Else",
@@ -57,6 +59,8 @@ const sections: Section[] = [
     label: "Convert at the Highest Rate",
     icon: "⚡",
     color: "amber",
+    intro:
+      "Once you have the call, you need to convert it. The best reps listen more than they talk, know their script cold, and address every obstacle before price is ever mentioned.",
     steps: [
       {
         title: "7. Prepare Before Every Call (5-Min Rule)",
@@ -100,6 +104,8 @@ const sections: Section[] = [
     label: "Stay Consistent",
     icon: "🏆",
     color: "green",
+    intro:
+      "The difference between champions and everyone else is sustainability. Being elite for one week doesn't build a career. These habits are what make performance repeatable.",
     steps: [
       {
         title: "14. Kill for Sport — Be a Tiger",
@@ -128,331 +134,269 @@ const sections: Section[] = [
   },
 ];
 
-function ChecklistItem({ text }: { text: string }) {
-  const [checked, setChecked] = useState(false);
-  return (
-    <div
-      style={{ display: "flex", alignItems: "flex-start", gap: "12px", padding: "8px 0", cursor: "pointer", borderBottom: "1px solid #f3f4f6" }}
-      onClick={() => setChecked(!checked)}
-    >
-      <div
-        style={{
-          marginTop: "2px",
-          width: "20px",
-          height: "20px",
-          borderRadius: "4px",
-          border: checked ? "2px solid #2563eb" : "2px solid #d1d5db",
-          background: checked ? "#2563eb" : "white",
-          display: "flex",
-          alignItems: "center",
-          justifyContent: "center",
-          flexShrink: 0,
-          transition: "all 0.15s",
-        }}
-      >
-        {checked && <span style={{ color: "white", fontSize: "11px", fontWeight: "bold" }}>✓</span>}
-      </div>
-      <span
-        style={{
-          fontSize: "14px",
-          lineHeight: "1.5",
-          color: checked ? "#9ca3af" : "#374151",
-          textDecoration: checked ? "line-through" : "none",
-          transition: "all 0.15s",
-        }}
-      >
-        {text}
-      </span>
-    </div>
-  );
-}
+const checklistColumns: { title: string; subtitle: string; emoji: string; accent: ColorKey; items: string[] }[] = [
+  {
+    title: "Off-the-Call SOP",
+    subtitle: "What you do between calls",
+    emoji: "📵",
+    accent: "blue",
+    items: [
+      "Pull up any appointments booked later this week to today if possible",
+      "Push out any unconfirmed calls and fill those slots with responsive leads",
+      "Send personalized pre-call touch to each scheduled prospect (voice memo, video, or gift card preference question)",
+      "Follow up on every lead from yesterday who hasn't responded",
+      "Check your Kill List — have you contacted each high-value prospect this week?",
+      "Ask for a referral from anyone who closed or showed strong interest",
+      "Log all outreach attempts in CRM with notes",
+      "BAMFAM — confirm all booked calls have a follow-up slot if needed",
+    ],
+  },
+  {
+    title: "On-the-Call SOP",
+    subtitle: "What you do on every single call",
+    emoji: "📞",
+    accent: "amber",
+    items: [
+      "5-minute research: business, LinkedIn, social profiles — know something specific about them",
+      "Open with something personal and specific in the first 30 seconds",
+      "Ask about what they've tried before, what they liked, what didn't work",
+      "Listen 2x more than you talk — answer questions with questions",
+      "Surface all obstacles BEFORE you mention price (time, money, fit, decision-makers, self-doubt)",
+      "If obstacle comes up, use a story + best case / worst case framework",
+      "Ask for the sale confidently once obstacles are resolved",
+      "If they hesitate, ask WHY, resolve the concern, then ask again",
+      "Take detailed notes throughout the call",
+      "BAMFAM — before hanging up, lock in the next meeting if they didn't close",
+      "Ask for a referral: 'Who do you know who's like you and would love this?'",
+    ],
+  },
+];
 
-type ColorSet = {
-  tabActive: CSSProperties;
-  tabInactive: CSSProperties;
-  dot: string;
-  callout: CSSProperties;
-};
+const metricFormulas = [
+  { name: "Lead Booking Rate", formula: "Leads booked ÷ total leads" },
+  { name: "Show Rate", formula: "Shows ÷ booked calls" },
+  { name: "Offer Rate", formula: "Offers made ÷ shows" },
+  { name: "Close Rate", formula: "Closes ÷ offers made" },
+  { name: "Avg Calls to Close", formula: "Total calls ÷ total closes" },
+  { name: "Avg Cash Collected", formula: "Total revenue ÷ closes" },
+];
 
-const colorMap: Record<ColorKey, ColorSet> = {
-  blue: {
-    tabActive: { background: "#2563eb", color: "white" },
-    tabInactive: { background: "white", color: "#1d4ed8", border: "1px solid #bfdbfe" },
-    dot: "#2563eb",
-    callout: { background: "#eff6ff", borderLeft: "4px solid #2563eb", color: "#1e40af" },
-  },
-  amber: {
-    tabActive: { background: "#d97706", color: "white" },
-    tabInactive: { background: "white", color: "#92400e", border: "1px solid #fde68a" },
-    dot: "#d97706",
-    callout: { background: "#fffbeb", borderLeft: "4px solid #d97706", color: "#92400e" },
-  },
-  green: {
-    tabActive: { background: "#16a34a", color: "white" },
-    tabInactive: { background: "white", color: "#166534", border: "1px solid #bbf7d0" },
-    dot: "#16a34a",
-    callout: { background: "#f0fdf4", borderLeft: "4px solid #16a34a", color: "#166534" },
-  },
-};
+const objections = [
+  { obstacle: "I don't have time right now", response: "Is this a seasonal thing, or will you always be this busy? If you want this to stick long-term, starting when you're busy is actually when you build the strongest habits — that's when I give the most support. When things slow down, it'll be easy. When busy hits again, you'll know exactly how to handle it." },
+  { obstacle: "I need to think about it", response: "That's totally fine — what specifically is making you hesitant? Walk me through it. [Identify the real concern, address it, then ask again.] You're two steps closer to a real decision than someone who hasn't even thought about it yet." },
+  { obstacle: "I need to check with my partner / spouse / business partner", response: "Makes sense. Let me ask you — are you looking for permission or for support? Because if you went home and they said no, what would you do? [Let them answer.] Most of the time people walk out and never come back — not because they didn't want it, but because they gave away their power. What can we do right now while we're both here?" },
+  { obstacle: "I don't have the budget / money", response: "I hear you. Have you ever bought something before you were 100% sure you could afford it and made it work? [Yes] The question isn't whether the money is sitting in your account — it's whether this is the right move. Best case, this changes everything. Worst case, you find something to cut. Is that a bet you're willing to take?" },
+  { obstacle: "I'm not sure this will work for me", response: "What specifically makes you think your situation is different? [Let them explain.] [Validate, then share a story of someone with the same doubt who succeeded.] You actually said earlier that X was the thing you needed — that's exactly what this addresses. What would need to be true for you to feel confident?" },
+  { obstacle: "I need to do more research", response: "What's the main thing you'd be researching? [They say X.] Okay, let me address that right now. [Answer X directly.] What else would you want to know before moving forward? [Keep going until there are no more concerns, then ask for the sale again.]" },
+];
+
+const WORST_CASE =
+  "“Let's say this doesn't work. Where are you? Probably in the same place you're in right now — and you've been there before and survived. That's your floor.”";
+const BEST_CASE =
+  "“Now let's say this works. Play it out 3–5 years. What does that look like for your business? Your family? That's your ceiling. Is that a bet you're willing to take?”";
+
+const VIEWS: { id: ViewId; label: string }[] = [
+  { id: "sop", label: "Core SOP" },
+  { id: "checklists", label: "Daily Checklists" },
+  { id: "objections", label: "Objection Playbook" },
+];
 
 type ViewId = "sop" | "checklists" | "objections";
 
+function splitNum(title: string): [string, string] {
+  const m = title.match(/^(\d+)\.\s*(.*)$/);
+  return m ? [m[1], m[2]] : ["•", title];
+}
+
+function ChecklistItem({ text }: { text: string }) {
+  const [checked, setChecked] = useState(false);
+  return (
+    <button type="button" className={`sop-check${checked ? " is-checked" : ""}`} aria-pressed={checked} onClick={() => setChecked((v) => !v)}>
+      <span className="sop-check-box" aria-hidden>
+        {checked ? "✓" : ""}
+      </span>
+      <span className="sop-check-text">{text}</span>
+    </button>
+  );
+}
+
 export default function SalesSOP() {
-  const [activeTab, setActiveTab] = useState<ColorKey | string>("opportunities");
+  const [activeTab, setActiveTab] = useState<string>("opportunities");
   const [activeView, setActiveView] = useState<ViewId>("sop");
 
-  const activeSection = sections.find((s) => s.id === activeTab);
-  const colors = colorMap[activeSection?.color ?? "blue"];
-
-  const offCallChecklist = [
-    "Pull up any appointments booked later this week to today if possible",
-    "Push out any unconfirmed calls and fill those slots with responsive leads",
-    "Send personalized pre-call touch to each scheduled prospect (voice memo, video, or gift card preference question)",
-    "Follow up on every lead from yesterday who hasn't responded",
-    "Check your Kill List — have you contacted each high-value prospect this week?",
-    "Ask for a referral from anyone who closed or showed strong interest",
-    "Log all outreach attempts in CRM with notes",
-    "BAMFAM — confirm all booked calls have a follow-up slot if needed",
-  ];
-
-  const onCallChecklist = [
-    "5-minute research: business, LinkedIn, social profiles — know something specific about them",
-    "Open with something personal and specific in the first 30 seconds",
-    "Ask about what they've tried before, what they liked, what didn't work",
-    "Listen 2x more than you talk — answer questions with questions",
-    "Surface all obstacles BEFORE you mention price (time, money, fit, decision-makers, self-doubt)",
-    "If obstacle comes up, use a story + best case / worst case framework",
-    "Ask for the sale confidently once obstacles are resolved",
-    "If they hesitate, ask WHY, resolve the concern, then ask again",
-    "Take detailed notes throughout the call",
-    "BAMFAM — before hanging up, lock in the next meeting if they didn't close",
-    "Ask for a referral: 'Who do you know who's like you and would love this?'",
-  ];
-
-  const objections = [
-    { obstacle: "I don't have time right now", response: "Is this a seasonal thing, or will you always be this busy? If you want this to stick long-term, starting when you're busy is actually when you build the strongest habits — that's when I give the most support. When things slow down, it'll be easy. When busy hits again, you'll know exactly how to handle it." },
-    { obstacle: "I need to think about it", response: "That's totally fine — what specifically is making you hesitant? Walk me through it. [Identify the real concern, address it, then ask again.] You're two steps closer to a real decision than someone who hasn't even thought about it yet." },
-    { obstacle: "I need to check with my partner / spouse / business partner", response: "Makes sense. Let me ask you — are you looking for permission or for support? Because if you went home and they said no, what would you do? [Let them answer.] Most of the time people walk out and never come back — not because they didn't want it, but because they gave away their power. What can we do right now while we're both here?" },
-    { obstacle: "I don't have the budget / money", response: "I hear you. Have you ever bought something before you were 100% sure you could afford it and made it work? [Yes] The question isn't whether the money is sitting in your account — it's whether this is the right move. Best case, this changes everything. Worst case, you find something to cut. Is that a bet you're willing to take?" },
-    { obstacle: "I'm not sure this will work for me", response: "What specifically makes you think your situation is different? [Let them explain.] [Validate, then share a story of someone with the same doubt who succeeded.] You actually said earlier that X was the thing you needed — that's exactly what this addresses. What would need to be true for you to feel confident?" },
-    { obstacle: "I need to do more research", response: "What's the main thing you'd be researching? [They say X.] Okay, let me address that right now. [Answer X directly.] What else would you want to know before moving forward? [Keep going until there are no more concerns, then ask for the sale again.]" },
-  ];
-
-  const rootStyle: CSSProperties = {
-    fontFamily: "var(--font-inter), 'Inter', sans-serif",
-    minHeight: "100vh",
-    background: "#f9fafb",
-    color: "#111827",
-  };
+  const activeSection = sections.find((s) => s.id === activeTab) ?? sections[0];
 
   return (
-    <div style={rootStyle}>
+    <div className="sop">
       {/* Header */}
-      <div style={{ background: "white", borderBottom: "1px solid #e5e7eb", padding: "20px 24px", boxShadow: "0 1px 3px rgba(0,0,0,0.05)" }}>
-        <div style={{ maxWidth: "860px", margin: "0 auto" }}>
-          <h1 style={{ fontSize: "22px", fontWeight: 700, color: "#111827" }}>Sales Team SOP</h1>
-          <p style={{ color: "#6b7280", fontSize: "14px", marginTop: "4px" }}>
+      <header className="sop-header">
+        <div className="sop-header-inner">
+          <div className="sop-eyebrow">Sales Playbook</div>
+          <h1 className="sop-title">Sales Team SOP</h1>
+          <p className="sop-sub">
             The complete playbook for maximizing leads, converting at the highest rate, and staying consistent.
           </p>
         </div>
-      </div>
+      </header>
 
-      {/* View tabs */}
-      <div style={{ background: "white", borderBottom: "1px solid #e5e7eb", padding: "0 24px" }}>
-        <div style={{ maxWidth: "860px", margin: "0 auto", display: "flex" }}>
-          {([
-            { id: "sop", label: "Core SOP" },
-            { id: "checklists", label: "Daily Checklists" },
-            { id: "objections", label: "Objection Playbook" },
-          ] as { id: ViewId; label: string }[]).map((v) => (
+      {/* Sticky view tabs */}
+      <nav className="sop-tabbar">
+        <div className="sop-tabbar-inner">
+          {VIEWS.map((v) => (
             <button
               key={v.id}
+              type="button"
+              className={`sop-tab${activeView === v.id ? " is-active" : ""}`}
+              aria-pressed={activeView === v.id}
               onClick={() => setActiveView(v.id)}
-              style={{
-                padding: "12px 20px",
-                fontSize: "14px",
-                fontWeight: 500,
-                border: "none",
-                background: "none",
-                cursor: "pointer",
-                borderBottom: activeView === v.id ? "2px solid #2563eb" : "2px solid transparent",
-                color: activeView === v.id ? "#2563eb" : "#6b7280",
-                transition: "all 0.15s",
-              }}
             >
               {v.label}
             </button>
           ))}
         </div>
-      </div>
+      </nav>
 
-      <div style={{ maxWidth: "860px", margin: "0 auto", padding: "32px 24px" }}>
+      <main className="sop-main">
         {/* CORE SOP */}
         {activeView === "sop" && (
-          <div>
-            <div style={{ display: "flex", gap: "12px", marginBottom: "24px", flexWrap: "wrap" }}>
-              {sections.map((sec) => {
-                const c = colorMap[sec.color];
-                return (
-                  <button
-                    key={sec.id}
-                    onClick={() => setActiveTab(sec.id)}
-                    style={{
-                      display: "flex",
-                      alignItems: "center",
-                      gap: "8px",
-                      padding: "8px 16px",
-                      borderRadius: "8px",
-                      fontSize: "14px",
-                      fontWeight: 600,
-                      cursor: "pointer",
-                      transition: "all 0.15s",
-                      border: "1px solid transparent",
-                      ...(activeTab === sec.id ? c.tabActive : c.tabInactive),
-                    }}
-                  >
-                    <span>{sec.icon}</span>
-                    {sec.label}
-                  </button>
-                );
-              })}
-            </div>
-
-            <div style={{ ...colors.callout, padding: "12px 16px", borderRadius: "8px", marginBottom: "20px", fontSize: "14px", fontWeight: 500 }}>
-              {activeTab === "opportunities" &&
-                "A salesperson's first job is to maximize the number of opportunities they have. Volume is the foundation. Everything else multiplies on top of it."}
-              {activeTab === "conversion" &&
-                "Once you have the call, you need to convert it. The best reps listen more than they talk, know their script cold, and address every obstacle before price is ever mentioned."}
-              {activeTab === "consistency" &&
-                "The difference between champions and everyone else is sustainability. Being elite for one week doesn't build a career. These habits are what make performance repeatable."}
-            </div>
-
-            <div style={{ display: "flex", flexDirection: "column", gap: "12px" }}>
-              {activeSection?.steps.map((step, i) => (
-                <div key={i} style={{ background: "white", border: "1px solid #e5e7eb", borderRadius: "12px", padding: "20px", boxShadow: "0 1px 2px rgba(0,0,0,0.04)" }}>
-                  <div style={{ display: "flex", gap: "14px" }}>
-                    <div style={{ width: "10px", height: "10px", borderRadius: "50%", background: colors.dot, flexShrink: 0, marginTop: "6px" }} />
-                    <div style={{ flex: 1 }}>
-                      <h3 style={{ fontWeight: 700, color: "#111827", marginBottom: "8px", fontSize: "15px" }}>{step.title}</h3>
-                      <p style={{ color: "#4b5563", fontSize: "14px", lineHeight: "1.6", marginBottom: "12px" }}>{step.body}</p>
-                      {step.metrics && (
-                        <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: "8px", marginBottom: "12px" }}>
-                          {step.metrics.map((m, j) => (
-                            <div key={j} style={{ background: "#f9fafb", border: "1px solid #e5e7eb", borderRadius: "8px", padding: "10px" }}>
-                              <div style={{ fontSize: "12px", fontWeight: 700, color: "#111827" }}>{m.label}</div>
-                              <div style={{ fontSize: "12px", color: "#6b7280", marginTop: "2px" }}>{m.desc}</div>
-                            </div>
-                          ))}
-                        </div>
-                      )}
-                      {step.callout && (
-                        <div style={{ ...colors.callout, padding: "10px 14px", borderRadius: "6px", fontSize: "13px", fontWeight: 500 }}>{step.callout}</div>
-                      )}
-                    </div>
-                  </div>
-                </div>
+          <div className="sop-view" key="sop">
+            <div className="sop-pills">
+              {sections.map((sec) => (
+                <button
+                  key={sec.id}
+                  type="button"
+                  data-accent={sec.color}
+                  className={`sop-pill${activeTab === sec.id ? " is-active" : ""}`}
+                  aria-pressed={activeTab === sec.id}
+                  onClick={() => setActiveTab(sec.id)}
+                >
+                  <span className="sop-pill-ic" aria-hidden>
+                    {sec.icon}
+                  </span>
+                  {sec.label}
+                </button>
               ))}
+            </div>
+
+            <div data-accent={activeSection.color}>
+              <div className="sop-intro">{activeSection.intro}</div>
+              <div className="sop-steps" key={activeSection.id}>
+                {activeSection.steps.map((step, i) => {
+                  const [num, title] = splitNum(step.title);
+                  return (
+                    <article className="sop-step" key={i}>
+                      <div className="sop-step-num" aria-hidden>
+                        {num}
+                      </div>
+                      <div className="sop-step-main">
+                        <h3 className="sop-step-title">{title}</h3>
+                        <p className="sop-step-body">{step.body}</p>
+                        {step.metrics && (
+                          <div className="sop-metrics">
+                            {step.metrics.map((m, j) => (
+                              <div className="sop-metric" key={j}>
+                                <div className="sop-metric-l">{m.label}</div>
+                                <div className="sop-metric-d">{m.desc}</div>
+                              </div>
+                            ))}
+                          </div>
+                        )}
+                        {step.callout && <div className="sop-callout">{step.callout}</div>}
+                      </div>
+                    </article>
+                  );
+                })}
+              </div>
             </div>
           </div>
         )}
 
         {/* DAILY CHECKLISTS */}
         {activeView === "checklists" && (
-          <div>
-            <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: "20px", marginBottom: "20px" }}>
-              {[
-                { title: "Off-the-Call SOP", subtitle: "What you do between calls", emoji: "📵", items: offCallChecklist, accent: "#2563eb" },
-                { title: "On-the-Call SOP", subtitle: "What you do on every single call", emoji: "📞", items: onCallChecklist, accent: "#d97706" },
-              ].map((col, ci) => (
-                <div key={ci} style={{ background: "white", border: "1px solid #e5e7eb", borderRadius: "12px", padding: "24px", boxShadow: "0 1px 2px rgba(0,0,0,0.04)" }}>
-                  <div style={{ display: "flex", alignItems: "center", gap: "12px", marginBottom: "16px" }}>
-                    <div style={{ width: "36px", height: "36px", borderRadius: "8px", background: "#f3f4f6", display: "flex", alignItems: "center", justifyContent: "center", fontSize: "20px" }}>{col.emoji}</div>
+          <div className="sop-view" key="checklists">
+            <div className="sop-cols">
+              {checklistColumns.map((col) => (
+                <section className="sop-card" data-accent={col.accent} key={col.title}>
+                  <div className="sop-card-head">
+                    <div className="sop-tile" aria-hidden>
+                      {col.emoji}
+                    </div>
                     <div>
-                      <div style={{ fontWeight: 700, color: "#111827", fontSize: "15px" }}>{col.title}</div>
-                      <div style={{ fontSize: "12px", color: "#6b7280" }}>{col.subtitle}</div>
+                      <div className="sop-card-title">{col.title}</div>
+                      <div className="sop-card-sub">{col.subtitle}</div>
                     </div>
                   </div>
                   {col.items.map((item, i) => (
                     <ChecklistItem key={i} text={item} />
                   ))}
-                </div>
+                </section>
               ))}
             </div>
 
-            <div style={{ background: "white", border: "1px solid #e5e7eb", borderRadius: "12px", padding: "24px", boxShadow: "0 1px 2px rgba(0,0,0,0.04)" }}>
-              <div style={{ display: "flex", alignItems: "center", gap: "12px", marginBottom: "16px" }}>
-                <div style={{ width: "36px", height: "36px", borderRadius: "8px", background: "#f0fdf4", display: "flex", alignItems: "center", justifyContent: "center", fontSize: "20px" }}>📊</div>
+            <section className="sop-card" data-accent="green">
+              <div className="sop-card-head">
+                <div className="sop-tile" aria-hidden>
+                  📊
+                </div>
                 <div>
-                  <div style={{ fontWeight: 700, color: "#111827", fontSize: "15px" }}>Metrics You Must Track</div>
-                  <div style={{ fontSize: "12px", color: "#6b7280" }}>If you only track close rate, you're flying blind</div>
+                  <div className="sop-card-title">Metrics You Must Track</div>
+                  <div className="sop-card-sub">If you only track close rate, you&apos;re flying blind</div>
                 </div>
               </div>
-              <div style={{ display: "grid", gridTemplateColumns: "repeat(3, 1fr)", gap: "10px" }}>
-                {[
-                  { name: "Lead Booking Rate", formula: "Leads booked ÷ total leads" },
-                  { name: "Show Rate", formula: "Shows ÷ booked calls" },
-                  { name: "Offer Rate", formula: "Offers made ÷ shows" },
-                  { name: "Close Rate", formula: "Closes ÷ offers made" },
-                  { name: "Avg Calls to Close", formula: "Total calls ÷ total closes" },
-                  { name: "Avg Cash Collected", formula: "Total revenue ÷ closes" },
-                ].map((m, i) => (
-                  <div key={i} style={{ background: "#f9fafb", border: "1px solid #e5e7eb", borderRadius: "8px", padding: "12px" }}>
-                    <div style={{ fontSize: "13px", fontWeight: 700, color: "#111827" }}>{m.name}</div>
-                    <div style={{ fontSize: "12px", color: "#6b7280", marginTop: "4px" }}>{m.formula}</div>
+              <div className="sop-metrics">
+                {metricFormulas.map((m, i) => (
+                  <div className="sop-metric" key={i}>
+                    <div className="sop-metric-l">{m.name}</div>
+                    <div className="sop-metric-d">{m.formula}</div>
                   </div>
                 ))}
               </div>
-              <p style={{ fontSize: "12px", color: "#9ca3af", marginTop: "16px" }}>
+              <p className="sop-note">
                 💡 Improving your show rate by 20% is just as valuable as improving your close rate by 20%. Control every variable in the funnel.
               </p>
-            </div>
+            </section>
           </div>
         )}
 
         {/* OBJECTION PLAYBOOK */}
         {activeView === "objections" && (
-          <div>
-            <div style={{ background: "#fffbeb", border: "1px solid #fde68a", borderRadius: "12px", padding: "16px", marginBottom: "20px" }}>
-              <p style={{ color: "#92400e", fontSize: "14px" }}>
-                <strong>Remember:</strong> An <strong>obstacle</strong> comes up before price — address it proactively. An <strong>objection</strong> comes up after — it&apos;s 10x harder to handle. Kill the zombie upfront. Resolve the concern, then ask again.
-              </p>
+          <div className="sop-view" key="objections">
+            <div className="sop-banner">
+              <strong>Remember:</strong> An <strong>obstacle</strong> comes up before price — address it proactively. An{" "}
+              <strong>objection</strong>{" "}comes up after — it&apos;s 10x harder to handle. Kill the zombie upfront. Resolve the concern, then ask again.
             </div>
-            <div style={{ display: "flex", flexDirection: "column", gap: "12px" }}>
+            <div className="sop-objs">
               {objections.map((obj, i) => (
-                <div key={i} style={{ background: "white", border: "1px solid #e5e7eb", borderRadius: "12px", overflow: "hidden", boxShadow: "0 1px 2px rgba(0,0,0,0.04)" }}>
-                  <div style={{ background: "#fef2f2", borderBottom: "1px solid #fecaca", padding: "12px 20px", display: "flex", gap: "8px", alignItems: "center" }}>
-                    <span style={{ color: "#dc2626", fontSize: "12px", fontWeight: 700, textTransform: "uppercase" }}>Prospect:</span>
-                    <span style={{ color: "#111827", fontWeight: 600, fontSize: "14px" }}>&quot;{obj.obstacle}&quot;</span>
+                <div className="sop-obj" key={i}>
+                  <div className="sop-obj-q">
+                    <span className="sop-tag sop-tag--q">Prospect:</span>
+                    <span className="sop-obj-qt">&ldquo;{obj.obstacle}&rdquo;</span>
                   </div>
-                  <div style={{ padding: "16px 20px", display: "flex", gap: "8px" }}>
-                    <span style={{ color: "#16a34a", fontSize: "12px", fontWeight: 700, textTransform: "uppercase", flexShrink: 0, marginTop: "2px" }}>You:</span>
-                    <p style={{ color: "#374151", fontSize: "14px", lineHeight: "1.6" }}>{obj.response}</p>
+                  <div className="sop-obj-a">
+                    <span className="sop-tag sop-tag--a">You:</span>
+                    <p className="sop-obj-at">{obj.response}</p>
                   </div>
                 </div>
               ))}
             </div>
 
-            <div style={{ background: "white", border: "1px solid #e5e7eb", borderRadius: "12px", padding: "20px", marginTop: "20px", boxShadow: "0 1px 2px rgba(0,0,0,0.04)" }}>
-              <h3 style={{ fontWeight: 700, color: "#111827", marginBottom: "12px" }}>🃏 The Best Case / Worst Case Close</h3>
-              <p style={{ color: "#4b5563", fontSize: "14px", marginBottom: "12px" }}>When someone is paralyzed by fear, walk them through it explicitly:</p>
-              <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: "12px" }}>
-                <div style={{ background: "#fef2f2", border: "1px solid #fecaca", borderRadius: "8px", padding: "14px" }}>
-                  <div style={{ color: "#dc2626", fontSize: "11px", fontWeight: 700, textTransform: "uppercase", marginBottom: "6px" }}>Worst Case</div>
-                  <p style={{ color: "#374151", fontSize: "14px", lineHeight: "1.5" }}>
-                    &quot;Let&apos;s say this doesn&apos;t work. Where are you? Probably in the same place you&apos;re in right now — and you&apos;ve been there before and survived. That&apos;s your floor.&quot;
-                  </p>
+            <section className="sop-case">
+              <h3 className="sop-case-title">🃏 The Best Case / Worst Case Close</h3>
+              <p className="sop-case-lead">When someone is paralyzed by fear, walk them through it explicitly:</p>
+              <div className="sop-case-grid">
+                <div className="sop-case-cell sop-case-cell--worst">
+                  <div className="sop-case-k">Worst Case</div>
+                  <p className="sop-case-p">{WORST_CASE}</p>
                 </div>
-                <div style={{ background: "#f0fdf4", border: "1px solid #bbf7d0", borderRadius: "8px", padding: "14px" }}>
-                  <div style={{ color: "#16a34a", fontSize: "11px", fontWeight: 700, textTransform: "uppercase", marginBottom: "6px" }}>Best Case</div>
-                  <p style={{ color: "#374151", fontSize: "14px", lineHeight: "1.5" }}>
-                    &quot;Now let&apos;s say this works. Play it out 3–5 years. What does that look like for your business? Your family? That&apos;s your ceiling. Is that a bet you&apos;re willing to take?&quot;
-                  </p>
+                <div className="sop-case-cell sop-case-cell--best">
+                  <div className="sop-case-k">Best Case</div>
+                  <p className="sop-case-p">{BEST_CASE}</p>
                 </div>
               </div>
-            </div>
+            </section>
           </div>
         )}
-      </div>
+      </main>
     </div>
   );
 }

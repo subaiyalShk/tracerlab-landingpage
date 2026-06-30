@@ -1,9 +1,536 @@
-/* Standalone Sales SOP page — light theme, fully isolated from the dark site chrome.
-   The global box-model reset (*{margin:0;padding:0;box-sizing:border-box}) is provided by
-   public/style.css, injected pre-paint by the css-bootstrap script in app/layout.tsx. Here
-   we only guarantee a light page background: the root layout's viewport color-scheme is
-   "dark light", which can otherwise tint the <body> / overscroll area behind this page. */
+/* Standalone Sales SOP page — polished light theme, fully responsive. Isolated from the dark
+   site chrome (lives outside the (tracerlabs) route group, like /solar). All styling lives here
+   in real CSS (not inline styles) so media queries / responsive grids work. Per-section accent
+   (blue / amber / green) is driven by a single set of --accent-* custom properties, switched via
+   [data-accent="..."] on a wrapper — descendants inherit, so callouts, chips, pills and checkbox
+   states all recolor from one source. */
+
+/* Light page background: the root layout's viewport color-scheme is "dark light", which can
+   otherwise tint <body> / the overscroll area behind this page. */
 html,
 body {
   background: #f9fafb;
+}
+
+/* ── Root + tokens ───────────────────────────────────────────────────────── */
+.sop {
+  --maxw: 900px;
+  --pad-x: clamp(16px, 4vw, 28px);
+  --radius: 14px;
+
+  --bg: #f9fafb;
+  --card: #ffffff;
+  --line: #e9ebf0;
+  --ink: #111827;
+  --ink-2: #4b5563;
+  --ink-3: #6b7280;
+  --ink-4: #9ca3af;
+  --shadow: 0 1px 2px rgba(17, 24, 39, 0.04), 0 10px 24px -18px rgba(17, 24, 39, 0.22);
+
+  /* accent defaults (blue) — overridden by [data-accent] below */
+  --accent: #2563eb;
+  --accent-strong: #1d4ed8;
+  --accent-weak: #eff6ff;
+  --accent-ink: #1e40af;
+  --accent-border: #bfdbfe;
+
+  color-scheme: light;
+  font-family: var(--font-inter), "Inter", system-ui, sans-serif;
+  color: var(--ink);
+  background: var(--bg);
+  min-height: 100vh;
+  min-height: 100dvh;
+  -webkit-font-smoothing: antialiased;
+}
+
+/* Zero-specificity safety reset (the legacy box reset is loaded, but stay self-sufficient). */
+.sop :where(h1, h2, h3, h4, p, ul, li) {
+  margin: 0;
+}
+/* Neutralize UA button chrome — this route loads Tailwind/globals' button reset nowhere. */
+.sop button {
+  font: inherit;
+  color: inherit;
+  background: none;
+  border: 0;
+  margin: 0;
+  cursor: pointer;
+}
+
+/* accent palettes */
+.sop [data-accent="blue"] {
+  --accent: #2563eb;
+  --accent-strong: #1d4ed8;
+  --accent-weak: #eff6ff;
+  --accent-ink: #1e40af;
+  --accent-border: #bfdbfe;
+}
+.sop [data-accent="amber"] {
+  --accent: #d97706;
+  --accent-strong: #b45309;
+  --accent-weak: #fffbeb;
+  --accent-ink: #92400e;
+  --accent-border: #fde68a;
+}
+.sop [data-accent="green"] {
+  --accent: #16a34a;
+  --accent-strong: #15803d;
+  --accent-weak: #f0fdf4;
+  --accent-ink: #166534;
+  --accent-border: #bbf7d0;
+}
+
+/* ── Header ──────────────────────────────────────────────────────────────── */
+.sop-header {
+  background: var(--card);
+  border-bottom: 1px solid var(--line);
+}
+.sop-header-inner {
+  max-width: var(--maxw);
+  margin: 0 auto;
+  padding: clamp(22px, 5vw, 32px) var(--pad-x);
+}
+.sop-eyebrow {
+  display: inline-flex;
+  align-items: center;
+  gap: 9px;
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  color: var(--ink-3);
+  margin-bottom: 12px;
+}
+.sop-eyebrow::before {
+  content: "";
+  width: 7px;
+  height: 7px;
+  border-radius: 50%;
+  background: #2563eb;
+  box-shadow: 0 0 0 4px rgba(37, 99, 235, 0.15);
+}
+.sop-title {
+  font-size: clamp(23px, 4.6vw, 31px);
+  font-weight: 700;
+  letter-spacing: -0.02em;
+  line-height: 1.1;
+}
+.sop-sub {
+  color: var(--ink-3);
+  font-size: clamp(13px, 2.6vw, 15px);
+  margin-top: 9px;
+  max-width: 62ch;
+  line-height: 1.55;
+}
+
+/* ── Sticky view tabs ────────────────────────────────────────────────────── */
+.sop-tabbar {
+  position: sticky;
+  top: 0;
+  z-index: 20;
+  background: rgba(255, 255, 255, 0.85);
+  backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
+  border-bottom: 1px solid var(--line);
+}
+.sop-tabbar-inner {
+  max-width: var(--maxw);
+  margin: 0 auto;
+  padding: 0 var(--pad-x);
+  display: flex;
+  gap: 2px;
+  overflow-x: auto;
+  scrollbar-width: none;
+}
+.sop-tabbar-inner::-webkit-scrollbar {
+  display: none;
+}
+.sop-tab {
+  position: relative;
+  white-space: nowrap;
+  padding: 14px 16px;
+  font-size: 14px;
+  font-weight: 600;
+  color: var(--ink-3);
+  border-bottom: 2px solid transparent;
+  transition: color 0.15s;
+}
+.sop-tab:hover {
+  color: var(--ink-2);
+}
+.sop-tab.is-active {
+  color: #2563eb;
+  border-bottom-color: #2563eb;
+}
+
+/* ── Main + view transition ──────────────────────────────────────────────── */
+.sop-main {
+  max-width: var(--maxw);
+  margin: 0 auto;
+  padding: clamp(22px, 4vw, 36px) var(--pad-x) 72px;
+}
+@keyframes sopFade {
+  from {
+    opacity: 0;
+    transform: translateY(8px);
+  }
+  to {
+    opacity: 1;
+    transform: none;
+  }
+}
+@media (prefers-reduced-motion: no-preference) {
+  .sop-view {
+    animation: sopFade 0.34s cubic-bezier(0.16, 1, 0.3, 1) both;
+  }
+  .sop-steps {
+    animation: sopFade 0.3s cubic-bezier(0.16, 1, 0.3, 1) both;
+  }
+}
+
+/* ── Section pills (Core SOP) ────────────────────────────────────────────── */
+.sop-pills {
+  display: flex;
+  gap: 10px;
+  flex-wrap: wrap;
+  margin-bottom: 22px;
+}
+@media (max-width: 560px) {
+  .sop-pills {
+    flex-wrap: nowrap;
+    overflow-x: auto;
+    scrollbar-width: none;
+    margin-inline: calc(var(--pad-x) * -1);
+    padding-inline: var(--pad-x);
+  }
+  .sop-pills::-webkit-scrollbar {
+    display: none;
+  }
+}
+.sop-pill {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  white-space: nowrap;
+  padding: 9px 15px;
+  border-radius: 999px;
+  font-size: 13.5px;
+  font-weight: 600;
+  color: var(--accent-ink);
+  background: var(--card);
+  border: 1px solid var(--accent-border);
+  transition: transform 0.12s ease, box-shadow 0.15s ease, background 0.15s ease, color 0.15s ease;
+}
+.sop-pill:hover {
+  transform: translateY(-1px);
+}
+.sop-pill.is-active {
+  background: var(--accent);
+  color: #fff;
+  border-color: var(--accent);
+  box-shadow: 0 8px 20px -9px color-mix(in oklab, var(--accent) 65%, transparent);
+}
+.sop-pill-ic {
+  font-size: 15px;
+  line-height: 1;
+}
+
+/* intro callout */
+.sop-intro {
+  background: var(--accent-weak);
+  border-left: 4px solid var(--accent);
+  color: var(--accent-ink);
+  padding: 14px 16px;
+  border-radius: 10px;
+  font-size: 14px;
+  font-weight: 500;
+  margin-bottom: 18px;
+  line-height: 1.55;
+}
+
+/* ── Steps ───────────────────────────────────────────────────────────────── */
+.sop-steps {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+.sop-step {
+  background: var(--card);
+  border: 1px solid var(--line);
+  border-radius: var(--radius);
+  padding: clamp(16px, 3vw, 22px);
+  box-shadow: var(--shadow);
+  display: flex;
+  gap: 14px;
+}
+.sop-step-num {
+  flex: 0 0 auto;
+  width: 34px;
+  height: 34px;
+  border-radius: 10px;
+  display: grid;
+  place-items: center;
+  font-size: 14px;
+  font-weight: 700;
+  color: #fff;
+  background: var(--accent);
+  box-shadow: 0 5px 14px -5px color-mix(in oklab, var(--accent) 60%, transparent);
+}
+.sop-step-main {
+  min-width: 0;
+}
+.sop-step-title {
+  font-size: 15.5px;
+  font-weight: 700;
+  color: var(--ink);
+  margin-bottom: 7px;
+  line-height: 1.3;
+}
+.sop-step-body {
+  color: var(--ink-2);
+  font-size: 14px;
+  line-height: 1.62;
+}
+.sop-callout {
+  margin-top: 12px;
+  background: var(--accent-weak);
+  border-left: 4px solid var(--accent);
+  color: var(--accent-ink);
+  padding: 10px 14px;
+  border-radius: 8px;
+  font-size: 13px;
+  font-weight: 500;
+  line-height: 1.5;
+}
+
+/* metrics grid (auto-fit → 1 col on mobile, no breakpoint needed) */
+.sop-metrics {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(148px, 1fr));
+  gap: 8px;
+  margin-top: 12px;
+}
+.sop-metric {
+  background: var(--bg);
+  border: 1px solid var(--line);
+  border-radius: 9px;
+  padding: 11px 12px;
+}
+.sop-metric-l {
+  font-size: 12.5px;
+  font-weight: 700;
+  color: var(--ink);
+}
+.sop-metric-d {
+  font-size: 12px;
+  color: var(--ink-3);
+  margin-top: 3px;
+  line-height: 1.4;
+}
+
+/* ── Daily checklists ────────────────────────────────────────────────────── */
+.sop-cols {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(272px, 1fr));
+  gap: 16px;
+  margin-bottom: 16px;
+}
+.sop-card {
+  background: var(--card);
+  border: 1px solid var(--line);
+  border-radius: var(--radius);
+  padding: clamp(18px, 3vw, 24px);
+  box-shadow: var(--shadow);
+}
+.sop-card-head {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  margin-bottom: 12px;
+}
+.sop-tile {
+  flex: 0 0 auto;
+  width: 38px;
+  height: 38px;
+  border-radius: 10px;
+  display: grid;
+  place-items: center;
+  font-size: 19px;
+  background: var(--accent-weak);
+  border: 1px solid var(--accent-border);
+}
+.sop-card-title {
+  font-size: 15px;
+  font-weight: 700;
+  color: var(--ink);
+}
+.sop-card-sub {
+  font-size: 12px;
+  color: var(--ink-3);
+  margin-top: 1px;
+}
+.sop-check {
+  width: 100%;
+  text-align: left;
+  display: flex;
+  align-items: flex-start;
+  gap: 12px;
+  padding: 10px 4px;
+  min-height: 44px;
+  border-bottom: 1px solid #f1f3f7;
+}
+.sop-check:last-child {
+  border-bottom: 0;
+}
+.sop-check-box {
+  flex: 0 0 auto;
+  margin-top: 1px;
+  width: 20px;
+  height: 20px;
+  border-radius: 5px;
+  border: 2px solid #d1d5db;
+  background: #fff;
+  display: grid;
+  place-items: center;
+  color: #fff;
+  font-size: 11px;
+  font-weight: 700;
+  transition: background 0.15s ease, border-color 0.15s ease;
+}
+.sop-check.is-checked .sop-check-box {
+  background: var(--accent);
+  border-color: var(--accent);
+}
+.sop-check-text {
+  font-size: 13.5px;
+  line-height: 1.5;
+  color: var(--ink-2);
+  transition: color 0.15s ease;
+}
+.sop-check.is-checked .sop-check-text {
+  color: var(--ink-4);
+  text-decoration: line-through;
+}
+.sop-note {
+  font-size: 12px;
+  color: var(--ink-4);
+  margin-top: 16px;
+  line-height: 1.5;
+}
+
+/* ── Objection playbook ──────────────────────────────────────────────────── */
+.sop-banner {
+  background: #fffbeb;
+  border: 1px solid #fde68a;
+  border-radius: var(--radius);
+  padding: 15px 16px;
+  margin-bottom: 16px;
+  color: #92400e;
+  font-size: 14px;
+  line-height: 1.55;
+}
+.sop-objs {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+.sop-obj {
+  background: var(--card);
+  border: 1px solid var(--line);
+  border-radius: var(--radius);
+  overflow: hidden;
+  box-shadow: var(--shadow);
+}
+.sop-obj-q {
+  background: #fef2f2;
+  border-bottom: 1px solid #fecaca;
+  padding: 13px 18px;
+  display: flex;
+  gap: 9px;
+  align-items: center;
+  flex-wrap: wrap;
+}
+.sop-obj-qt {
+  color: #111827;
+  font-weight: 600;
+  font-size: 14px;
+}
+.sop-obj-a {
+  padding: 15px 18px;
+  display: flex;
+  gap: 9px;
+}
+.sop-obj-at {
+  color: #374151;
+  font-size: 14px;
+  line-height: 1.62;
+}
+.sop-tag {
+  flex: 0 0 auto;
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+  margin-top: 2px;
+}
+.sop-tag--q {
+  color: #dc2626;
+}
+.sop-tag--a {
+  color: #16a34a;
+}
+.sop-case {
+  background: var(--card);
+  border: 1px solid var(--line);
+  border-radius: var(--radius);
+  padding: clamp(18px, 3vw, 22px);
+  margin-top: 16px;
+  box-shadow: var(--shadow);
+}
+.sop-case-title {
+  font-size: 16px;
+  font-weight: 700;
+  color: var(--ink);
+  margin-bottom: 6px;
+}
+.sop-case-lead {
+  color: var(--ink-2);
+  font-size: 14px;
+  margin-bottom: 14px;
+  line-height: 1.55;
+}
+.sop-case-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+  gap: 12px;
+}
+.sop-case-cell {
+  border-radius: 10px;
+  padding: 14px;
+}
+.sop-case-cell--worst {
+  background: #fef2f2;
+  border: 1px solid #fecaca;
+}
+.sop-case-cell--best {
+  background: #f0fdf4;
+  border: 1px solid #bbf7d0;
+}
+.sop-case-k {
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+  margin-bottom: 6px;
+}
+.sop-case-cell--worst .sop-case-k {
+  color: #dc2626;
+}
+.sop-case-cell--best .sop-case-k {
+  color: #16a34a;
+}
+.sop-case-p {
+  color: #374151;
+  font-size: 14px;
+  line-height: 1.55;
 }

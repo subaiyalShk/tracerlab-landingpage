@@ -1,0 +1,9 @@
+/* Standalone Sales SOP page — light theme, fully isolated from the dark site chrome.
+   The global box-model reset (*{margin:0;padding:0;box-sizing:border-box}) is provided by
+   public/style.css, injected pre-paint by the css-bootstrap script in app/layout.tsx. Here
+   we only guarantee a light page background: the root layout's viewport color-scheme is
+   "dark light", which can otherwise tint the <body> / overscroll area behind this page. */
+html,
+body {
+  background: #f9fafb;
+}

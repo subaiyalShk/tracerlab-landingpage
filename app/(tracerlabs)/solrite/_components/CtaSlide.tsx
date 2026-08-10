@@ -1,5 +1,6 @@
 import Button from "../../../components/Button";
 import DeckCta from "./DeckCta";
+import SlideBackdrop from "./SlideBackdrop";
 import Eyebrow from "../../../components/Eyebrow";
 import { Kinetic, Reveal } from "../../../components/motion";
 
@@ -10,6 +11,7 @@ export default function CtaSlide({ calcomUrl }: { calcomUrl: string }) {
       id="tl-solrite-cta"
       className="relative isolate flex min-h-[100dvh] w-full snap-start flex-col items-center justify-center overflow-hidden bg-page text-center text-ink"
     >
+      <SlideBackdrop src="/assets/solrite/gen/cta-v1.png" opacity={0.24} />
       <div
         aria-hidden
         className="pointer-events-none absolute left-1/2 top-1/2 -z-10 h-[46vw] w-[56vw] -translate-x-1/2 -translate-y-1/2 rounded-full opacity-[0.16] blur-[150px]"

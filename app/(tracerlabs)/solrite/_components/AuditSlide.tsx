@@ -18,7 +18,7 @@ const ROWS: Row[] = [
 
 export default function AuditSlide() {
   return (
-    <Slide id="tl-solrite-audit">
+    <Slide id="tl-solrite-audit" bgSrc="/assets/solrite/gen/audit-v1.png" bgOpacity={0.16}>
       <div className="max-w-[46rem]">
         <Eyebrow>What we found</Eyebrow>
         <Kinetic

@@ -24,7 +24,7 @@ const RISKS = [
 
 export default function NeedsSlide() {
   return (
-    <Slide id="tl-solrite-needs" contentClassName="py-20">
+    <Slide id="tl-solrite-needs" contentClassName="py-20" bgSrc="/assets/solrite/gen/needs-v1.png" bgOpacity={0.16}>
       <div className="max-w-[46rem]">
         <Eyebrow>To start</Eyebrow>
         <Kinetic

@@ -20,7 +20,7 @@ const PAIR = [
 
 export default function CostSlide() {
   return (
-    <Slide id="tl-solrite-cost">
+    <Slide id="tl-solrite-cost" bgSrc="/assets/solrite/gen/cost-v1.png" bgOpacity={0.2}>
       <div className="max-w-[46rem]">
         <Eyebrow>The business cost</Eyebrow>
         <Kinetic

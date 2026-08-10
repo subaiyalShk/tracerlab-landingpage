@@ -1,4 +1,5 @@
 import DeckCta from "./DeckCta";
+import SlideBackdrop from "./SlideBackdrop";
 import Eyebrow from "../../../components/Eyebrow";
 import { KineticHeading } from "../../../components/Kinetic";
 
@@ -9,6 +10,7 @@ export default function CoverSlide() {
       id="tl-solrite-cover"
       className="relative isolate flex min-h-[100dvh] w-full snap-start flex-col items-center justify-center overflow-hidden bg-page text-center text-ink"
     >
+      <SlideBackdrop src="/assets/solrite/gen/cover-v2.png" opacity={0.26} />
       {/* dot grid + ambient glow */}
       <div
         aria-hidden

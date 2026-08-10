@@ -34,7 +34,7 @@ const STEPS = [
 
 export default function PlanSlide() {
   return (
-    <Slide id="tl-solrite-plan" contentClassName="py-20">
+    <Slide id="tl-solrite-plan" contentClassName="py-20" bgSrc="/assets/solrite/gen/plan-v1.png" bgOpacity={0.16}>
       <div className="max-w-[46rem]">
         <Eyebrow>The proposal</Eyebrow>
         <Kinetic

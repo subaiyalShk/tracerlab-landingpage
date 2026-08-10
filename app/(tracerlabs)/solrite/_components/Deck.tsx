@@ -1,6 +1,7 @@
 "use client";
 
 import { useEffect, useRef, useState } from "react";
+import { scrollToSlide } from "./deckScroll";
 
 // Scroll-deck shell: a full-viewport snap-scroll container (deck feel, page mechanics) with
 // a right-side progress rail and ↑/↓ · PageUp/Down keyboard nav. Pure CSS snap is the no-JS
@@ -32,7 +33,8 @@ export default function Deck({ children, count }: { children: React.ReactNode; c
       e.preventDefault();
       const dir = e.key === "ArrowDown" || e.key === "PageDown" ? 1 : -1;
       const next = Math.min(slides.length - 1, Math.max(0, active + dir));
-      slides[next]?.scrollIntoView({ behavior: "smooth" });
+      const id = slides[next]?.id;
+      if (id) scrollToSlide(id);
     };
     root.addEventListener("keydown", onKey);
     return () => {
@@ -42,7 +44,8 @@ export default function Deck({ children, count }: { children: React.ReactNode; c
   }, [active]);
 
   const go = (i: number) => {
-    ref.current?.querySelectorAll<HTMLElement>("[data-slide]")[i]?.scrollIntoView({ behavior: "smooth" });
+    const id = ref.current?.querySelectorAll<HTMLElement>("[data-slide]")[i]?.id;
+    if (id) scrollToSlide(id);
   };
 
   return (

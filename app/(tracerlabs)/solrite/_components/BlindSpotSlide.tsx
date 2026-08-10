@@ -16,7 +16,7 @@ const SPARK_KNOWS = [
 
 export default function BlindSpotSlide() {
   return (
-    <Slide id="tl-solrite-blindspot">
+    <Slide id="tl-solrite-blindspot" bgSrc="/assets/solrite/gen/blindspot-v1.png" bgOpacity={0.18}>
       <div className="max-w-[46rem]">
         <Eyebrow>The gap</Eyebrow>
         <Kinetic

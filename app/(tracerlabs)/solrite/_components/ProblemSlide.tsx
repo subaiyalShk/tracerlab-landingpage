@@ -4,7 +4,7 @@ import { Kinetic, Reveal } from "../../../components/motion";
 
 export default function ProblemSlide() {
   return (
-    <Slide id="tl-solrite-problem">
+    <Slide id="tl-solrite-problem" bgSrc="/assets/solrite/gen/problem-v2.png" bgOpacity={0.22}>
       <div className="max-w-[46rem]">
         <Eyebrow>The problem</Eyebrow>
         <Kinetic

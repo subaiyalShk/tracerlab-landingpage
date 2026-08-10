@@ -88,12 +88,6 @@ export default function LoopSlide() {
         </div>
       </SlideReveal>
 
-      <SlideReveal delay={0.25}>
-        <p className="mt-8 max-w-[46rem] text-[1.02rem] leading-relaxed text-ink/55">
-          The acquisition path is complete and working. The learning path is not — which is why the ad account
-          cannot get smarter over time, no matter how long it runs.
-        </p>
-      </SlideReveal>
     </Slide>
   );
 }

@@ -5,16 +5,15 @@ import Bevel, { GLASS_BORDER, GLASS_BG } from "../../../components/Bevel";
 import Eyebrow from "../../../components/Eyebrow";
 
 const HAVE = [
-  "Lead to replied to qualified to proposal to signed",
-  "Broken out by state, by channel, and by Meta ad set",
-  "Every Meta lead stored against Meta's own lead ID",
+  "Lead to replied to qualified to signed",
+  "Split by state, channel and ad set",
+  "Keyed to Meta's own lead ID",
 ];
 
 const MISSING = [
-  "No ad spend in it — so no cost per qualified lead, per market",
-  "Fixed to the last 30 days, with no date control",
-  "Qualified and bill are partly inferred from an uploaded photo, not a clean stage",
-  "Nothing reconciles it against what the ad account reports",
+  "No spend in it",
+  "No cost per qualified lead",
+  "Never reconciled with the ad account",
 ];
 
 export default function ProveFirstSlide() {
@@ -28,9 +27,7 @@ export default function ProveFirstSlide() {
         />
         <SlideReveal delay={0.12}>
           <p className="mt-5 text-[1.02rem] leading-relaxed text-ink/55">
-            Spark already has a lead funnel dashboard, and it already splits by Meta ad set. The reason it has
-            not settled this argument is that it cannot see money, and nothing has been reconciled against the
-            ad account.
+            The funnel already exists. It just cannot see money.
           </p>
         </SlideReveal>
       </div>
@@ -81,14 +78,11 @@ export default function ProveFirstSlide() {
 
       <SlideReveal delay={0.4}>
         <div className="mt-7 max-w-[54rem] border-l-2 border-brand-pink/70 pl-6">
-          <p className="text-[1.02rem] leading-relaxed text-ink/80">
-            Week one is not a build. We put spend beside that funnel and reconcile it against the ad account,
-            so Houston and Corpus Christi finally carry a cost per <span className="text-ink">qualified</span>{" "}
-            lead rather than a cost per form fill.
+          <p className="text-[1.15rem] leading-relaxed text-ink/80">
+            Week one is not a build. It is a number.
           </p>
-          <p className="mt-3 text-[0.95rem] leading-relaxed text-ink/50">
-            If the leads die before a rep reaches them, it is quality and the way Meta is told to buy. If they
-            are reachable homeowners who do not convert, it is the sales motion — and no ad work fixes that.
+          <p className="mt-3 text-[0.98rem] text-ink/50">
+            Cost per qualified lead, Houston versus Corpus Christi.
           </p>
         </div>
       </SlideReveal>

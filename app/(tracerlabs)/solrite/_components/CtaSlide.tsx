@@ -1,7 +1,6 @@
 import SlideReveal from "./SlideReveal";
 import { KineticHeading } from "../../../components/Kinetic";
 import Button from "../../../components/Button";
-import DeckCta from "./DeckCta";
 import SlideBackdrop from "./SlideBackdrop";
 import Bevel, { GLASS_BORDER, GLASS_BG } from "../../../components/Bevel";
 import Eyebrow from "../../../components/Eyebrow";
@@ -42,8 +41,7 @@ export default function CtaSlide({ calcomUrl }: { calcomUrl: string }) {
         />
         <SlideReveal delay={0.15}>
           <p className="mx-auto mt-6 max-w-[40rem] text-[1.05rem] leading-relaxed text-ink/55">
-            Step 00 begins as soon as the setup fee lands: we confirm what is actually live in the ad account
-            and establish the baseline everything after it is measured against.
+            Step 00 starts as soon as the setup fee lands.
           </p>
         </SlideReveal>
 
@@ -77,20 +75,13 @@ export default function CtaSlide({ calcomUrl }: { calcomUrl: string }) {
         </SlideReveal>
         <SlideReveal delay={0.36}>
           <p className="mt-5 text-[0.8rem] text-ink/35">
-            Secure checkout via Stripe. The services agreement follows separately for e-signature.
+            Secure checkout via Stripe.
           </p>
         </SlideReveal>
 
-        <SlideReveal delay={0.42}>
-          <div className="mt-10 flex justify-center">
-            <DeckCta target="tl-solrite-plan" variant="secondary" size="sm">
-              Back to the plan
-            </DeckCta>
-          </div>
-        </SlideReveal>
         <SlideReveal delay={0.48}>
           <p className="mt-10 text-[0.72rem] uppercase tracking-[0.22em] text-ink/30">
-            Prepared by Tracerlabs for Solrite Energy · Based on a full audit of the Spark codebase
+            Tracerlabs × Solrite Energy
           </p>
         </SlideReveal>
       </div>

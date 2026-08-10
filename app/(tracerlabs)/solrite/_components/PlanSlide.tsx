@@ -8,28 +8,28 @@ const STEPS = [
   {
     n: "00",
     title: "Settle the argument",
-    body: "Run the funnel Spark already holds for all 403 leads: reached, qualified, progressed, split by market. Settles whether this is a lead problem or a sales problem before a line of code is written.",
+    body: "Put spend beside the funnel. Lead problem or sales problem — answered.",
   },
   {
     n: "01",
     title: "Send outcomes back to Meta",
-    body: "Report each meaningful stage — reached, qualified as a homeowner, signed — back against the original lead ID, then move the campaign's optimisation goal off the form fill and onto that stage.",
-    emphasis: "This is the step that changes what Meta buys.",
+    body: "Report outcomes back against the lead ID. Switch the goal off form fills.",
+    emphasis: "Changes what Meta buys.",
   },
   {
     n: "02",
     title: "Bring spend in, get unit economics out",
-    body: "Pull ad spend nightly and put it alongside the funnel that already exists: cost per lead, cost per qualified lead, cost per signed deal, and return by campaign and ad set.",
+    body: "Spend in nightly. Cost per qualified lead, per ad set.",
   },
   {
     n: "03",
     title: "Harden the attribution",
-    body: "Key reporting to stable campaign and ad set IDs so renaming an ad set stops splitting its history, and capture Meta click IDs on the website forms so paid traffic stops counting as ordinary website traffic.",
+    body: "Key to IDs, not names. Capture click IDs on the site.",
   },
   {
     n: "04",
     title: "Prove it head to head",
-    body: "Our funnel runs as a second ad set at matched budget, against the Instant Forms, not instead of them. Cost per lead will rise — that is expected. We agree up front that the scoreboard is cost per qualified lead and per booked appointment.",
+    body: "Our funnel runs as a second ad set, matched budget. Head to head.",
   },
 ];
 
@@ -44,8 +44,7 @@ export default function PlanSlide() {
         />
         <SlideReveal delay={0.15}>
           <p className="mt-5 max-w-[43rem] text-[1.02rem] leading-relaxed text-ink/55">
-            Five steps, in this order. Nothing is bet on a hunch: step 00 diagnoses, step 01 changes what Meta
-            buys, and step 04 proves the new funnel against the old one rather than replacing it.
+            Five steps. Nothing bet on a hunch.
           </p>
         </SlideReveal>
       </div>

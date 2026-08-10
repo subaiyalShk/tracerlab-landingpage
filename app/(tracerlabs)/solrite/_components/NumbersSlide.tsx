@@ -28,8 +28,7 @@ export default function NumbersSlide() {
         />
         <SlideReveal delay={0.12}>
           <p className="mt-5 text-[1rem] leading-relaxed text-ink/55">
-            Last 30 days, from the ad account: <span className="text-ink/85">403 leads, about $4,300 spent</span>.
-            Not one of these figures says whether a lead answered the phone, owned their roof, or signed.
+            Last 30 days · <span className="text-ink/85">403 leads · ~$4,300</span>
           </p>
         </SlideReveal>
       </div>
@@ -61,10 +60,6 @@ export default function NumbersSlide() {
                   </li>
                 ))}
               </ul>
-              <p className="mt-4 text-[0.85rem] leading-relaxed text-ink/50">
-                California is switched off, and $18.29 per form fill is the most visible number attached to it.
-                Whether those leads converted better than Texas is not recorded anywhere.
-              </p>
             </div>
           </Bevel>
         </SlideReveal>
@@ -95,10 +90,8 @@ export default function NumbersSlide() {
                   </li>
                 ))}
               </ul>
-              <p className="mt-4 text-[0.85rem] leading-relaxed text-ink/50">
-                Corpus Christi costs <span className="text-brand-pink">51% more per lead</span>{" "}
-                than Houston on an identical budget — and Meta labels Houston &quot;high performing&quot;
-                purely because its fills are cheaper.
+              <p className="mt-4 text-[0.9rem] text-ink/55">
+                <span className="text-brand-pink">51% more per lead.</span> Same budget.
               </p>
             </div>
           </Bevel>
@@ -106,9 +99,8 @@ export default function NumbersSlide() {
       </div>
 
       <SlideReveal delay={0.4}>
-        <p className="mt-7 max-w-[52rem] text-[0.98rem] leading-relaxed text-ink/55">
-          Corpus Christi is drifting toward the number California was switched off at. It may well be the
-          better market — nobody can currently tell, because the only scoreboard measures form fills.
+        <p className="mt-8 text-[1.15rem] leading-relaxed text-ink/80">
+          None of it says who answered, who owned the roof, or who signed.
         </p>
       </SlideReveal>
     </Slide>

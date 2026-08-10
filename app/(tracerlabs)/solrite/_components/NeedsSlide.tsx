@@ -5,22 +5,21 @@ import Bevel, { GLASS_BORDER, GLASS_BG } from "../../../components/Bevel";
 import Eyebrow from "../../../components/Eyebrow";
 
 const NEEDS = [
-  "Read access to Spark's database, so week one can reconcile its funnel against the ad account",
-  "An app with Marketing API enabled — none of the three in the Business Manager has it, so the spark-insights system user cannot issue a reporting token today",
-  "A decision on the target stage: a reached lead, a qualified homeowner, or a signed deal",
-  "A named owner for the weekly call on where budget moves",
+  "Read access to Spark's database",
+  "An app with Marketing API enabled",
+  "The target stage: reached, qualified, or signed",
+  "An owner for the weekly budget call",
 ];
 
 const SUCCESS = [
-  "Cost per qualified lead becomes visible for the first time — then starts falling",
-  "At the same spend, a higher share of leads reply and qualify as homeowners",
-  "Ad set decisions get made on cost per outcome instead of cost per form fill",
+  "Cost per qualified lead becomes visible",
+  "More of the same spend reaches homeowners",
+  "Decisions made on outcome, not form fills",
 ];
 
 const RISKS = [
-  "Optimisation needs volume to learn. If weekly signed deals are thin we target an earlier but still meaningful stage — often the better choice regardless.",
-  "Changing the goal resets learning. Expect a noisy period before it improves; that needs planning for, not panic.",
-  "Nothing here is based on Solrite's live numbers, because we do not have access yet. Step 00 exists to fix that before anyone commits to a target.",
+  "Optimisation needs volume to learn.",
+  "Changing the goal resets learning. Expect noise first.",
 ];
 
 export default function NeedsSlide() {
@@ -29,7 +28,7 @@ export default function NeedsSlide() {
       <div className="max-w-[46rem]">
         <Eyebrow>To start</Eyebrow>
         <KineticHeading
-          segments={[{ text: "What we need, and " }, { text: "how we will know it worked.", gradient: true }]}
+          segments={[{ text: "What we need. " }, { text: "How we'll know.", gradient: true }]}
           className="font-display mt-6 text-[clamp(1.7rem,4.2vw,2.9rem)] font-normal uppercase leading-[1.0] tracking-tight"
         />
       </div>
@@ -73,9 +72,7 @@ export default function NeedsSlide() {
                   </li>
                 ))}
               </ul>
-              <p className="mt-auto pt-5 text-[0.85rem] leading-relaxed text-ink/45">
-                Expect several weeks before the first two read cleanly.
-              </p>
+              <p className="mt-auto pt-5 text-[0.85rem] text-ink/45">Several weeks to read cleanly.</p>
             </div>
           </Bevel>
         </SlideReveal>

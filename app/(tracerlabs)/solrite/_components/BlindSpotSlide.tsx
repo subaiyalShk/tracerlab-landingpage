@@ -52,10 +52,8 @@ export default function BlindSpotSlide() {
                 </span>
                 <span className="text-[1rem] text-ink/80">event</span>
               </div>
-              <p className="mt-3 text-[0.9rem] text-ink/60">Form submitted.</p>
-              <p className="mt-auto pt-6 text-[0.88rem] leading-relaxed text-ink/50">
-                Identical for every lead. The tyre-kicker and the signed customer are indistinguishable.
-              </p>
+              <p className="mt-3 text-[0.95rem] text-ink/60">Form submitted.</p>
+              <p className="mt-auto pt-6 text-[0.9rem] text-ink/45">Identical for every lead.</p>
             </div>
           </Bevel>
         </SlideReveal>

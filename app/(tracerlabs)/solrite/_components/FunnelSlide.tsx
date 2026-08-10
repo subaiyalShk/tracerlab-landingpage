@@ -5,17 +5,17 @@ import Bevel, { GLASS_BORDER, GLASS_BG } from "../../../components/Bevel";
 import Eyebrow from "../../../components/Eyebrow";
 
 const TODAY = [
-  "Pre-filled instant form, three yes/no questions",
-  "Lead lands in the inbox alongside every other lead",
-  "A rep rings to find out what the form should have asked",
-  "If it goes well, a booking link is pasted in by hand",
+  "Pre-filled form, three yes/no questions",
+  "Lands in the inbox with everything else",
+  "A rep rings to qualify",
+  "Booking link pasted by hand",
 ];
 
 const PROPOSED = [
-  "The ad points at a funnel we build and control",
-  "Ownership, bill, roof and existing solar are established before anything else",
-  "The appointment is booked in the flow, onto a rep's calendar",
-  "That booking is the event we report back to Meta",
+  "The ad points at our funnel",
+  "Qualified before anything else",
+  "Appointment booked in the flow",
+  "The booking is what Meta learns",
 ];
 
 export default function FunnelSlide() {
@@ -29,8 +29,7 @@ export default function FunnelSlide() {
         />
         <SlideReveal delay={0.12}>
           <p className="mt-5 text-[1rem] leading-relaxed text-ink/55">
-            The reps are currently the filter. Every lead gets a call to establish facts a form could have
-            established — which is expensive, slow, and the reason good leads go cold behind bad ones.
+            Right now the reps are the filter.
           </p>
         </SlideReveal>
       </div>
@@ -81,14 +80,11 @@ export default function FunnelSlide() {
 
       <SlideReveal delay={0.38}>
         <div className="mt-7 max-w-[54rem] border-l-2 border-brand-pink/70 pl-6">
-          <p className="text-[1rem] leading-relaxed text-ink/80">
-            Expect cost per lead to <span className="text-ink">rise</span>. An instant form is pre-filled and
-            never leaves Meta; a real qualification step will always convert fewer people. That is the trade,
-            and it is why this runs as a second ad set at matched budget rather than replacing anything.
+          <p className="text-[1.15rem] leading-relaxed text-ink/80">
+            Cost per lead will rise. That is the trade.
           </p>
-          <p className="mt-3 text-[0.9rem] leading-relaxed text-ink/50">
-            The scoreboard is agreed before it starts: cost per qualified lead, and cost per booked
-            appointment. Judged on cost per form fill, this loses by design.
+          <p className="mt-3 text-[0.98rem] text-ink/50">
+            The scoreboard is cost per booked appointment — agreed before we start.
           </p>
         </div>
       </SlideReveal>

@@ -7,8 +7,8 @@ import Eyebrow from "../../../components/Eyebrow";
 const STEPS = [
   {
     n: "00",
-    title: "Verify what is actually live",
-    body: "Confirm the Meta lead webhook is running in production, count the leads that have genuinely arrived, and establish a baseline from real numbers before changing anything.",
+    title: "Settle the argument",
+    body: "Run the funnel Spark already holds for all 403 leads: reached, qualified, progressed, split by market. Settles whether this is a lead problem or a sales problem before a line of code is written.",
   },
   {
     n: "01",
@@ -28,8 +28,8 @@ const STEPS = [
   },
   {
     n: "04",
-    title: "Put it on a cadence",
-    body: "A weekly read of cost per outcome by ad set, with agreed rules for what gets scaled and what gets cut. The reporting is only worth building if it changes what happens to the budget.",
+    title: "Prove it head to head",
+    body: "Our funnel runs as a second ad set at matched budget, against the Instant Forms, not instead of them. Cost per lead will rise — that is expected. We agree up front that the scoreboard is cost per qualified lead and per booked appointment.",
   },
 ];
 
@@ -44,8 +44,8 @@ export default function PlanSlide() {
         />
         <SlideReveal delay={0.15}>
           <p className="mt-5 max-w-[43rem] text-[1.02rem] leading-relaxed text-ink/55">
-            Five steps, in this order. The sequence matters: step one changes what Meta buys, step two proves
-            whether it worked.
+            Five steps, in this order. Nothing is bet on a hunch: step 00 diagnoses, step 01 changes what Meta
+            buys, and step 04 proves the new funnel against the old one rather than replacing it.
           </p>
         </SlideReveal>
       </div>

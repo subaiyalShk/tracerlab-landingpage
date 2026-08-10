@@ -3,11 +3,13 @@ import Link from "next/link";
 import Deck from "./_components/Deck";
 import DeckCta from "./_components/DeckCta";
 import CoverSlide from "./_components/CoverSlide";
+import ComplaintSlide from "./_components/ComplaintSlide";
 import ProblemSlide from "./_components/ProblemSlide";
 import LoopSlide from "./_components/LoopSlide";
 import BlindSpotSlide from "./_components/BlindSpotSlide";
-import CostSlide from "./_components/CostSlide";
+import NumbersSlide from "./_components/NumbersSlide";
 import AuditSlide from "./_components/AuditSlide";
+import ProveFirstSlide from "./_components/ProveFirstSlide";
 import PlanSlide from "./_components/PlanSlide";
 import NeedsSlide from "./_components/NeedsSlide";
 import CtaSlide from "./_components/CtaSlide";
@@ -55,13 +57,15 @@ export default function SolritePage() {
         </div>
       </header>
 
-      <Deck count={9}>
+      <Deck count={11}>
         <CoverSlide />
+        <ComplaintSlide />
         <ProblemSlide />
         <LoopSlide />
         <BlindSpotSlide />
-        <CostSlide />
+        <NumbersSlide />
         <AuditSlide />
+        <ProveFirstSlide />
         <PlanSlide />
         <NeedsSlide />
         <CtaSlide calcomUrl={calcomUrl} />

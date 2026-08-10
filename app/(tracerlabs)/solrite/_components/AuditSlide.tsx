@@ -12,15 +12,16 @@ const ROWS: Row[] = [
   { label: "Meta lead ID, form, ad, ad set and campaign stored per lead, with the full raw payload", live: true },
   { label: "Duplicate protection against Meta's webhook retries", live: true },
   { label: "Signed deals exclude those closed by another sales partner", live: true },
-  { label: "Lead outcomes sent back to Meta", live: false },
+  { label: "Meta Pixel on the website — but it fires PageView, and Lead only on the contact form", live: true },
+  { label: "Lead outcomes sent back to Meta — nothing, from anywhere", live: false },
   { label: "Ad spend in the system — cost per lead, cost per qualified, cost per acquisition", live: false },
   { label: "Attribution keyed to stable campaign and ad set IDs rather than names", live: false },
-  { label: "Meta click tracking on website forms", live: false },
+  { label: "Meta click IDs captured alongside website leads", live: false },
 ];
 
 export default function AuditSlide() {
   return (
-    <Slide id="tl-solrite-audit" padY="py-14">
+    <Slide id="tl-solrite-audit" padY="py-9">
       <div className="grid items-center gap-9 lg:grid-cols-[1.05fr_0.95fr]">
         <div>
           <Eyebrow>What we found</Eyebrow>
@@ -42,18 +43,18 @@ export default function AuditSlide() {
           <Illustration
             src="/assets/solrite/gen/il-audit-v1.png"
             alt="A glowing cable already plugged into the equipment cabinet at one end, its other end lying coiled and unconnected on the floor."
-            minH="min-h-[250px]"
+            minH="min-h-[210px]"
           />
         </SlideReveal>
       </div>
 
       <SlideReveal delay={0.24}>
-        <Bevel bevel={14} border={GLASS_BORDER} bg={GLASS_BG} className="mt-7">
+        <Bevel bevel={14} border={GLASS_BORDER} bg={GLASS_BG} className="mt-5">
           <ul className="flex flex-col p-2">
             {ROWS.map((r) => (
               <li
                 key={r.label}
-                className="flex items-start justify-between gap-5 border-b border-ink/[0.07] px-4 py-2.5 last:border-b-0"
+                className="flex items-start justify-between gap-5 border-b border-ink/[0.07] px-4 py-2 last:border-b-0"
               >
                 <span className="text-[0.9rem] leading-snug text-ink/70">{r.label}</span>
                 <span
@@ -70,11 +71,20 @@ export default function AuditSlide() {
       </SlideReveal>
 
       <SlideReveal delay={0.3}>
-        <p className="mt-5 max-w-[52rem] border-l-2 border-ink/15 pl-5 text-[0.88rem] leading-relaxed text-ink/45">
-          <span className="text-ink/70">One thing we could not verify.</span> We reviewed the code, not the
-          live account — we cannot confirm from the outside that the Meta lead webhook is switched on in
-          production, or how many leads have actually flowed through it. That is the first thing we would check.
-        </p>
+        <div className="mt-5 max-w-[54rem] border-l-2 border-brand-pink/70 pl-6">
+          <p className="text-[0.72rem] font-semibold uppercase tracking-[0.22em] text-ink/45">
+            Meta is already telling you this, inside your own ad set
+          </p>
+          <p className="mt-3 text-[1rem] leading-relaxed text-ink/80">
+            &ldquo;Connect your CRM to prioritize higher-quality leads. Use conversion data to maximize lead
+            quality by <span className="text-ink">connecting your CRM through Conversions API</span> and
+            choosing <span className="text-ink">Maximize number of qualified leads</span>.&rdquo;
+          </p>
+          <p className="mt-3 text-[0.88rem] leading-relaxed text-ink/50">
+            That is Meta&apos;s own recommendation panel, not ours. The setting it points at only becomes
+            available once outcome data flows back — which is exactly what is missing.
+          </p>
+        </div>
       </SlideReveal>
     </Slide>
   );

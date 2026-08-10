@@ -38,9 +38,6 @@ export const metadata: Metadata = {
 };
 
 export default function SolritePage() {
-  const calcomUrl =
-    process.env.NEXT_PUBLIC_CAL_BOOKING_LINK || "https://cal.com/team/tracerlabs/discovery-call";
-
   return (
     <div className="font-body bg-page text-ink">
       {/* minimal fixed top bar — logo + CTA, over the deck */}
@@ -70,7 +67,7 @@ export default function SolritePage() {
         <MonthOneSlide />
         <CheckpointSlide />
         <NeedsSlide />
-        <CtaSlide calcomUrl={calcomUrl} />
+        <CtaSlide />
       </Deck>
     </div>
   );

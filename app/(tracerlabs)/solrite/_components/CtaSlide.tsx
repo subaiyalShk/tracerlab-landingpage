@@ -16,7 +16,7 @@ const TERMS = [
   { k: "Month to month", v: "decide at the end of month one" },
 ];
 
-export default function CtaSlide({ calcomUrl }: { calcomUrl: string }) {
+export default function CtaSlide() {
   return (
     <section
       data-slide
@@ -67,9 +67,6 @@ export default function CtaSlide({ calcomUrl }: { calcomUrl: string }) {
           <div className="mt-9 flex flex-wrap items-center justify-center gap-4">
             <Button href={STRIPE_SETUP_FEE} variant="primary" external>
               Pay setup fee
-            </Button>
-            <Button href={calcomUrl} variant="secondary" external>
-              Book a call first
             </Button>
           </div>
         </SlideReveal>

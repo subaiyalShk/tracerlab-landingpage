@@ -49,11 +49,13 @@ export default function ComplaintSlide() {
       <SlideReveal delay={0.4}>
         <div className="mt-8 max-w-[52rem] border-l-2 border-brand-pink/70 pl-6">
           <p className="text-[1.06rem] leading-relaxed text-ink/80">
-            Right now nobody can tell which one it is — not the reps, not the ad account, not us. The data
-            that settles it is already sitting in Spark and has never been looked at.
+            Spark can already answer it. For every lead Meta billed for, it holds whether they replied,
+            whether a rep ever spoke to them, whether they owned the roof, and how far they got — down to
+            the ad set that produced them.
           </p>
           <p className="mt-3 text-[0.95rem] leading-relaxed text-ink/50">
-            That is where this starts. Not with a build, with an answer.
+            What has never happened is setting that against what the ads cost. That is where this starts.
+            Not with a build, with an answer.
           </p>
         </div>
       </SlideReveal>

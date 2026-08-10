@@ -1,8 +1,20 @@
 import Button from "../../../components/Button";
 import DeckCta from "./DeckCta";
 import SlideBackdrop from "./SlideBackdrop";
+import Bevel, { GLASS_BORDER, GLASS_BG } from "../../../components/Bevel";
 import Eyebrow from "../../../components/Eyebrow";
 import { Kinetic, Reveal } from "../../../components/motion";
+
+// Live Stripe payment link for the Solrite setup fee — the same link sent to Jarom on
+// 6 Aug 2026. Terms below must stay in step with it: $2,000 one-time setup fee, then
+// $5,000/month from month 2, month to month.
+const STRIPE_SETUP_FEE = "https://buy.stripe.com/14A3cu95EcgreKvbbTeEo0y";
+
+const TERMS = [
+  { k: "$2,000", v: "one-time setup fee — the only charge in month 1" },
+  { k: "$5,000", v: "per month, beginning in month 2" },
+  { k: "Month to month", v: "cancel any time" },
+];
 
 export default function CtaSlide({ calcomUrl }: { calcomUrl: string }) {
   return (
@@ -20,7 +32,7 @@ export default function CtaSlide({ calcomUrl }: { calcomUrl: string }) {
 
       <div className="mx-auto w-full max-w-[900px] px-6 sm:px-10">
         <div className="flex justify-center">
-          <Eyebrow>Next step</Eyebrow>
+          <Eyebrow>Get started</Eyebrow>
         </div>
         <Kinetic
           as="h2"
@@ -29,22 +41,54 @@ export default function CtaSlide({ calcomUrl }: { calcomUrl: string }) {
         />
         <Reveal delay={0.15}>
           <p className="mx-auto mt-6 max-w-[40rem] text-[1.05rem] leading-relaxed text-ink/55">
-            Give us read access to the ad account and we will start with step 00 — confirming what is live and
-            establishing the baseline. Everything after that is measured against it.
+            Step 00 begins as soon as the setup fee lands: we confirm what is actually live in the ad account
+            and establish the baseline everything after it is measured against.
           </p>
         </Reveal>
-        <Reveal delay={0.25}>
+
+        <Reveal delay={0.22}>
+          <Bevel bevel={14} border={GLASS_BORDER} bg={GLASS_BG} className="mx-auto mt-9 max-w-[38rem]">
+            <ul className="flex flex-col p-2">
+              {TERMS.map((t) => (
+                <li
+                  key={t.k}
+                  className="flex flex-wrap items-baseline justify-center gap-x-2.5 border-b border-ink/[0.07] px-5 py-3 last:border-b-0"
+                >
+                  <span className="font-body text-[1.05rem] font-semibold tracking-tight text-ink/90 tabular-nums">
+                    {t.k}
+                  </span>
+                  <span className="text-[0.92rem] text-ink/55">{t.v}</span>
+                </li>
+              ))}
+            </ul>
+          </Bevel>
+        </Reveal>
+
+        <Reveal delay={0.3}>
           <div className="mt-9 flex flex-wrap items-center justify-center gap-4">
-            <Button href={calcomUrl} variant="primary" external>
-              Book a call
+            <Button href={STRIPE_SETUP_FEE} variant="primary" external>
+              Pay setup fee
             </Button>
-            <DeckCta target="tl-solrite-plan" variant="secondary">
+            <Button href={calcomUrl} variant="secondary" external>
+              Book a call first
+            </Button>
+          </div>
+        </Reveal>
+        <Reveal delay={0.36}>
+          <p className="mt-5 text-[0.8rem] text-ink/35">
+            Secure checkout via Stripe. The services agreement follows separately for e-signature.
+          </p>
+        </Reveal>
+
+        <Reveal delay={0.42}>
+          <div className="mt-10 flex justify-center">
+            <DeckCta target="tl-solrite-plan" variant="secondary" size="sm">
               Back to the plan
             </DeckCta>
           </div>
         </Reveal>
-        <Reveal delay={0.35}>
-          <p className="mt-12 text-[0.72rem] uppercase tracking-[0.22em] text-ink/30">
+        <Reveal delay={0.48}>
+          <p className="mt-10 text-[0.72rem] uppercase tracking-[0.22em] text-ink/30">
             Prepared by Tracerlabs for Solrite Energy · Based on a full audit of the Spark codebase
           </p>
         </Reveal>

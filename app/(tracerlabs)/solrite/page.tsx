@@ -11,6 +11,7 @@ import NumbersSlide from "./_components/NumbersSlide";
 import AuditSlide from "./_components/AuditSlide";
 import ProveFirstSlide from "./_components/ProveFirstSlide";
 import PlanSlide from "./_components/PlanSlide";
+import FunnelSlide from "./_components/FunnelSlide";
 import NeedsSlide from "./_components/NeedsSlide";
 import CtaSlide from "./_components/CtaSlide";
 
@@ -57,7 +58,7 @@ export default function SolritePage() {
         </div>
       </header>
 
-      <Deck count={11}>
+      <Deck count={12}>
         <CoverSlide />
         <ComplaintSlide />
         <ProblemSlide />
@@ -67,6 +68,7 @@ export default function SolritePage() {
         <AuditSlide />
         <ProveFirstSlide />
         <PlanSlide />
+        <FunnelSlide />
         <NeedsSlide />
         <CtaSlide calcomUrl={calcomUrl} />
       </Deck>

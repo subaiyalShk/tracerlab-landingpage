@@ -1,6 +1,7 @@
 import Slide from "./Slide";
+import SlideReveal from "./SlideReveal";
+import { KineticHeading } from "../../../components/Kinetic";
 import Eyebrow from "../../../components/Eyebrow";
-import { Kinetic, Reveal } from "../../../components/motion";
 
 const PINK = "#e7028d";
 
@@ -75,24 +76,24 @@ export default function LoopSlide() {
     <Slide id="tl-solrite-loop">
       <div className="max-w-[46rem]">
         <Eyebrow>The open circuit</Eyebrow>
-        <Kinetic
+        <KineticHeading
           segments={[{ text: "The lead reaches you. " }, { text: "Nothing goes back.", gradient: true }]}
           className="font-display mt-6 text-[clamp(1.9rem,4.8vw,3.2rem)] font-normal uppercase leading-[1.0] tracking-tight"
         />
       </div>
 
-      <Reveal delay={0.15}>
+      <SlideReveal delay={0.15}>
         <div className="mt-10">
           <LoopDiagram />
         </div>
-      </Reveal>
+      </SlideReveal>
 
-      <Reveal delay={0.25}>
+      <SlideReveal delay={0.25}>
         <p className="mt-8 max-w-[46rem] text-[1.02rem] leading-relaxed text-ink/55">
           The acquisition path is complete and working. The learning path is not — which is why the ad account
           cannot get smarter over time, no matter how long it runs.
         </p>
-      </Reveal>
+      </SlideReveal>
     </Slide>
   );
 }

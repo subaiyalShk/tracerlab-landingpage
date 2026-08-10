@@ -1,7 +1,8 @@
 import Slide from "./Slide";
+import SlideReveal from "./SlideReveal";
+import { KineticHeading } from "../../../components/Kinetic";
 import Bevel, { GLASS_BORDER, GLASS_BG } from "../../../components/Bevel";
 import Eyebrow from "../../../components/Eyebrow";
-import { Kinetic, Reveal } from "../../../components/motion";
 
 const NEEDS = [
   "Business Manager access — admin rights sufficient to issue a token that can read ad spend and send conversion events",
@@ -24,17 +25,17 @@ const RISKS = [
 
 export default function NeedsSlide() {
   return (
-    <Slide id="tl-solrite-needs" contentClassName="py-20" bgSrc="/assets/solrite/gen/needs-v1.png" bgOpacity={0.16}>
+    <Slide id="tl-solrite-needs" padY="py-16" bgSrc="/assets/solrite/gen/needs-v1.png" bgOpacity={0.16}>
       <div className="max-w-[46rem]">
         <Eyebrow>To start</Eyebrow>
-        <Kinetic
+        <KineticHeading
           segments={[{ text: "What we need, and " }, { text: "how we will know it worked.", gradient: true }]}
           className="font-display mt-6 text-[clamp(1.7rem,4.2vw,2.9rem)] font-normal uppercase leading-[1.0] tracking-tight"
         />
       </div>
 
       <div className="mt-9 grid gap-5 lg:grid-cols-2">
-        <Reveal y={26} amount={0.2} className="h-full">
+        <SlideReveal y={26} className="h-full">
           <Bevel bevel={14} border={GLASS_BORDER} bg={GLASS_BG} className="h-full">
             <div className="flex h-full flex-col p-7">
               <span className="text-[0.72rem] font-semibold uppercase tracking-[0.22em] text-ink/45">
@@ -53,9 +54,9 @@ export default function NeedsSlide() {
               </ul>
             </div>
           </Bevel>
-        </Reveal>
+        </SlideReveal>
 
-        <Reveal delay={0.12} y={26} amount={0.2} className="h-full">
+        <SlideReveal delay={0.12} y={26} className="h-full">
           <Bevel bevel={14} border={GLASS_BORDER} bg={GLASS_BG} className="h-full">
             <div className="flex h-full flex-col p-7">
               <span className="text-[0.72rem] font-semibold uppercase tracking-[0.22em] text-ink/45">
@@ -77,10 +78,10 @@ export default function NeedsSlide() {
               </p>
             </div>
           </Bevel>
-        </Reveal>
+        </SlideReveal>
       </div>
 
-      <Reveal delay={0.24}>
+      <SlideReveal delay={0.24}>
         <div className="mt-6 border-l-2 border-ink/15 pl-5">
           <p className="text-[0.72rem] font-semibold uppercase tracking-[0.22em] text-ink/45">Straight talk</p>
           <ul className="mt-3 flex flex-col gap-2.5">
@@ -91,7 +92,7 @@ export default function NeedsSlide() {
             ))}
           </ul>
         </div>
-      </Reveal>
+      </SlideReveal>
     </Slide>
   );
 }

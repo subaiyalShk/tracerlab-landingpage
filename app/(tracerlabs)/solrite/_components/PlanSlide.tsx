@@ -1,7 +1,8 @@
 import Slide from "./Slide";
+import SlideReveal from "./SlideReveal";
+import { KineticHeading } from "../../../components/Kinetic";
 import Bevel, { GLASS_BORDER, GLASS_BG } from "../../../components/Bevel";
 import Eyebrow from "../../../components/Eyebrow";
-import { Kinetic, Reveal } from "../../../components/motion";
 
 const STEPS = [
   {
@@ -34,24 +35,24 @@ const STEPS = [
 
 export default function PlanSlide() {
   return (
-    <Slide id="tl-solrite-plan" contentClassName="py-20" bgSrc="/assets/solrite/gen/plan-v1.png" bgOpacity={0.16}>
+    <Slide id="tl-solrite-plan" padY="py-16" bgSrc="/assets/solrite/gen/plan-v1.png" bgOpacity={0.16}>
       <div className="max-w-[46rem]">
         <Eyebrow>The proposal</Eyebrow>
-        <Kinetic
+        <KineticHeading
           segments={[{ text: "Close the loop, " }, { text: "then price the funnel.", gradient: true }]}
           className="font-display mt-6 text-[clamp(1.9rem,4.8vw,3.2rem)] font-normal uppercase leading-[1.0] tracking-tight"
         />
-        <Reveal delay={0.15}>
+        <SlideReveal delay={0.15}>
           <p className="mt-5 max-w-[43rem] text-[1.02rem] leading-relaxed text-ink/55">
             Five steps, in this order. The sequence matters: step one changes what Meta buys, step two proves
             whether it worked.
           </p>
-        </Reveal>
+        </SlideReveal>
       </div>
 
       <div className="mt-9 grid gap-4 lg:grid-cols-5">
         {STEPS.map((s, i) => (
-          <Reveal key={s.n} delay={i * 0.08} y={26} amount={0.2} className="h-full">
+          <SlideReveal key={s.n} delay={i * 0.08} y={26} className="h-full">
             <Bevel bevel={14} border={GLASS_BORDER} bg={GLASS_BG} className="h-full">
               <div className="flex h-full flex-col p-5">
                 <span className="font-display text-[0.78rem] font-bold tracking-[0.18em] text-brand-pink">
@@ -68,7 +69,7 @@ export default function PlanSlide() {
                 )}
               </div>
             </Bevel>
-          </Reveal>
+          </SlideReveal>
         ))}
       </div>
     </Slide>

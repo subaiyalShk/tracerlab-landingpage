@@ -29,4 +29,15 @@ export function scrollToSlide(id: string) {
   // Offset of the slide within the scrollport, independent of offsetParent.
   const top = deck.scrollTop + el.getBoundingClientRect().top - deck.getBoundingClientRect().top;
   deck.scrollTo({ top, behavior: "instant" as ScrollBehavior });
+
+  // The slide's scroll-reveal animations are IntersectionObserver-driven. After a single
+  // instantaneous jump the observers can miss the change and the slide stays blank (seen
+  // jumping backwards up the deck). Nudge a pixel and back on the next frames to force a
+  // recalculation; visually imperceptible.
+  requestAnimationFrame(() => {
+    deck.scrollTop = top + 1;
+    requestAnimationFrame(() => {
+      deck.scrollTop = top;
+    });
+  });
 }

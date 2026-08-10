@@ -1,50 +1,57 @@
 import Slide from "./Slide";
+import SlideReveal from "./SlideReveal";
+import { KineticHeading } from "../../../components/Kinetic";
+import Illustration from "./Illustration";
 import Eyebrow from "../../../components/Eyebrow";
-import { Kinetic, Reveal } from "../../../components/motion";
 
 export default function ProblemSlide() {
   return (
-    <Slide id="tl-solrite-problem" bgSrc="/assets/solrite/gen/problem-v2.png" bgOpacity={0.22}>
-      <div className="max-w-[46rem]">
-        <Eyebrow>The problem</Eyebrow>
-        <Kinetic
-          segments={[
-            { text: "Meta only ever learns that a " },
-            { text: "form was submitted.", gradient: true },
-          ]}
-          className="font-display mt-6 text-[clamp(1.9rem,4.8vw,3.2rem)] font-normal uppercase leading-[1.0] tracking-tight"
-        />
-        <Reveal delay={0.15}>
-          <p className="mt-6 max-w-[43rem] text-[1.02rem] leading-relaxed text-ink/55">
-            With Meta Instant Forms, the conversion event being optimised against is the form submission
-            itself. It is the only outcome Meta is told about, so it is the only outcome Meta can buy.
-          </p>
-        </Reveal>
-        <Reveal delay={0.25}>
-          <p className="mt-4 max-w-[43rem] text-[1.02rem] leading-relaxed text-ink/55">
-            Every delivery decision — which audiences to chase, which creative to favour, where to push
-            budget — is Meta answering a single question:{" "}
-            <span className="text-ink/85">who is most likely to complete this form?</span> Not who is likely
-            to become a Solrite customer.
-          </p>
-        </Reveal>
-      </div>
-
-      <Reveal delay={0.35}>
-        <div className="mt-10 max-w-[43rem] border-l-2 border-brand-pink/70 pl-6">
-          <p className="text-[1.02rem] leading-relaxed text-ink/70">
-            Instant Forms pre-fill name, email and phone from the user&apos;s profile, so submitting one costs
-            the user almost nothing. That is why they produce volume so reliably — and why volume is a weak
-            signal of intent.
-          </p>
-          <p className="mt-4 text-[1.02rem] leading-relaxed text-ink/70">
-            As budget increases, Meta widens the net looking for more of what it has been rewarded for: cheap
-            form fills. Cost per lead holds, the dashboard looks healthy, and cost per{" "}
-            <span className="text-ink">signed deal</span> quietly climbs. The metric that is visible and the
-            metric that pays the bills move in opposite directions.
-          </p>
+    <Slide id="tl-solrite-problem">
+      <div className="grid items-center gap-10 lg:grid-cols-[1.02fr_0.98fr]">
+        <div>
+          <Eyebrow>The problem</Eyebrow>
+          <KineticHeading
+            segments={[
+              { text: "Meta only ever learns that a " },
+              { text: "form was submitted.", gradient: true },
+            ]}
+            className="font-display mt-6 text-[clamp(1.8rem,4.2vw,2.9rem)] font-normal uppercase leading-[1.0] tracking-tight"
+          />
+          <SlideReveal delay={0.15}>
+            <p className="mt-6 text-[1.02rem] leading-relaxed text-ink/55">
+              With Meta Instant Forms, the conversion event being optimised against is the form submission
+              itself. It is the only outcome Meta is told about, so it is the only outcome Meta can buy.
+            </p>
+          </SlideReveal>
+          <SlideReveal delay={0.22}>
+            <p className="mt-4 text-[1.02rem] leading-relaxed text-ink/55">
+              Every delivery decision — which audiences to chase, which creative to favour, where to push
+              budget — is Meta answering a single question:{" "}
+              <span className="text-ink/85">who is most likely to complete this form?</span> Not who is likely
+              to become a Solrite customer.
+            </p>
+          </SlideReveal>
         </div>
-      </Reveal>
+
+        <div className="flex flex-col gap-5">
+          <SlideReveal delay={0.1}>
+            <Illustration
+              src="/assets/solrite/gen/il-problem-v1.png"
+              alt="A sensor aimed at a single lit checkbox, while a long row of identical leads behind it stays in darkness, unseen."
+              minH="min-h-[260px]"
+            />
+          </SlideReveal>
+          <SlideReveal delay={0.28}>
+            <div className="border-l-2 border-brand-pink/70 pl-5">
+              <p className="text-[0.94rem] leading-relaxed text-ink/60">
+                Instant Forms pre-fill name, email and phone, so submitting one costs the user almost nothing.
+                As budget increases Meta hunts for more of what it is rewarded for — cheap form fills. Cost per
+                lead holds, while cost per <span className="text-ink">signed deal</span> quietly climbs.
+              </p>
+            </div>
+          </SlideReveal>
+        </div>
+      </div>
     </Slide>
   );
 }

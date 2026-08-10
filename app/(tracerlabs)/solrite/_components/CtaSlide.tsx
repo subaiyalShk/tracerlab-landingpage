@@ -1,9 +1,10 @@
+import SlideReveal from "./SlideReveal";
+import { KineticHeading } from "../../../components/Kinetic";
 import Button from "../../../components/Button";
 import DeckCta from "./DeckCta";
 import SlideBackdrop from "./SlideBackdrop";
 import Bevel, { GLASS_BORDER, GLASS_BG } from "../../../components/Bevel";
 import Eyebrow from "../../../components/Eyebrow";
-import { Kinetic, Reveal } from "../../../components/motion";
 
 // Live Stripe payment link for the Solrite setup fee — the same link sent to Jarom on
 // 6 Aug 2026. Terms below must stay in step with it: $2,000 one-time setup fee, then
@@ -34,19 +35,19 @@ export default function CtaSlide({ calcomUrl }: { calcomUrl: string }) {
         <div className="flex justify-center">
           <Eyebrow>Get started</Eyebrow>
         </div>
-        <Kinetic
+        <KineticHeading
           as="h2"
           segments={[{ text: "One wire away from " }, { text: "buying customers.", gradient: true }]}
           className="font-display mt-6 text-[clamp(2rem,5.2vw,3.6rem)] font-normal uppercase leading-[1.0] tracking-tight"
         />
-        <Reveal delay={0.15}>
+        <SlideReveal delay={0.15}>
           <p className="mx-auto mt-6 max-w-[40rem] text-[1.05rem] leading-relaxed text-ink/55">
             Step 00 begins as soon as the setup fee lands: we confirm what is actually live in the ad account
             and establish the baseline everything after it is measured against.
           </p>
-        </Reveal>
+        </SlideReveal>
 
-        <Reveal delay={0.22}>
+        <SlideReveal delay={0.22}>
           <Bevel bevel={14} border={GLASS_BORDER} bg={GLASS_BG} className="mx-auto mt-9 max-w-[38rem]">
             <ul className="flex flex-col p-2">
               {TERMS.map((t) => (
@@ -62,9 +63,9 @@ export default function CtaSlide({ calcomUrl }: { calcomUrl: string }) {
               ))}
             </ul>
           </Bevel>
-        </Reveal>
+        </SlideReveal>
 
-        <Reveal delay={0.3}>
+        <SlideReveal delay={0.3}>
           <div className="mt-9 flex flex-wrap items-center justify-center gap-4">
             <Button href={STRIPE_SETUP_FEE} variant="primary" external>
               Pay setup fee
@@ -73,25 +74,25 @@ export default function CtaSlide({ calcomUrl }: { calcomUrl: string }) {
               Book a call first
             </Button>
           </div>
-        </Reveal>
-        <Reveal delay={0.36}>
+        </SlideReveal>
+        <SlideReveal delay={0.36}>
           <p className="mt-5 text-[0.8rem] text-ink/35">
             Secure checkout via Stripe. The services agreement follows separately for e-signature.
           </p>
-        </Reveal>
+        </SlideReveal>
 
-        <Reveal delay={0.42}>
+        <SlideReveal delay={0.42}>
           <div className="mt-10 flex justify-center">
             <DeckCta target="tl-solrite-plan" variant="secondary" size="sm">
               Back to the plan
             </DeckCta>
           </div>
-        </Reveal>
-        <Reveal delay={0.48}>
+        </SlideReveal>
+        <SlideReveal delay={0.48}>
           <p className="mt-10 text-[0.72rem] uppercase tracking-[0.22em] text-ink/30">
             Prepared by Tracerlabs for Solrite Energy · Based on a full audit of the Spark codebase
           </p>
-        </Reveal>
+        </SlideReveal>
       </div>
     </section>
   );

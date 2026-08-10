@@ -13,7 +13,7 @@ const STRIPE_SETUP_FEE = "https://buy.stripe.com/14A3cu95EcgreKvbbTeEo0y";
 const TERMS = [
   { k: "$2,000", v: "one-time setup fee — the only charge in month 1" },
   { k: "$5,000", v: "per month, beginning in month 2" },
-  { k: "Month to month", v: "cancel any time" },
+  { k: "Month to month", v: "decide at the end of month one" },
 ];
 
 export default function CtaSlide({ calcomUrl }: { calcomUrl: string }) {
@@ -36,12 +36,12 @@ export default function CtaSlide({ calcomUrl }: { calcomUrl: string }) {
         </div>
         <KineticHeading
           as="h2"
-          segments={[{ text: "One wire away from " }, { text: "buying customers.", gradient: true }]}
+          segments={[{ text: "Month one. " }, { text: "Then you decide.", gradient: true }]}
           className="font-display mt-6 text-[clamp(2rem,5.2vw,3.6rem)] font-normal uppercase leading-[1.0] tracking-tight"
         />
         <SlideReveal delay={0.15}>
           <p className="mx-auto mt-6 max-w-[40rem] text-[1.05rem] leading-relaxed text-ink/55">
-            Step 00 starts as soon as the setup fee lands.
+            The baseline starts as soon as the setup fee lands.
           </p>
         </SlideReveal>
 

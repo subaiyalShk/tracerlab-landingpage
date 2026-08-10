@@ -9,8 +9,8 @@ import LoopSlide from "./_components/LoopSlide";
 import BlindSpotSlide from "./_components/BlindSpotSlide";
 import NumbersSlide from "./_components/NumbersSlide";
 import AuditSlide from "./_components/AuditSlide";
-import ProveFirstSlide from "./_components/ProveFirstSlide";
-import PlanSlide from "./_components/PlanSlide";
+import MonthOneSlide from "./_components/MonthOneSlide";
+import CheckpointSlide from "./_components/CheckpointSlide";
 import FunnelSlide from "./_components/FunnelSlide";
 import NeedsSlide from "./_components/NeedsSlide";
 import CtaSlide from "./_components/CtaSlide";
@@ -54,7 +54,7 @@ export default function SolritePage() {
               <img src="/assets/logo-light.png" alt="Tracerlabs" data-logo="light" className="h-[128px] w-auto max-w-none translate-y-[0.5px]" />
             </span>
           </Link>
-          <DeckCta target="tl-solrite-plan" variant="primary" size="sm">See the plan</DeckCta>
+          <DeckCta target="tl-solrite-month-one" variant="primary" size="sm">Month one</DeckCta>
         </div>
       </header>
 
@@ -66,9 +66,9 @@ export default function SolritePage() {
         <BlindSpotSlide />
         <NumbersSlide />
         <AuditSlide />
-        <ProveFirstSlide />
-        <PlanSlide />
         <FunnelSlide />
+        <MonthOneSlide />
+        <CheckpointSlide />
         <NeedsSlide />
         <CtaSlide calcomUrl={calcomUrl} />
       </Deck>

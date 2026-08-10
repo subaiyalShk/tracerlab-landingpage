@@ -46,7 +46,7 @@ export default function CoverSlide() {
           holds everything needed to change it.
         </p>
         <div className="animate-rise mt-9 flex flex-wrap items-center justify-center gap-4 [animation-delay:0.65s]">
-          <DeckCta target="tl-solrite-plan" variant="primary">See the plan</DeckCta>
+          <DeckCta target="tl-solrite-month-one" variant="primary">See month one</DeckCta>
           <DeckCta target="tl-solrite-audit" variant="secondary">What we found</DeckCta>
         </div>
       </div>

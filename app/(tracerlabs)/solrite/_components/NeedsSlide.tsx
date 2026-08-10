@@ -5,10 +5,10 @@ import Bevel, { GLASS_BORDER, GLASS_BG } from "../../../components/Bevel";
 import Eyebrow from "../../../components/Eyebrow";
 
 const NEEDS = [
-  "Business Manager access — admin rights sufficient to issue a token that can read ad spend and send conversion events",
-  "Confirmation of the ad account and page running the live lead campaigns",
+  "Read access to Spark's database, so week one can reconcile its funnel against the ad account",
+  "An app with Marketing API enabled — none of the three in the Business Manager has it, so the spark-insights system user cannot issue a reporting token today",
   "A decision on the target stage: a reached lead, a qualified homeowner, or a signed deal",
-  "A named owner for the weekly decision on where budget moves",
+  "A named owner for the weekly call on where budget moves",
 ];
 
 const SUCCESS = [
@@ -25,7 +25,7 @@ const RISKS = [
 
 export default function NeedsSlide() {
   return (
-    <Slide id="tl-solrite-needs" padY="py-16" bgSrc="/assets/solrite/gen/needs-v1.png" bgOpacity={0.16}>
+    <Slide id="tl-solrite-needs" padY="py-10" bgSrc="/assets/solrite/gen/needs-v1.png" bgOpacity={0.16}>
       <div className="max-w-[46rem]">
         <Eyebrow>To start</Eyebrow>
         <KineticHeading

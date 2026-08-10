@@ -21,8 +21,8 @@ const ROWS: Row[] = [
 
 export default function AuditSlide() {
   return (
-    <Slide id="tl-solrite-audit" padY="py-9">
-      <div className="grid items-center gap-9 lg:grid-cols-[1.05fr_0.95fr]">
+    <Slide id="tl-solrite-audit" padY="py-6">
+      <div className="grid items-center gap-8 lg:grid-cols-[1.05fr_0.95fr]">
         <div>
           <Eyebrow>What we found</Eyebrow>
           <KineticHeading

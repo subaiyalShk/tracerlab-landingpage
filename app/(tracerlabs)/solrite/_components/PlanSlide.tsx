@@ -8,7 +8,7 @@ const STEPS = [
   {
     n: "00",
     title: "Settle the argument",
-    body: "Put spend beside the funnel. Lead problem or sales problem — answered.",
+    body: "One reconciliation, by hand. Lead problem or sales problem — answered.",
   },
   {
     n: "01",
@@ -18,12 +18,12 @@ const STEPS = [
   },
   {
     n: "02",
-    title: "Bring spend in, get unit economics out",
-    body: "Spend in nightly. Cost per qualified lead, per ad set.",
+    title: "Put a cost on every stage",
+    body: "Automate it. Nightly spend, cost per qualified lead by ad set.",
   },
   {
     n: "03",
-    title: "Harden the attribution",
+    title: "Stop the numbers drifting",
     body: "Key to IDs, not names. Capture click IDs on the site.",
   },
   {
@@ -39,7 +39,7 @@ export default function PlanSlide() {
       <div className="max-w-[46rem]">
         <Eyebrow>The proposal</Eyebrow>
         <KineticHeading
-          segments={[{ text: "Close the loop, " }, { text: "then price the funnel.", gradient: true }]}
+          segments={[{ text: "Close the loop. " }, { text: "Then measure it in dollars.", gradient: true }]}
           className="font-display mt-6 text-[clamp(1.9rem,4.8vw,3.2rem)] font-normal uppercase leading-[1.0] tracking-tight"
         />
         <SlideReveal delay={0.15}>

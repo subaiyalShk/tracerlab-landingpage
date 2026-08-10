@@ -62,8 +62,8 @@ export default function NumbersSlide() {
                 ))}
               </ul>
               <p className="mt-4 text-[0.85rem] leading-relaxed text-ink/50">
-                California was switched off at $18.29 — a decision made on cost per form fill, not cost per
-                customer.
+                California is switched off, and $18.29 per form fill is the most visible number attached to it.
+                Whether those leads converted better than Texas is not recorded anywhere.
               </p>
             </div>
           </Bevel>
@@ -107,8 +107,8 @@ export default function NumbersSlide() {
 
       <SlideReveal delay={0.4}>
         <p className="mt-7 max-w-[52rem] text-[0.98rem] leading-relaxed text-ink/55">
-          Corpus Christi is drifting toward the number that killed California. It may well be the better
-          market — nobody can currently tell, because the only scoreboard measures form fills.
+          Corpus Christi is drifting toward the number California was switched off at. It may well be the
+          better market — nobody can currently tell, because the only scoreboard measures form fills.
         </p>
       </SlideReveal>
     </Slide>

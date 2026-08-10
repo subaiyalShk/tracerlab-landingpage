@@ -13,7 +13,7 @@ const ROWS: Row[] = [
   { label: "Duplicate protection against Meta's webhook retries", live: true },
   { label: "Signed deals exclude those closed by another sales partner", live: true },
   { label: "Meta Pixel on the website — but it fires PageView, and Lead only on the contact form", live: true },
-  { label: "Lead outcomes sent back to Meta — nothing, from anywhere", live: false },
+  { label: "Lead outcomes sent back to Meta — nothing in Spark, and no Pixel event beyond Lead", live: false },
   { label: "Ad spend in the system — cost per lead, cost per qualified, cost per acquisition", live: false },
   { label: "Attribution keyed to stable campaign and ad set IDs rather than names", live: false },
   { label: "Meta click IDs captured alongside website leads", live: false },

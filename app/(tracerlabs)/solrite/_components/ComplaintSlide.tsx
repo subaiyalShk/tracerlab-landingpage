@@ -26,7 +26,7 @@ export default function ComplaintSlide() {
         />
         <SlideReveal delay={0.12}>
           <p className="mt-6 text-[1.02rem] leading-relaxed text-ink/55">
-            There are only two explanations, and they lead to completely different work.
+            Two explanations dominate, and they lead to completely different work. Both are testable; right now neither is being tested.
           </p>
         </SlideReveal>
       </div>

@@ -118,7 +118,7 @@ html[data-theme="light"] {
 
   /* cards become solid white + a soft drop-shadow (applied via filter: drop-shadow in
      Bevel — box-shadow is clipped by the bevel clip-path, drop-shadow follows the shape) */
-  --tl-card-bg: rgba(255,255,255,0.66);
+  --tl-card-bg: linear-gradient(160deg, rgba(255,255,255,0.85) 0%, rgba(255,255,255,0.55) 45%, rgba(240,244,255,0.5) 100%);
   --tl-card-border: rgba(11,13,18,0.08);
   --tl-card-shadow: drop-shadow(0 1px 2px rgba(11,13,18,0.05)) drop-shadow(0 12px 24px rgba(11,13,18,0.10));
 
@@ -450,8 +450,8 @@ html[data-theme="light"] {
   --nt-underglow: 0 22px 50px -26px rgba(11, 13, 18, 0.28);
   --nt-underglow-filter: drop-shadow(0 1px 2px rgba(11, 13, 18, 0.05)) drop-shadow(0 16px 32px rgba(11, 13, 18, 0.14));
   --nt-chart-glow: none;
-  --nt-ambient-blue: rgba(5, 106, 252, 0.07);
-  --nt-ambient-pink: rgba(231, 2, 141, 0.05);
+  --nt-ambient-blue: rgba(5, 106, 252, 0.14);
+  --nt-ambient-pink: rgba(231, 2, 141, 0.10);
   --nt-edge: linear-gradient(135deg, rgba(231, 2, 141, 0.35), rgba(5, 106, 252, 0.35));
   --nt-figure-glow: none;
 }
@@ -468,7 +468,7 @@ html[data-theme="light"] {
   transition: transform 0.3s ease, box-shadow 0.3s ease, border-color 0.3s ease;
 }
 html[data-theme="light"] .nt-card {
-  box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.85);
+  box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.9), 0 14px 36px -16px rgba(11, 13, 18, 0.18);
 }
 .nt-card:hover {
   transform: translateY(-3px);
@@ -521,7 +521,7 @@ html[data-theme="light"] .nt-hairline {
   --nt-horizon: radial-gradient(50% 100% at 50% 100%, rgba(5, 106, 252, 0.32) 0%, rgba(231, 2, 141, 0.14) 45%, transparent 75%);
 }
 html[data-theme="light"] {
-  --nt-grid-line: rgba(11, 13, 18, 0.05);
+  --nt-grid-line: rgba(5, 106, 252, 0.10);
   --nt-horizon: radial-gradient(50% 100% at 50% 100%, rgba(5, 106, 252, 0.10) 0%, transparent 70%);
 }
 

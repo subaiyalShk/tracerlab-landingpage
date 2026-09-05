@@ -142,7 +142,18 @@ function CardFoot({ s }: { s: Pick<Service, "tools" | "cta"> }) {
 
 export default function Services() {
   return (
-    <section id="tl-services" className="font-body w-full bg-page text-ink">
+    <section id="tl-services" className="font-body relative isolate w-full overflow-hidden bg-page text-ink">
+      {/* ambient color field — gives the frosted cards something to blur */}
+      <div
+        aria-hidden
+        className="pointer-events-none absolute -right-[10%] top-[16%] -z-10 h-[42vw] w-[42vw] rounded-full blur-[120px]"
+        style={{ background: "radial-gradient(circle, var(--nt-ambient-blue) 0%, transparent 70%)" }}
+      />
+      <div
+        aria-hidden
+        className="pointer-events-none absolute -left-[12%] bottom-[6%] -z-10 h-[38vw] w-[38vw] rounded-full blur-[120px]"
+        style={{ background: "radial-gradient(circle, var(--nt-ambient-pink) 0%, transparent 70%)" }}
+      />
       <div className="mx-auto w-full max-w-[1280px] px-6 sm:px-10"><div className="nt-hairline" /></div>
       <div className="mx-auto w-full max-w-[1280px] px-6 py-20 sm:px-10 sm:py-28 lg:py-36">
         {/* Header */}

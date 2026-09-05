@@ -335,7 +335,18 @@ function ProductRow({ p, mediaRight }: { p: Product; mediaRight: boolean }) {
 
 export default function Projects() {
   return (
-    <section id="tl-projects" className="font-body w-full bg-page text-ink">
+    <section id="tl-projects" className="font-body relative isolate w-full overflow-hidden bg-page text-ink">
+      {/* ambient color field — gives the frosted spotlight panels something to blur */}
+      <div
+        aria-hidden
+        className="pointer-events-none absolute -left-[10%] top-[10%] -z-10 h-[44vw] w-[44vw] rounded-full blur-[130px]"
+        style={{ background: "radial-gradient(circle, var(--nt-ambient-pink) 0%, transparent 70%)" }}
+      />
+      <div
+        aria-hidden
+        className="pointer-events-none absolute -right-[12%] top-[42%] -z-10 h-[46vw] w-[46vw] rounded-full blur-[130px]"
+        style={{ background: "radial-gradient(circle, var(--nt-ambient-blue) 0%, transparent 70%)" }}
+      />
       {/* scroll anchor: legacy/service links point at #projects (section id is tl-projects) */}
       <div id="projects" aria-hidden />
       <div className="mx-auto w-full max-w-[1280px] px-6 sm:px-10"><div className="nt-hairline" /></div>

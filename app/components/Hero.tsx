@@ -6,7 +6,7 @@
 // and the brand gradient appears exactly once (the panel's headline number).
 import Button from "./Button";
 import Bevel, { GLASS_BORDER, GLASS_BG } from "./Bevel";
-import RateChart from "./RateChart";
+import TelemetryPanel from "./TelemetryPanel";
 
 const DISPLAY = "var(--font-archivo), system-ui, sans-serif";
 
@@ -85,53 +85,7 @@ export default function Hero() {
           innerClassName="backdrop-blur-xl"
           style={{ background: "var(--nt-edge)", filter: "var(--nt-underglow-filter)" }}
         >
-          <div className="flex flex-col p-6 sm:p-7">
-            <div className="flex items-center justify-between border-b border-ink/10 pb-4">
-              <span className="text-[0.92rem] font-medium text-ink/60" style={{ fontFamily: DISPLAY }}>
-                Client telemetry
-              </span>
-              <span className="flex items-center gap-2 text-[0.8rem] text-ink/45">
-                <span aria-hidden className="relative flex h-2 w-2">
-                  <span className="absolute inline-flex h-full w-full animate-ping rounded-full bg-[#056AFC] opacity-60" />
-                  <span className="relative inline-flex h-2 w-2 rounded-full bg-[#056AFC]" />
-                </span>
-                production data
-              </span>
-            </div>
-
-            <div className="pt-5">
-              <div
-                className="bg-gradient-to-r from-brand-pink to-brand-blue bg-clip-text text-[clamp(3rem,6vw,4.2rem)] font-extrabold leading-none tracking-tight text-transparent"
-                style={{ fontFamily: DISPLAY }}
-              >
-                367
-              </div>
-              <div className="mt-1.5 text-[0.95rem] text-ink/60">
-                solar consultations booked on autopilot
-              </div>
-            </div>
-
-            <div className="mt-5 text-ink">
-              <RateChart compact />
-            </div>
-
-            <dl className="mt-5 grid grid-cols-2 gap-4 border-t border-ink/10 pt-5">
-              {[
-                ["94%", "appointment show rate"],
-                ["20", "paid bookings in week one — Harbs Farm"],
-              ].map(([v, l]) => (
-                <div key={l}>
-                  <dt className="sr-only">{l}</dt>
-                  <dd>
-                    <span className="text-[1.5rem] font-bold tracking-tight text-ink" style={{ fontFamily: DISPLAY }}>
-                      {v}
-                    </span>
-                    <span className="mt-0.5 block text-[0.82rem] leading-snug text-ink/55">{l}</span>
-                  </dd>
-                </div>
-              ))}
-            </dl>
-          </div>
+          <TelemetryPanel />
         </Bevel>
         </div>
       </div>

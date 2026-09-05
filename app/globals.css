@@ -429,3 +429,77 @@ html:not([data-theme="light"]) [data-logo="light"] { display: none; }
   width: 100% !important;
   height: 100% !important;
 }
+
+/* ── Night Telemetry depth layer (2026-09 redesign) ─────────────────────────
+   The atmosphere layer over the flat editorial structure: glass cards with
+   hover underglow, gradient hairlines, ambient glows, neon chart accents.
+   Rationed by hierarchy — ONE full-treatment centerpiece per page (gradient
+   edge + permanent underglow + brackets), cards glow on hover only, prose
+   stays quiet. Glow lives in dark mode; light mode gets clean glass + soft
+   neutral shadows (no fake neon on white). */
+:root {
+  --nt-underglow: 0 28px 80px -28px rgba(5, 106, 252, 0.38), 0 22px 60px -30px rgba(231, 2, 141, 0.28);
+  --nt-underglow-filter: drop-shadow(0 22px 44px rgba(5, 106, 252, 0.28)) drop-shadow(0 16px 36px rgba(231, 2, 141, 0.2));
+  --nt-chart-glow: drop-shadow(0 0 7px rgba(5, 106, 252, 0.55));
+  --nt-ambient-blue: rgba(5, 106, 252, 0.14);
+  --nt-ambient-pink: rgba(231, 2, 141, 0.1);
+  --nt-edge: linear-gradient(135deg, rgba(231, 2, 141, 0.6), rgba(5, 106, 252, 0.6));
+  --nt-figure-glow: 0 0 26px rgba(5, 106, 252, 0.45);
+}
+html[data-theme="light"] {
+  --nt-underglow: 0 22px 50px -26px rgba(11, 13, 18, 0.28);
+  --nt-underglow-filter: drop-shadow(0 1px 2px rgba(11, 13, 18, 0.05)) drop-shadow(0 16px 32px rgba(11, 13, 18, 0.14));
+  --nt-chart-glow: none;
+  --nt-ambient-blue: rgba(5, 106, 252, 0.07);
+  --nt-ambient-pink: rgba(231, 2, 141, 0.05);
+  --nt-edge: linear-gradient(135deg, rgba(231, 2, 141, 0.35), rgba(5, 106, 252, 0.35));
+  --nt-figure-glow: none;
+}
+
+/* Glass card: rest = quiet glass + hairline; hover = lift + brand underglow. */
+.nt-card {
+  background: var(--tl-card-bg);
+  border: 1px solid var(--tl-card-border);
+  transition: transform 0.3s ease, box-shadow 0.3s ease, border-color 0.3s ease;
+}
+.nt-card:hover {
+  transform: translateY(-3px);
+  box-shadow: var(--nt-underglow);
+  border-color: color-mix(in oklab, var(--tl-ink) 20%, transparent);
+}
+
+/* Gradient hairline — section dividers (fades at both ends). */
+.nt-hairline {
+  height: 1px;
+  border: none;
+  background: linear-gradient(90deg, transparent, rgba(231, 2, 141, 0.4), rgba(5, 106, 252, 0.4), transparent);
+}
+html[data-theme="light"] .nt-hairline {
+  background: linear-gradient(90deg, transparent, rgba(231, 2, 141, 0.3), rgba(5, 106, 252, 0.3), transparent);
+}
+
+/* Chart marks pick up a neon glow in dark mode only. */
+.nt-chart rect {
+  filter: var(--nt-chart-glow);
+}
+
+/* Solid-accent result figures glow softly in dark mode. */
+.nt-figure {
+  text-shadow: var(--nt-figure-glow);
+}
+
+/* Corner brackets for the centerpiece panel. */
+.nt-brackets {
+  position: absolute;
+  inset: -10px;
+  pointer-events: none;
+}
+.nt-brackets span {
+  position: absolute;
+  width: 22px;
+  height: 22px;
+}
+.nt-brackets span:nth-child(1) { top: 0; left: 0; border-top: 2px solid rgba(231, 2, 141, 0.5); border-left: 2px solid rgba(231, 2, 141, 0.5); }
+.nt-brackets span:nth-child(2) { top: 0; right: 0; border-top: 2px solid rgba(5, 106, 252, 0.5); border-right: 2px solid rgba(5, 106, 252, 0.5); }
+.nt-brackets span:nth-child(3) { bottom: 0; left: 0; border-bottom: 2px solid rgba(5, 106, 252, 0.5); border-left: 2px solid rgba(5, 106, 252, 0.5); }
+.nt-brackets span:nth-child(4) { bottom: 0; right: 0; border-bottom: 2px solid rgba(231, 2, 141, 0.5); border-right: 2px solid rgba(231, 2, 141, 0.5); }

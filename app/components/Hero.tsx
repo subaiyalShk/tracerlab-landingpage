@@ -12,7 +12,28 @@ const DISPLAY = "var(--font-archivo), system-ui, sans-serif";
 
 export default function Hero() {
   return (
-    <section id="tl-hero" className="font-body relative w-full bg-page text-ink">
+    <section id="tl-hero" className="font-body relative isolate w-full overflow-hidden bg-page text-ink">
+      {/* ── Ambient light (one of two on the page — the other sits behind the CTA) */}
+      <div
+        aria-hidden
+        className="animate-drift pointer-events-none absolute -right-[12%] -top-[18%] -z-10 h-[52vw] w-[52vw] rounded-full blur-[130px]"
+        style={{ background: "radial-gradient(circle, var(--nt-ambient-blue) 0%, transparent 70%)" }}
+      />
+      <div
+        aria-hidden
+        className="animate-drift-slow pointer-events-none absolute -left-[14%] top-[30%] -z-10 h-[44vw] w-[44vw] rounded-full blur-[130px]"
+        style={{ background: "radial-gradient(circle, var(--nt-ambient-pink) 0%, transparent 70%)" }}
+      />
+      {/* Dot grid, hero only */}
+      <div
+        aria-hidden
+        className="pointer-events-none absolute inset-0 -z-10 opacity-60"
+        style={{
+          backgroundImage: "radial-gradient(circle, var(--tl-dot-grid) 1px, transparent 1px)",
+          backgroundSize: "24px 24px",
+          maskImage: "radial-gradient(ellipse 85% 70% at 55% 35%, #000 30%, transparent 75%)",
+        }}
+      />
       <div className="mx-auto grid w-full max-w-[1280px] grid-cols-1 items-center gap-12 px-6 py-16 sm:px-10 sm:py-20 lg:grid-cols-[1.02fr_0.98fr] lg:gap-14 lg:py-24">
         {/* Left: copy */}
         <div className="min-w-0 max-w-[40rem]">
@@ -46,8 +67,19 @@ export default function Hero() {
           </p>
         </div>
 
-        {/* Right: client telemetry panel — the page's one chamfered panel */}
-        <Bevel bevel={16} border={GLASS_BORDER} bg={GLASS_BG} className="w-full min-w-0">
+        {/* Right: client telemetry panel — the page's one full-treatment centerpiece:
+            gradient edge, permanent underglow, corner brackets. */}
+        <div className="relative w-full min-w-0">
+          <div aria-hidden className="nt-brackets">
+            <span /><span /><span /><span />
+          </div>
+        <Bevel
+          bevel={16}
+          border={GLASS_BORDER}
+          bg={GLASS_BG}
+          className="w-full min-w-0"
+          style={{ background: "var(--nt-edge)", filter: "var(--nt-underglow-filter)" }}
+        >
           <div className="flex flex-col p-6 sm:p-7">
             <div className="flex items-center justify-between border-b border-ink/10 pb-4">
               <span className="text-[0.92rem] font-medium text-ink/60" style={{ fontFamily: DISPLAY }}>
@@ -93,6 +125,7 @@ export default function Hero() {
             </dl>
           </div>
         </Bevel>
+        </div>
       </div>
     </section>
   );

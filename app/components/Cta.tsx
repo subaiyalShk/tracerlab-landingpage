@@ -18,11 +18,18 @@ export default function Cta() {
   const calcomUrl = process.env.NEXT_PUBLIC_CAL_BOOKING_LINK || "https://cal.com/team/tracerlabs/discovery-call";
 
   return (
-    <section id="tl-cta" className="font-body w-full bg-page text-ink">
+    <section id="tl-cta" className="font-body relative isolate w-full overflow-hidden bg-page text-ink">
+      {/* ambient glow behind the orb — the page's second (and last) ambient light */}
+      <div
+        aria-hidden
+        className="pointer-events-none absolute left-1/2 top-1/3 -z-10 h-[46vw] w-[58vw] -translate-x-1/2 -translate-y-1/2 rounded-full blur-[140px]"
+        style={{ background: "radial-gradient(circle, var(--nt-ambient-pink) 0%, var(--nt-ambient-blue) 50%, transparent 75%)" }}
+      />
       {/* scroll anchor for #contact links (hero CTA, nav) */}
       <div id="contact" aria-hidden />
 
-      <div className="mx-auto flex w-full max-w-[820px] flex-col items-center border-t border-ink/10 px-6 py-16 text-center sm:px-10 sm:py-20 lg:py-24">
+      <div className="mx-auto w-full max-w-[1280px] px-6 sm:px-10"><div className="nt-hairline" /></div>
+      <div className="mx-auto flex w-full max-w-[820px] flex-col items-center px-6 py-16 text-center sm:px-10 sm:py-20 lg:py-24">
         <h2
           className="max-w-[16ch] text-[clamp(1.9rem,4.4vw,3rem)] font-extrabold leading-[1.08] tracking-tight text-ink"
           style={{ fontFamily: DISPLAY }}
@@ -56,7 +63,7 @@ export default function Cta() {
         {/* What happens next */}
         <ol className="mt-14 grid w-full list-none grid-cols-1 gap-4 p-0 text-left sm:grid-cols-3">
           {STEPS.map((s) => (
-            <li key={s.n} className="border border-ink/10 p-5">
+            <li key={s.n} className="nt-card p-5">
               <span className="text-[0.85rem] font-semibold text-ink/30" style={{ fontFamily: DISPLAY }}>
                 {s.n}
               </span>

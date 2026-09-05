@@ -174,7 +174,7 @@ function OpsPanel() {
 // Media panel — plain hairline frame; the 9:16 reel is the content.
 function Frame({ media }: { media: Media }) {
   return (
-    <div className="relative aspect-[9/16] w-full overflow-hidden border border-ink/10 bg-[#0b0b0f]">
+    <div className="relative aspect-[9/16] w-full overflow-hidden border border-ink/10 bg-[#0b0b0f] transition-shadow duration-300 hover:shadow-[var(--nt-underglow)]">
       {media.kind === "video" && (
         <ProjectVideo src={media.src} poster={media.poster} label={media.label} fit={media.fit} />
       )}
@@ -239,7 +239,8 @@ export default function Projects() {
     <section id="tl-projects" className="font-body w-full bg-page text-ink">
       {/* scroll anchor: legacy/service links point at #projects (section id is tl-projects) */}
       <div id="projects" aria-hidden />
-      <div className="mx-auto w-full max-w-[1280px] border-t border-ink/10 px-6 py-16 sm:px-10 sm:py-20 lg:py-24">
+      <div className="mx-auto w-full max-w-[1280px] px-6 sm:px-10"><div className="nt-hairline" /></div>
+      <div className="mx-auto w-full max-w-[1280px] px-6 py-16 sm:px-10 sm:py-20 lg:py-24">
         {/* header */}
         <div className="max-w-[44rem]">
           <p className="text-[0.98rem] text-ink/50">Recent work</p>

@@ -35,7 +35,7 @@ export default function RateChart({ compact = false }: { compact?: boolean }) {
       viewBox={`0 0 ${W} ${H}`}
       role="img"
       aria-label="Lead to consultation rate by month: April 20%, May 28%, June 58%, July 50%, August 40%, September 42%. The AI texting agent went live at the end of May."
-      className="w-full"
+      className="nt-chart w-full"
     >
       {/* baseline */}
       <line x1={padX} y1={baseline} x2={W - padX} y2={baseline} stroke="currentColor" strokeOpacity="0.18" strokeWidth="1" />

@@ -12,7 +12,8 @@ const LINKS = [
 
 export default function Footer() {
   return (
-    <footer id="tl-footer" className="font-body w-full border-t border-ink/10 bg-page text-ink">
+    <footer id="tl-footer" className="font-body w-full bg-page text-ink">
+      <div className="nt-hairline" />
       <div className="mx-auto w-full max-w-[1280px] px-6 py-14 sm:px-10 sm:py-16">
         <div className="flex flex-col gap-10 lg:flex-row lg:items-start lg:justify-between">
           {/* brand */}

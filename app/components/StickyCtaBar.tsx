@@ -51,7 +51,7 @@ export default function StickyCtaBar({
           transition={{ type: "spring", stiffness: 260, damping: 26 }}
           className="pointer-events-none fixed inset-x-0 bottom-4 z-40 flex justify-center px-4 sm:bottom-6"
         >
-          <div className="pointer-events-auto border border-ink/15 bg-page/90 shadow-[0_12px_40px_-16px_rgba(0,0,0,0.4)] backdrop-blur-xl">
+          <div className="pointer-events-auto border border-ink/15 bg-page/90 shadow-[var(--nt-underglow)] backdrop-blur-xl">
             <div className="flex items-center gap-3 py-2.5 pl-4 pr-2.5 sm:gap-5 sm:pl-5">
               <span
                 className="hidden text-[0.9rem] font-semibold text-ink/75 sm:block"

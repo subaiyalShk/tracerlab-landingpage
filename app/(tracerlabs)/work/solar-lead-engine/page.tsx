@@ -58,7 +58,7 @@ function Result({
   return (
     <div className="mt-7 border-l-2 border-[#056AFC] pl-6">
       <div
-        className="text-[2.1rem] font-bold leading-none tracking-tight text-[#056AFC]"
+        className="nt-figure text-[2.1rem] font-bold leading-none tracking-tight text-[#056AFC]"
         style={{ fontFamily: DISPLAY }}
       >
         {figure}

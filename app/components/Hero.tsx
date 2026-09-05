@@ -99,9 +99,9 @@ export default function Hero() {
             className="animate-rise mt-5 max-w-[34rem] text-[1.05rem] leading-relaxed text-ink/55"
             style={{ animationDelay: "0.2s" }}
           >
-            From voice agents that answer every call to custom web &amp; mobile
-            apps and sales automation — we design, build, and ship
-            production-grade AI for growing businesses. Fast.
+            We generate the leads and build the systems that turn them into
+            revenue — ads, funnels, AI follow-up, and custom software. Designed,
+            built, and shipped by one team. Fast.
           </p>
 
           {/* CTAs */}

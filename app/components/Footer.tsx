@@ -4,6 +4,8 @@
 const LINKS = [
   { label: "Services", href: "#tl-services" },
   { label: "Recent work", href: "#tl-projects" },
+  { label: "AI agents", href: "/agents" },
+  { label: "Voice agents", href: "/voice-agents" },
   { label: "Contact", href: "#contact" },
 ];
 

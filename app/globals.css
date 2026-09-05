@@ -265,14 +265,11 @@ html:not([data-theme="light"]) [data-logo="light"] { display: none; }
   clip-path: polygon(0 0, calc(100% - 9px) 0, 100% 9px, 100% 100%, 9px 100%, 0 calc(100% - 9px));
 }
 
-/* Smooth anchor scrolling (replaces the legacy app.js JS smooth-scroll we removed), and a
-   scroll-margin so jumping to a section clears the sticky 64px nav. Gated on motion
-   preference — reduced-motion users get instant jumps. */
-@media (prefers-reduced-motion: no-preference) {
-  html {
-    scroll-behavior: smooth;
-  }
-}
+/* Anchor jumps are INSTANT on purpose. `scroll-behavior: smooth` made every anchor link
+   (including #contact — all the CTA buttons) silently fail: Chrome cancels an in-flight
+   smooth scroll when layout shifts mid-animation, and the lazy-loading project videos +
+   scroll-reveal animations shift layout constantly. Instant jumps always land.
+   scroll-margin keeps targets clear of the sticky nav. */
 #tl-services,
 #tl-projects {
   scroll-margin-top: 4.75rem;

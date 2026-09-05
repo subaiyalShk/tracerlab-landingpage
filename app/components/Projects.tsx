@@ -26,16 +26,16 @@ type Project = {
   media: Media;
 };
 
-const PROJECTS: Project[] = [
+const CASE_STUDIES: Project[] = [
   {
     id: "solar",
     client: "A Texas solar company",
     title: "An AI sales engine that books solar consults on autopilot",
     blurb:
-      "A high-performing speed-to-lead funnel paired with an AI voice agent that calls every inbound lead within minutes, qualifies them, and books the consultation — so no lead ever goes cold.",
-    metrics: ["2 appointments booked / day", "$38 / qualified lead", "calls in minutes"],
+      "A verified-leads funnel paired with an AI texting agent that reaches every lead within minutes and books the consultation — plus a confirmation agent that reminds and reschedules so appointments actually happen. Fake numbers blocked at the door, calendar full.",
+    metrics: ["367 consults booked", "Lead → consult rate doubled", "94% show rate"],
     tech: ["Next.js", "Retell", "Twilio", "GoHighLevel"],
-    link: { label: "See the live funnel", href: "/solar" },
+    link: { label: "Read the full case study", href: "/work/solar-lead-engine" },
     media: {
       kind: "video",
       src: "/assets/solar-funnel.mp4",
@@ -44,6 +44,20 @@ const PROJECTS: Project[] = [
       label: "Demo reel of the solar lead-gen funnel that books appointments daily.",
     },
   },
+  {
+    id: "meatops",
+    client: "Harbs Farm · Meat processing, New York",
+    title: "The platform that runs Harbs Farm end-to-end",
+    blurb:
+      "We took a farm running on phone calls and paper fully online: a booking wizard for farmers, deposits through Square, a kanban processing board for staff, capacity the owner controls from a calendar — plus the ad campaigns and reminder ladders that fill it.",
+    metrics: ["20 bookings, every deposit paid — week 1 of ads", "1 in 8 Google visitors books", "Booking → cut sheet → payment"],
+    tech: ["Next.js", "Supabase", "Square", "Meta Ads"],
+    link: { label: "Read the full case study", href: "/work/harbs-farm" },
+    media: { kind: "panel" },
+  },
+];
+
+const PRODUCTS: Project[] = [
   {
     id: "canvassing",
     client: "Our product · Offset Canvassing",
@@ -60,17 +74,6 @@ const PROJECTS: Project[] = [
       fit: "cover",
       label: "Demo reel of the Offset Canvassing GIS app and companion mobile CRM for door-to-door teams.",
     },
-  },
-  {
-    id: "meatops",
-    client: "A specialty meat-processing facility",
-    title: "An operations platform that runs a meat-processing facility end-to-end",
-    blurb:
-      "A booking wizard for farmers, a kanban processing board for staff, dynamic per-animal pricing, Square payments, and an inbound AI receptionist that answers calls and looks up order status in real time.",
-    metrics: ["Booking → cut sheet → payment", "AI receptionist", "Kanban ops board"],
-    tech: ["Next.js", "Supabase", "Square", "Retell"],
-    link: { label: "Build one for your business", href: "#contact" },
-    media: { kind: "panel" },
   },
   {
     id: "fitness",
@@ -194,6 +197,8 @@ function Frame({ media }: { media: Media }) {
 export default function Projects() {
   return (
     <section id="tl-projects" className="font-body relative isolate w-full overflow-hidden bg-page text-ink">
+      {/* scroll anchor: legacy/service links point at #projects (section id is tl-projects) */}
+      <div id="projects" aria-hidden />
       {/* ambient brand glow */}
       <div
         aria-hidden
@@ -216,14 +221,28 @@ export default function Projects() {
           </Reveal>
         </div>
 
-        {/* alternating rows */}
-        <div className="mt-14 flex flex-col gap-16 sm:gap-20 lg:gap-24">
-          {PROJECTS.map((p, i) => {
+        {/* Tier 1 — client case studies (each links to its full write-up),
+            Tier 2 — our own products & experiments (link to the live thing).
+            One continuous alternating layout; a small label opens each tier. */}
+        {[
+          { label: "Client case studies", items: CASE_STUDIES, offset: 0 },
+          { label: "Our products & experiments", items: PRODUCTS, offset: CASE_STUDIES.length },
+        ].map((tier) => (
+        <div key={tier.label}>
+        <Reveal delay={0.1}>
+          <p className="mt-14 text-[0.72rem] font-semibold uppercase tracking-[0.24em] text-ink/40">
+            {tier.label}
+          </p>
+        </Reveal>
+        <div className="mt-8 flex flex-col gap-16 sm:gap-20 lg:gap-24">
+          {tier.items.map((p, idx) => {
+            const i = idx + tier.offset;
             const mediaRight = i % 2 === 1; // alternate sides on lg
             return (
               <Reveal key={p.id} y={36} amount={0.12}>
               <article
-                className={`flex flex-col gap-9 lg:flex-row lg:items-stretch lg:gap-14 ${mediaRight ? "lg:flex-row-reverse" : ""}`}
+                id={`work-${p.id}`}
+                className={`scroll-mt-24 flex flex-col gap-9 lg:flex-row lg:items-stretch lg:gap-14 ${mediaRight ? "lg:flex-row-reverse" : ""}`}
               >
                 {/* media — full width on mobile (tall 9:16 reel), phone-width on lg.
                     With flex-row(-reverse) + default justify, the slack falls to the outer edge,
@@ -278,6 +297,8 @@ export default function Projects() {
             );
           })}
         </div>
+        </div>
+        ))}
 
         {/* section CTA → conversion */}
         <Reveal amount={0.6} y={14}>

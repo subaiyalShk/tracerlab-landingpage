@@ -1,16 +1,31 @@
-// Recent work (Telemetry redesign) — two tiers: client case studies (each
-// links to its full write-up) and our own products & experiments. Media frames
-// (9:16 reels) stay; the copy side is flat editorial — Archivo titles, blue
-// metric figures, hairlines, no glass, no scroll-reveal gating.
+// Recent work (Night Telemetry) — two tiers with deliberate hierarchy:
+// client case studies are SPOTLIGHT glass panels (product-window media chrome,
+// big telemetry figures, a real button), products & experiments stay quiet
+// editorial rows beneath. No scroll-reveal gating.
 import Image from "next/image";
 import ProjectVideo from "./ProjectVideo";
+import Button from "./Button";
 
 type Media =
   | { kind: "video"; src: string; poster: string; fit?: "cover" | "contain"; label: string }
   | { kind: "image"; src: string; alt: string; fit?: "cover" | "contain" }
   | { kind: "panel" };
 
-type Project = {
+type Figure = { v: string; l: string };
+
+type CaseStudy = {
+  id: string;
+  client: string;
+  title: string;
+  blurb: string;
+  figures: Figure[];
+  tech: string;
+  href: string;
+  chrome: string;
+  media: Media;
+};
+
+type Product = {
   id: string;
   client: string;
   title: string;
@@ -18,22 +33,28 @@ type Project = {
   metrics: string[];
   tech: string;
   link: { label: string; href: string; external?: boolean };
+  chrome: string;
   media: Media;
 };
 
 const DISPLAY = "var(--font-archivo), system-ui, sans-serif";
 const ACCENT = "#056AFC";
 
-const CASE_STUDIES: Project[] = [
+const CASE_STUDIES: CaseStudy[] = [
   {
     id: "solar",
     client: "A Texas solar company",
     title: "An AI sales engine that books solar consults on autopilot",
     blurb:
-      "A verified-leads funnel paired with an AI texting agent that reaches every lead within minutes and books the consultation — plus a confirmation agent that reminds and reschedules so appointments actually happen. Fake numbers blocked at the door, calendar full.",
-    metrics: ["367 consults booked", "Lead → consult rate doubled", "94% show rate"],
+      "A verified-leads funnel paired with an AI texting agent that reaches every lead within minutes and books the consultation — plus a confirmation agent that reminds and reschedules so appointments actually happen.",
+    figures: [
+      { v: "367", l: "consults booked" },
+      { v: "2×", l: "lead → consult rate" },
+      { v: "94%", l: "show rate" },
+    ],
     tech: "Next.js, Retell, Twilio, GoHighLevel",
-    link: { label: "Read the full case study", href: "/work/solar-lead-engine" },
+    href: "/work/solar-lead-engine",
+    chrome: "solar lead engine — live",
     media: {
       kind: "video",
       src: "/assets/solar-funnel.mp4",
@@ -47,24 +68,30 @@ const CASE_STUDIES: Project[] = [
     client: "Harbs Farm — meat processing, New York",
     title: "The platform that runs Harbs Farm end-to-end",
     blurb:
-      "We took a farm running on phone calls and paper fully online: a booking wizard for farmers, deposits through Square, a kanban processing board for staff, capacity the owner controls from a calendar — plus the ad campaigns and reminder ladders that fill it.",
-    metrics: ["20 bookings, every deposit paid — week 1 of ads", "1 in 8 Google visitors books"],
+      "We took a farm running on phone calls and paper fully online: a booking wizard for farmers, deposits through Square, a kanban board for staff, owner-controlled capacity — plus the ad campaigns and reminder ladders that fill it.",
+    figures: [
+      { v: "20", l: "bookings, week one" },
+      { v: "100%", l: "deposits paid" },
+      { v: "1 in 8", l: "visitors book" },
+    ],
     tech: "Next.js, Supabase, Square, Meta Ads",
-    link: { label: "Read the full case study", href: "/work/harbs-farm" },
+    href: "/work/harbs-farm",
+    chrome: "harbsfarm.com — production",
     media: { kind: "panel" },
   },
 ];
 
-const PRODUCTS: Project[] = [
+const PRODUCTS: Product[] = [
   {
     id: "canvassing",
     client: "Our product — Offset Canvassing",
     title: "A GIS canvassing app that turns every door into intelligence",
     blurb:
-      "Offset Canvassing gives roofing and door-to-door teams a GIS-style map layered with public homeowner data — plus a companion mobile CRM so reps capture intel in the field, track territory, and never knock the same door twice.",
+      "A GIS-style map layered with public homeowner data — plus a companion mobile CRM so reps capture intel in the field, track territory, and never knock the same door twice.",
     metrics: ["GIS + public homeowner data", "Companion mobile CRM"],
     tech: "Next.js, React Native, Google Maps, Supabase",
     link: { label: "See the live page", href: "https://offset-canvassing.vercel.app/", external: true },
+    chrome: "offset-canvassing — demo",
     media: {
       kind: "video",
       src: "/assets/offset-canvassing.mp4",
@@ -82,6 +109,7 @@ const PRODUCTS: Project[] = [
     metrics: ["Personalized AI coach", "iOS, Android & web"],
     tech: "Flutter, React, Gemini, Supabase",
     link: { label: "See it live", href: "https://beastmode.tracerlabs.io/", external: true },
+    chrome: "beastmode.tracerlabs.io",
     media: { kind: "image", src: "/assets/project2.png", alt: "AI fitness app on phone and laptop.", fit: "contain" },
   },
   {
@@ -93,6 +121,7 @@ const PRODUCTS: Project[] = [
     metrics: ["Campaigns in days", "10+ reels shipped"],
     tech: "Remotion, fal.ai, Next.js",
     link: { label: "Get a reel for your brand", href: "#contact" },
+    chrome: "ai-video reel",
     media: {
       kind: "video",
       src: "/assets/reel-aivideo.mp4",
@@ -119,8 +148,6 @@ function OpsPanel() {
         </span>
         <span className="text-[0.6rem] font-medium text-white/30">Today</span>
       </div>
-
-      {/* mini stat row */}
       <div className="grid grid-cols-3 gap-2">
         {[
           { v: "24", l: "Active" },
@@ -133,15 +160,12 @@ function OpsPanel() {
           </div>
         ))}
       </div>
-
-      {/* progress bar */}
       <div className="flex items-center gap-2">
         <div className="h-1.5 flex-1 overflow-hidden rounded-full bg-white/[0.08]">
           <div className="h-full w-[68%] rounded-full" style={{ backgroundColor: "#056afc" }} />
         </div>
         <span className="text-[0.55rem] font-semibold text-white/50">68%</span>
       </div>
-
       <div className="flex flex-1 flex-col gap-2 overflow-hidden">
         {orders.map((k, i) => {
           const s = STATUS[k];
@@ -171,10 +195,9 @@ function OpsPanel() {
   );
 }
 
-// Media panel — plain hairline frame; the 9:16 reel is the content.
-function Frame({ media }: { media: Media }) {
+function MediaBody({ media }: { media: Media }) {
   return (
-    <div className="relative aspect-[9/16] w-full overflow-hidden border border-ink/10 bg-[#0b0b0f] transition-shadow duration-300 hover:shadow-[var(--nt-underglow)]">
+    <>
       {media.kind === "video" && (
         <ProjectVideo src={media.src} poster={media.poster} label={media.label} fit={media.fit} />
       )}
@@ -189,43 +212,119 @@ function Frame({ media }: { media: Media }) {
         />
       )}
       {media.kind === "panel" && <OpsPanel />}
+    </>
+  );
+}
+
+// Product-window media frame: slim chrome bar (dots + label), 9:16 body,
+// hover glow. The media reads as a running application, not a picture.
+function MediaChrome({ media, chrome }: { media: Media; chrome: string }) {
+  return (
+    <div className="overflow-hidden border border-ink/15 bg-[#0b0b0f] transition-shadow duration-300 hover:shadow-[var(--nt-underglow)]">
+      <div className="flex items-center gap-1.5 border-b border-white/10 bg-white/[0.03] px-3 py-2">
+        <span className="h-2 w-2 rounded-full bg-white/15" />
+        <span className="h-2 w-2 rounded-full bg-white/15" />
+        <span className="h-2 w-2 rounded-full bg-white/15" />
+        <span className="ml-2 min-w-0 truncate text-[0.68rem] font-medium tracking-wide text-white/35">
+          {chrome}
+        </span>
+        <span aria-hidden className="ml-auto flex shrink-0 items-center gap-1.5">
+          <span className="h-1.5 w-1.5 rounded-full bg-[#056afc]" />
+        </span>
+      </div>
+      <div className="relative aspect-[9/16] w-full">
+        <MediaBody media={media} />
+      </div>
     </div>
   );
 }
 
-function Row({ p, mediaRight }: { p: Project; mediaRight: boolean }) {
+// Spotlight panel for a client case study — the loud tier.
+function CaseCard({ cs, mediaRight }: { cs: CaseStudy; mediaRight: boolean }) {
+  return (
+    <article id={`work-${cs.id}`} className="nt-card relative scroll-mt-24 p-6 sm:p-8">
+      <div
+        className={`grid grid-cols-1 items-center gap-8 lg:gap-14 ${
+          mediaRight ? "lg:grid-cols-[1fr_minmax(0,19rem)]" : "lg:grid-cols-[minmax(0,19rem)_1fr]"
+        }`}
+      >
+        <div className={mediaRight ? "lg:order-2" : ""}>
+          <MediaChrome media={cs.media} chrome={cs.chrome} />
+        </div>
+        <div className={`min-w-0 ${mediaRight ? "lg:order-1" : ""}`}>
+          <p className="text-[0.9rem] text-ink/50">{cs.client}</p>
+          <h3
+            className="mt-2 max-w-[24ch] text-[clamp(1.6rem,2.8vw,2.2rem)] font-extrabold leading-[1.12] tracking-tight text-ink"
+            style={{ fontFamily: DISPLAY }}
+          >
+            {cs.title}
+          </h3>
+          <p className="mt-4 max-w-[40rem] text-[1rem] leading-[1.7] text-ink/60">{cs.blurb}</p>
+
+          {/* telemetry figures */}
+          <dl className="mt-7 flex flex-wrap gap-x-10 gap-y-5 border-t border-ink/10 pt-6">
+            {cs.figures.map((f) => (
+              <div key={f.l}>
+                <dt className="sr-only">{f.l}</dt>
+                <dd>
+                  <span
+                    className="nt-figure block text-[1.9rem] font-extrabold leading-none tracking-tight"
+                    style={{ fontFamily: DISPLAY, color: ACCENT }}
+                  >
+                    {f.v}
+                  </span>
+                  <span className="mt-1.5 block text-[0.85rem] text-ink/55">{f.l}</span>
+                </dd>
+              </div>
+            ))}
+          </dl>
+
+          <p className="mt-5 text-[0.82rem] text-ink/40">{cs.tech}</p>
+
+          <div className="mt-6">
+            <Button href={cs.href} variant="secondary">
+              Read the full case study
+            </Button>
+          </div>
+        </div>
+      </div>
+    </article>
+  );
+}
+
+// Quiet editorial row for a product — the calm tier.
+function ProductRow({ p, mediaRight }: { p: Product; mediaRight: boolean }) {
   return (
     <article
       id={`work-${p.id}`}
-      className={`scroll-mt-24 flex flex-col gap-8 border-t border-ink/10 pt-12 lg:flex-row lg:gap-14 ${mediaRight ? "lg:flex-row-reverse" : ""}`}
+      className={`scroll-mt-24 flex flex-col gap-8 border-t border-ink/10 pt-12 lg:flex-row lg:gap-14 ${
+        mediaRight ? "lg:flex-row-reverse" : ""
+      }`}
     >
-      <div className="w-full lg:w-[19rem] lg:shrink-0">
-        <Frame media={p.media} />
+      <div className="w-full lg:w-[17rem] lg:shrink-0">
+        <MediaChrome media={p.media} chrome={p.chrome} />
       </div>
       <div className="w-full min-w-0 lg:flex-1 lg:self-center">
         <p className="text-[0.9rem] text-ink/50">{p.client}</p>
         <h3
-          className="mt-2 max-w-[26ch] text-[clamp(1.4rem,2.4vw,1.85rem)] font-bold leading-[1.15] tracking-tight text-ink"
+          className="mt-2 max-w-[26ch] text-[clamp(1.35rem,2.2vw,1.7rem)] font-bold leading-[1.15] tracking-tight text-ink"
           style={{ fontFamily: DISPLAY }}
         >
           {p.title}
         </h3>
-        <p className="mt-4 max-w-[40rem] text-[0.98rem] leading-[1.7] text-ink/60">{p.blurb}</p>
-
-        <ul className="mt-5 flex list-none flex-col gap-1.5 p-0">
+        <p className="mt-4 max-w-[40rem] text-[0.96rem] leading-[1.7] text-ink/60">{p.blurb}</p>
+        <ul className="mt-4 flex list-none flex-col gap-1.5 p-0">
           {p.metrics.map((m) => (
-            <li key={m} className="text-[0.95rem] font-semibold" style={{ color: ACCENT }}>
+            <li key={m} className="text-[0.92rem] font-semibold" style={{ color: ACCENT }}>
               {m}
             </li>
           ))}
         </ul>
-
         <p className="mt-3 text-[0.82rem] text-ink/40">{p.tech}</p>
-
         <a
           href={p.link.href}
           {...(p.link.external ? { target: "_blank", rel: "noopener noreferrer" } : {})}
-          className="mt-6 inline-block text-[0.95rem] font-semibold text-ink/75 underline decoration-ink/25 underline-offset-4 transition-colors hover:text-ink hover:decoration-ink/60"
+          className="mt-5 inline-block text-[0.95rem] font-semibold text-ink/75 underline decoration-ink/25 underline-offset-4 transition-colors hover:text-ink hover:decoration-ink/60"
         >
           {p.link.label}
         </a>
@@ -257,21 +356,25 @@ export default function Projects() {
           </p>
         </div>
 
-        {[
-          { label: "Client case studies", items: CASE_STUDIES, offset: 0 },
-          { label: "Our products & experiments", items: PRODUCTS, offset: CASE_STUDIES.length },
-        ].map((tier) => (
-          <div key={tier.label}>
-            <p className="mt-14 text-[0.9rem] font-semibold text-ink/45" style={{ fontFamily: DISPLAY }}>
-              {tier.label}
-            </p>
-            <div className="mt-6 flex flex-col gap-12">
-              {tier.items.map((p, idx) => (
-                <Row key={p.id} p={p} mediaRight={(idx + tier.offset) % 2 === 1} />
-              ))}
-            </div>
-          </div>
-        ))}
+        {/* Tier 1 — spotlight case studies */}
+        <p className="mt-14 text-[0.9rem] font-semibold text-ink/45" style={{ fontFamily: DISPLAY }}>
+          Client case studies
+        </p>
+        <div className="mt-6 flex flex-col gap-8">
+          {CASE_STUDIES.map((cs, i) => (
+            <CaseCard key={cs.id} cs={cs} mediaRight={i % 2 === 1} />
+          ))}
+        </div>
+
+        {/* Tier 2 — products & experiments */}
+        <p className="mt-16 text-[0.9rem] font-semibold text-ink/45" style={{ fontFamily: DISPLAY }}>
+          Our products &amp; experiments
+        </p>
+        <div className="mt-6 flex flex-col gap-12">
+          {PRODUCTS.map((p, i) => (
+            <ProductRow key={p.id} p={p} mediaRight={i % 2 === 1} />
+          ))}
+        </div>
 
         {/* section CTA → conversion */}
         <p className="mt-16 text-[0.98rem] text-ink/55">

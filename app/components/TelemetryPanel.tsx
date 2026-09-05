@@ -33,22 +33,18 @@ const PANES: Pane[] = [
   {
     tab: "Harbs Farm",
     headline: "20",
-    headlineLabel: "paid bookings in the first week of ads — New York",
+    headlineLabel: "paid bookings in the first week of ads — Harbs Farm, New York",
     figures: [
       ["100%", "of deposits collected up front"],
-      ["1 in 8", "Google visitors becomes a booking"],
-      ["7", "new farmer customers since launch"],
       ["0", "phone calls needed to book"],
     ],
   },
   {
     tab: "All clients",
     headline: "500+",
-    headlineLabel: "appointments tracked in production",
+    headlineLabel: "appointments tracked in production — Texas & New York",
     figures: [
       ["12k+", "funnel visitors measured"],
-      ["TX + NY", "client systems in production"],
-      ["24/7", "AI agents answering & booking"],
       ["1", "team running all of it"],
     ],
   },
@@ -61,7 +57,7 @@ export default function TelemetryPanel() {
   useEffect(() => {
     if (paused) return;
     if (window.matchMedia("(prefers-reduced-motion: reduce)").matches) return;
-    const t = setInterval(() => setI((v) => (v + 1) % PANES.length), 8000);
+    const t = setInterval(() => setI((v) => (v + 1) % PANES.length), 12000);
     return () => clearInterval(t);
   }, [paused]);
 
@@ -78,36 +74,9 @@ export default function TelemetryPanel() {
           Client telemetry
         </span>
         <span className="flex items-center gap-2 text-[0.8rem] text-ink/45">
-          <span aria-hidden className="relative flex h-2 w-2">
-            <span className="absolute inline-flex h-full w-full animate-ping rounded-full bg-[#056AFC] opacity-60" />
-            <span className="relative inline-flex h-2 w-2 rounded-full bg-[#056AFC]" />
-          </span>
+          <span aria-hidden className="inline-block h-2 w-2 rounded-full bg-[#056AFC]" />
           production data
         </span>
-      </div>
-
-      {/* client tabs */}
-      <div className="flex gap-5 pt-4" role="tablist" aria-label="Client meters">
-        {PANES.map((p, idx) => (
-          <button
-            key={p.tab}
-            role="tab"
-            aria-selected={idx === i}
-            onClick={() => setI(idx)}
-            className={`relative pb-1 text-[0.85rem] font-medium transition-colors ${
-              idx === i ? "text-ink" : "text-ink/45 hover:text-ink/70"
-            }`}
-            style={{ fontFamily: DISPLAY }}
-          >
-            {p.tab}
-            <span
-              aria-hidden
-              className={`absolute -bottom-px left-0 h-[2px] bg-gradient-to-r from-brand-pink to-brand-blue transition-all duration-300 ${
-                idx === i ? "w-full" : "w-0"
-              }`}
-            />
-          </button>
-        ))}
       </div>
 
       {/* pane — keyed remount replays the rise animation on switch */}
@@ -145,6 +114,22 @@ export default function TelemetryPanel() {
             </div>
           ))}
         </dl>
+      </div>
+
+      {/* pane dots — quiet, clickable */}
+      <div className="flex justify-center gap-2.5 pt-5" role="tablist" aria-label="Client meters">
+        {PANES.map((p, idx) => (
+          <button
+            key={p.tab}
+            role="tab"
+            aria-selected={idx === i}
+            aria-label={p.tab}
+            onClick={() => setI(idx)}
+            className={`h-1.5 rounded-full transition-all duration-300 ${
+              idx === i ? "w-6 bg-gradient-to-r from-brand-pink to-brand-blue" : "w-1.5 bg-ink/20 hover:bg-ink/40"
+            }`}
+          />
+        ))}
       </div>
     </div>
   );

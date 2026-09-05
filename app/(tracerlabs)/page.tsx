@@ -8,16 +8,14 @@ import Footer from "../components/Footer";
 import JsonLd from "../components/JsonLd";
 import StickyCtaBar from "../components/StickyCtaBar";
 
-// The whole page is now React — no more injected legacy markup. <Nav> sits AFTER the hero so
-// it rests at the bottom of the first screen, then (position: sticky; top: 0) rises to stick
-// at the top as you scroll — the original nav design. <main id="content"> keeps the id the
-// legacy ScreenAnimation/canvas code references (it self-manages from there).
+// Telemetry redesign: the nav sits at the top (the old rests-at-bottom-of-hero
+// behavior is retired). <main id="content"> keeps its id for legacy references.
 export default function Home() {
   return (
     <>
       <JsonLd />
-      <Hero />
       <Nav />
+      <Hero />
       <main id="content">
         <TechBar />
         <Services />

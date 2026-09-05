@@ -1,14 +1,9 @@
-// Tracerlabs recent work — third componentized section, sits between <Services/> and
-// the legacy contact/footer (MARKUP_BOTTOM). Five real, anonymized projects in an
-// alternating feature-row layout (media ⇄ copy). Extends the hero/services design
-// language: black canvas, glass, pink→blue brand accents, Duborics titles, animate-rise.
-// Video media is lazy + in-view-only via the ProjectVideo client component; everything
-// else is a static mockup/image or a styled UI panel. Scoped under #tl-projects.
+// Recent work (Telemetry redesign) — two tiers: client case studies (each
+// links to its full write-up) and our own products & experiments. Media frames
+// (9:16 reels) stay; the copy side is flat editorial — Archivo titles, blue
+// metric figures, hairlines, no glass, no scroll-reveal gating.
 import Image from "next/image";
 import ProjectVideo from "./ProjectVideo";
-import Bevel, { GLASS_BORDER, GLASS_BG } from "./Bevel";
-import Eyebrow from "./Eyebrow";
-import { Kinetic, Reveal } from "./motion";
 
 type Media =
   | { kind: "video"; src: string; poster: string; fit?: "cover" | "contain"; label: string }
@@ -21,10 +16,13 @@ type Project = {
   title: string;
   blurb: string;
   metrics: string[];
-  tech: string[];
+  tech: string;
   link: { label: string; href: string; external?: boolean };
   media: Media;
 };
+
+const DISPLAY = "var(--font-archivo), system-ui, sans-serif";
+const ACCENT = "#056AFC";
 
 const CASE_STUDIES: Project[] = [
   {
@@ -34,7 +32,7 @@ const CASE_STUDIES: Project[] = [
     blurb:
       "A verified-leads funnel paired with an AI texting agent that reaches every lead within minutes and books the consultation — plus a confirmation agent that reminds and reschedules so appointments actually happen. Fake numbers blocked at the door, calendar full.",
     metrics: ["367 consults booked", "Lead → consult rate doubled", "94% show rate"],
-    tech: ["Next.js", "Retell", "Twilio", "GoHighLevel"],
+    tech: "Next.js, Retell, Twilio, GoHighLevel",
     link: { label: "Read the full case study", href: "/work/solar-lead-engine" },
     media: {
       kind: "video",
@@ -46,12 +44,12 @@ const CASE_STUDIES: Project[] = [
   },
   {
     id: "meatops",
-    client: "Harbs Farm · Meat processing, New York",
+    client: "Harbs Farm — meat processing, New York",
     title: "The platform that runs Harbs Farm end-to-end",
     blurb:
       "We took a farm running on phone calls and paper fully online: a booking wizard for farmers, deposits through Square, a kanban processing board for staff, capacity the owner controls from a calendar — plus the ad campaigns and reminder ladders that fill it.",
-    metrics: ["20 bookings, every deposit paid — week 1 of ads", "1 in 8 Google visitors books", "Booking → cut sheet → payment"],
-    tech: ["Next.js", "Supabase", "Square", "Meta Ads"],
+    metrics: ["20 bookings, every deposit paid — week 1 of ads", "1 in 8 Google visitors books"],
+    tech: "Next.js, Supabase, Square, Meta Ads",
     link: { label: "Read the full case study", href: "/work/harbs-farm" },
     media: { kind: "panel" },
   },
@@ -60,12 +58,12 @@ const CASE_STUDIES: Project[] = [
 const PRODUCTS: Project[] = [
   {
     id: "canvassing",
-    client: "Our product · Offset Canvassing",
+    client: "Our product — Offset Canvassing",
     title: "A GIS canvassing app that turns every door into intelligence",
     blurb:
       "Offset Canvassing gives roofing and door-to-door teams a GIS-style map layered with public homeowner data — plus a companion mobile CRM so reps capture intel in the field, track territory, and never knock the same door twice.",
-    metrics: ["GIS + public homeowner data", "Companion mobile CRM", "Built for roofing & D2D"],
-    tech: ["Next.js", "React Native", "Google Maps", "Census data", "Supabase"],
+    metrics: ["GIS + public homeowner data", "Companion mobile CRM"],
+    tech: "Next.js, React Native, Google Maps, Supabase",
     link: { label: "See the live page", href: "https://offset-canvassing.vercel.app/", external: true },
     media: {
       kind: "video",
@@ -81,8 +79,8 @@ const PRODUCTS: Project[] = [
     title: "An AI coach that builds martial-arts training and meal plans",
     blurb:
       "A cross-platform fitness app where an AI “sensei” generates personalized workouts, nutrition guidance, and grocery lists — kitchen to gym, on iOS, Android, and web.",
-    metrics: ["Personalized AI coach", "iOS · Android · Web", "Auto meal plans"],
-    tech: ["Flutter", "React", "Gemini", "Supabase"],
+    metrics: ["Personalized AI coach", "iOS, Android & web"],
+    tech: "Flutter, React, Gemini, Supabase",
     link: { label: "See it live", href: "https://beastmode.tracerlabs.io/", external: true },
     media: { kind: "image", src: "/assets/project2.png", alt: "AI fitness app on phone and laptop.", fit: "contain" },
   },
@@ -92,8 +90,8 @@ const PRODUCTS: Project[] = [
     title: "Cinematic video ads, generated with AI",
     blurb:
       "We script, generate, and render scroll-stopping video ads with a Remotion + fal.ai pipeline — full campaigns shipped in days, not weeks, for a fraction of a traditional production crew.",
-    metrics: ["Remotion + fal.ai", "Campaigns in days", "10+ reels shipped"],
-    tech: ["Remotion", "fal.ai", "Next.js"],
+    metrics: ["Campaigns in days", "10+ reels shipped"],
+    tech: "Remotion, fal.ai, Next.js",
     link: { label: "Get a reel for your brand", href: "#contact" },
     media: {
       kind: "video",
@@ -105,45 +103,63 @@ const PRODUCTS: Project[] = [
   },
 ];
 
-function Arrow() {
-  return (
-    <svg className="h-3.5 w-3.5 transition-transform duration-300 group-hover/lk:translate-x-1" viewBox="0 0 16 16" fill="none" stroke="currentColor" strokeWidth="1.8">
-      <path d="M3 8h10M9 4l4 4-4 4" strokeLinecap="round" strokeLinejoin="round" />
-    </svg>
-  );
-}
-
-// Portrait mobile-ops-list motif for the (image-less, anonymized) meat-processing project.
-// Reads like the staff app: a vertical list of orders with status pills — fits the 9:16 card.
+// Kanban-style ops board rendering for the Harbs Farm platform.
 function OpsPanel() {
   const STATUS = {
-    drop: { label: "Drop-off", color: "#8a8a93" },
-    proc: { label: "Processing", color: "#e7028d" },
-    ready: { label: "Ready", color: "#056afc" },
+    drop: { label: "Drop-off", color: "#8a8a93", bg: "rgba(138,138,147,0.15)" },
+    proc: { label: "Processing", color: "#e7028d", bg: "rgba(231,2,141,0.12)" },
+    ready: { label: "Ready", color: "#056afc", bg: "rgba(5,106,252,0.12)" },
   } as const;
   const orders: (keyof typeof STATUS)[] = ["ready", "proc", "proc", "drop", "ready", "drop", "proc"];
   return (
     <div className="absolute inset-0 flex flex-col gap-3 p-4">
       <div className="flex items-center justify-between">
-        <span className="inline-flex items-center gap-1.5 text-[0.62rem] font-semibold uppercase tracking-[0.16em] text-white/55">
-          <span className="h-1.5 w-1.5 rounded-full bg-brand-pink" />
+        <span className="text-[0.7rem] font-semibold text-white/55" style={{ fontFamily: DISPLAY }}>
           Processing board
         </span>
-        <span className="text-[0.55rem] font-medium uppercase tracking-wide text-white/30">Today</span>
+        <span className="text-[0.6rem] font-medium text-white/30">Today</span>
       </div>
+
+      {/* mini stat row */}
+      <div className="grid grid-cols-3 gap-2">
+        {[
+          { v: "24", l: "Active" },
+          { v: "8", l: "Ready" },
+          { v: "3", l: "Issues" },
+        ].map((s) => (
+          <div key={s.l} className="flex flex-col items-center bg-white/[0.045] py-2">
+            <span className="text-[0.95rem] font-bold text-white/80">{s.v}</span>
+            <span className="text-[0.55rem] text-white/35">{s.l}</span>
+          </div>
+        ))}
+      </div>
+
+      {/* progress bar */}
+      <div className="flex items-center gap-2">
+        <div className="h-1.5 flex-1 overflow-hidden rounded-full bg-white/[0.08]">
+          <div className="h-full w-[68%] rounded-full" style={{ backgroundColor: "#056afc" }} />
+        </div>
+        <span className="text-[0.55rem] font-semibold text-white/50">68%</span>
+      </div>
+
       <div className="flex flex-1 flex-col gap-2 overflow-hidden">
         {orders.map((k, i) => {
           const s = STATUS[k];
           return (
-            <div key={i} className="bv-6 flex items-center gap-2.5 bg-white/[0.045] p-2.5">
-              <span className="bv-6 h-7 w-7 shrink-0 bg-white/[0.09]" />
+            <div key={i} className="flex items-center gap-2.5 bg-white/[0.04] p-2.5">
+              <span className="flex h-7 w-7 shrink-0 items-center justify-center bg-white/[0.08]">
+                <svg className="h-3.5 w-3.5 text-white/40" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                  <rect x="3" y="4" width="18" height="18" rx="2" />
+                  <path d="M16 2v4M8 2v4M3 10h18" />
+                </svg>
+              </span>
               <div className="min-w-0 flex-1">
-                <div className="h-1.5 w-3/4 rounded-full bg-white/18" />
+                <div className="h-1.5 w-3/4 rounded-full bg-white/20" />
                 <div className="mt-1.5 h-1.5 w-1/2 rounded-full bg-white/10" />
               </div>
               <span
-                className="bv-6 shrink-0 px-2 py-0.5 text-[0.55rem] font-semibold"
-                style={{ color: s.color, backgroundColor: `${s.color}22` }}
+                className="shrink-0 px-2 py-0.5 text-[0.55rem] font-semibold"
+                style={{ color: s.color, backgroundColor: s.bg }}
               >
                 {s.label}
               </span>
@@ -155,161 +171,116 @@ function OpsPanel() {
   );
 }
 
-const FRAME_CLIP =
-  "polygon(0 0, calc(100% - 16px) 0, 100% 16px, 100% 100%, 16px 100%, 0 calc(100% - 16px))";
-
-// Beveled media panel: outer = border edge, inner (inset-px) = fill + media, both chamfered.
+// Media panel — plain hairline frame; the 9:16 reel is the content.
 function Frame({ media }: { media: Media }) {
   return (
-    <div
-      className="relative aspect-[9/16] w-full"
-      style={{ clipPath: FRAME_CLIP, backgroundColor: "rgba(255,255,255,0.10)", filter: "var(--tl-frame-shadow, none)" }}
-    >
-      <div
-        className="absolute inset-px overflow-hidden"
-        style={{
-          clipPath: FRAME_CLIP,
-          backgroundImage:
-            "radial-gradient(80% 60% at 70% 20%, rgba(255,255,255,0.05), transparent 70%), linear-gradient(160deg,#121216,#0a0a0d)",
-        }}
-      >
-        {media.kind === "video" && (
-          <ProjectVideo src={media.src} poster={media.poster} label={media.label} fit={media.fit} />
-        )}
-        {media.kind === "image" && (
-          <Image
-            src={media.src}
-            alt={media.alt}
-            fill
-            sizes="(max-width: 1024px) 100vw, 20rem"
-            className={`object-${media.fit === "contain" ? "contain p-6" : "cover"}`}
-            loading="lazy"
-          />
-        )}
-        {media.kind === "panel" && <OpsPanel />}
-        {/* inner top sheen */}
-        <div aria-hidden className="pointer-events-none absolute inset-0" style={{ background: "linear-gradient(160deg, rgba(255,255,255,0.05) 0%, transparent 28%)" }} />
-      </div>
+    <div className="relative aspect-[9/16] w-full overflow-hidden border border-ink/10 bg-[#0b0b0f]">
+      {media.kind === "video" && (
+        <ProjectVideo src={media.src} poster={media.poster} label={media.label} fit={media.fit} />
+      )}
+      {media.kind === "image" && (
+        <Image
+          src={media.src}
+          alt={media.alt}
+          fill
+          sizes="(max-width: 1024px) 100vw, 20rem"
+          className={`object-${media.fit === "contain" ? "contain p-6" : "cover"}`}
+          loading="lazy"
+        />
+      )}
+      {media.kind === "panel" && <OpsPanel />}
     </div>
+  );
+}
+
+function Row({ p, mediaRight }: { p: Project; mediaRight: boolean }) {
+  return (
+    <article
+      id={`work-${p.id}`}
+      className={`scroll-mt-24 flex flex-col gap-8 border-t border-ink/10 pt-12 lg:flex-row lg:gap-14 ${mediaRight ? "lg:flex-row-reverse" : ""}`}
+    >
+      <div className="w-full lg:w-[19rem] lg:shrink-0">
+        <Frame media={p.media} />
+      </div>
+      <div className="w-full min-w-0 lg:flex-1 lg:self-center">
+        <p className="text-[0.9rem] text-ink/50">{p.client}</p>
+        <h3
+          className="mt-2 max-w-[26ch] text-[clamp(1.4rem,2.4vw,1.85rem)] font-bold leading-[1.15] tracking-tight text-ink"
+          style={{ fontFamily: DISPLAY }}
+        >
+          {p.title}
+        </h3>
+        <p className="mt-4 max-w-[40rem] text-[0.98rem] leading-[1.7] text-ink/60">{p.blurb}</p>
+
+        <ul className="mt-5 flex list-none flex-col gap-1.5 p-0">
+          {p.metrics.map((m) => (
+            <li key={m} className="text-[0.95rem] font-semibold" style={{ color: ACCENT }}>
+              {m}
+            </li>
+          ))}
+        </ul>
+
+        <p className="mt-3 text-[0.82rem] text-ink/40">{p.tech}</p>
+
+        <a
+          href={p.link.href}
+          {...(p.link.external ? { target: "_blank", rel: "noopener noreferrer" } : {})}
+          className="mt-6 inline-block text-[0.95rem] font-semibold text-ink/75 underline decoration-ink/25 underline-offset-4 transition-colors hover:text-ink hover:decoration-ink/60"
+        >
+          {p.link.label}
+        </a>
+      </div>
+    </article>
   );
 }
 
 export default function Projects() {
   return (
-    <section id="tl-projects" className="font-body relative isolate w-full overflow-hidden bg-page text-ink">
+    <section id="tl-projects" className="font-body w-full bg-page text-ink">
       {/* scroll anchor: legacy/service links point at #projects (section id is tl-projects) */}
       <div id="projects" aria-hidden />
-      {/* ambient brand glow */}
-      <div
-        aria-hidden
-        className="pointer-events-none absolute right-0 top-1/4 -z-10 h-[42vw] w-[50vw] rounded-full opacity-[0.13] blur-[150px]"
-        style={{ background: "radial-gradient(circle, rgba(231,2,141,0.28) 0%, rgba(5,106,252,0.14) 45%, transparent 72%)" }}
-      />
-
-      <div className="mx-auto w-full max-w-[1280px] px-6 py-20 sm:px-10 sm:py-24 lg:py-28">
+      <div className="mx-auto w-full max-w-[1280px] border-t border-ink/10 px-6 py-16 sm:px-10 sm:py-20 lg:py-24">
         {/* header */}
         <div className="max-w-[44rem]">
-          <Eyebrow>Recent work</Eyebrow>
-          <Kinetic
-            segments={[{ text: "Work we've " }, { text: "shipped", gradient: true }]}
-            className="font-display mt-6 text-[clamp(2rem,5vw,3.4rem)] font-normal uppercase leading-[1.0] tracking-tight"
-          />
-          <Reveal delay={0.15}>
-            <p className="mt-5 max-w-[40rem] text-[1.02rem] leading-relaxed text-ink/55">
-              Real products in production — voice agents, field-sales platforms, operations software, and AI video. A sample of what we&apos;ve built for the businesses we work with.
-            </p>
-          </Reveal>
+          <p className="text-[0.98rem] text-ink/50">Recent work</p>
+          <h2
+            className="mt-4 text-[clamp(1.9rem,4vw,2.8rem)] font-extrabold leading-[1.08] tracking-tight text-ink"
+            style={{ fontFamily: DISPLAY }}
+          >
+            Work we&apos;ve shipped.
+          </h2>
+          <p className="mt-5 max-w-[40rem] text-[1.05rem] leading-[1.7] text-ink/60">
+            Real products in production — funnels, AI agents, field-sales
+            platforms, operations software, and AI video.
+          </p>
         </div>
 
-        {/* Tier 1 — client case studies (each links to its full write-up),
-            Tier 2 — our own products & experiments (link to the live thing).
-            One continuous alternating layout; a small label opens each tier. */}
         {[
           { label: "Client case studies", items: CASE_STUDIES, offset: 0 },
           { label: "Our products & experiments", items: PRODUCTS, offset: CASE_STUDIES.length },
         ].map((tier) => (
-        <div key={tier.label}>
-        <Reveal delay={0.1}>
-          <p className="mt-14 text-[0.72rem] font-semibold uppercase tracking-[0.24em] text-ink/40">
-            {tier.label}
-          </p>
-        </Reveal>
-        <div className="mt-8 flex flex-col gap-16 sm:gap-20 lg:gap-24">
-          {tier.items.map((p, idx) => {
-            const i = idx + tier.offset;
-            const mediaRight = i % 2 === 1; // alternate sides on lg
-            return (
-              <Reveal key={p.id} y={36} amount={0.12}>
-              <article
-                id={`work-${p.id}`}
-                className={`scroll-mt-24 flex flex-col gap-9 lg:flex-row lg:items-stretch lg:gap-14 ${mediaRight ? "lg:flex-row-reverse" : ""}`}
-              >
-                {/* media — full width on mobile (tall 9:16 reel), phone-width on lg.
-                    With flex-row(-reverse) + default justify, the slack falls to the outer edge,
-                    so each media+copy cluster sits toward the inner side (alternating). */}
-                <div className="w-full lg:w-[20rem] lg:shrink-0">
-                  <Frame media={p.media} />
-                </div>
-                {/* copy — carded in the same dark-glass Bevel as the Services tiles, so each
-                    row reads as two matching panels (media frame + copy card) instead of
-                    panel-plus-loose-text. Stretches to the media height for an even row. */}
-                <Bevel
-                  bevel={16}
-                  border={GLASS_BORDER}
-                  bg={GLASS_BG}
-                  innerClassName="backdrop-blur-md"
-                  className="w-full min-w-0 lg:flex-1"
-                >
-                  <div className="flex h-full flex-col justify-center p-7 sm:p-10">
-                    <div className="text-[0.72rem] font-semibold uppercase tracking-[0.2em] text-ink/40">{p.client}</div>
-                    <h3 className="font-display mt-3 text-[clamp(1.4rem,2.6vw,1.9rem)] font-normal leading-tight tracking-tight">{p.title}</h3>
-                    <p className="mt-4 text-[0.98rem] leading-relaxed text-ink/55 lg:max-w-[42rem]">{p.blurb}</p>
-
-                    {/* metric chips — neutral beveled glass (restraint: accent lives at focal points, not here) */}
-                    <ul className="mt-6 flex flex-wrap gap-2">
-                      {p.metrics.map((m) => (
-                        <li key={m} className="bv-6 inline-flex items-center bg-ink/[0.06] px-3 py-1 text-[0.78rem] font-medium text-ink/80">
-                          {m}
-                        </li>
-                      ))}
-                    </ul>
-
-                    {/* tech badges */}
-                    <ul className="mt-4 flex flex-wrap gap-2">
-                      {p.tech.map((t) => (
-                        <li key={t} className="bv-6 bg-ink/[0.045] px-3 py-1 text-[0.72rem] font-medium tracking-wide text-ink/50">{t}</li>
-                      ))}
-                    </ul>
-
-                    {/* link */}
-                    <a
-                      href={p.link.href}
-                      {...(p.link.external ? { target: "_blank", rel: "noopener noreferrer" } : {})}
-                      className="group/lk mt-7 inline-flex items-center gap-1.5 text-[0.88rem] font-semibold text-ink/70 transition-colors hover:text-ink"
-                    >
-                      {p.link.label}
-                      <Arrow />
-                    </a>
-                  </div>
-                </Bevel>
-              </article>
-              </Reveal>
-            );
-          })}
-        </div>
-        </div>
+          <div key={tier.label}>
+            <p className="mt-14 text-[0.9rem] font-semibold text-ink/45" style={{ fontFamily: DISPLAY }}>
+              {tier.label}
+            </p>
+            <div className="mt-6 flex flex-col gap-12">
+              {tier.items.map((p, idx) => (
+                <Row key={p.id} p={p} mediaRight={(idx + tier.offset) % 2 === 1} />
+              ))}
+            </div>
+          </div>
         ))}
 
         {/* section CTA → conversion */}
-        <Reveal amount={0.6} y={14}>
-          <p className="mt-16 text-[0.98rem] text-ink/55">
-            Have something like this in mind?{" "}
-            <a href="#contact" className="group/lk inline-flex items-center gap-1.5 font-semibold text-ink/80 transition-colors hover:text-ink">
-              Tell us what you&apos;re building
-              <Arrow />
-            </a>
-          </p>
-        </Reveal>
+        <p className="mt-16 text-[0.98rem] text-ink/55">
+          Have something like this in mind?{" "}
+          <a
+            href="#contact"
+            className="font-semibold text-ink/80 underline decoration-ink/25 underline-offset-4 transition-colors hover:text-ink hover:decoration-ink/60"
+          >
+            Tell us what you&apos;re building
+          </a>
+        </p>
       </div>
     </section>
   );

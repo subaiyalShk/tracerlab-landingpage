@@ -1,14 +1,13 @@
 import type { Metadata } from "next";
-import Nav from "../../../components/Nav";
 import Footer from "../../../components/Footer";
 import Bevel, { GLASS_BORDER, GLASS_BG } from "../../../components/Bevel";
-import Eyebrow from "../../../components/Eyebrow";
 import Button from "../../../components/Button";
-import { Kinetic, Reveal } from "../../../components/motion";
+import CaseHeader from "../../../components/CaseHeader";
 
 // Case study: Harbs Farm — the flagship client story (named with permission).
-// Content page: Nav sticks from the top (no full-height hero), sections inherit the
-// site's design language (glass Bevel panels, brand gradients, font-body/font-display).
+// Telemetry design language (matches /work/solar-lead-engine): Archivo
+// headings, flat hairline panels, blue results accent, no reveal gating,
+// the brand gradient exactly once (the hero number).
 
 export const metadata: Metadata = {
   title: "Case Study: Harbs Farm",
@@ -26,12 +25,8 @@ export const metadata: Metadata = {
   },
 };
 
-const STATS = [
-  { v: "20", l: "paid bookings in week one of ads" },
-  { v: "100%", l: "of deposits collected up front" },
-  { v: "1 in 8", l: "Google visitors becomes a booking" },
-  { v: "7", l: "new farmer customers since launch" },
-];
+const DISPLAY = "var(--font-archivo), system-ui, sans-serif";
+const ACCENT = "#056AFC";
 
 const BUILT = [
   {
@@ -60,90 +55,77 @@ const BUILT = [
   },
 ];
 
-function StatTile({ v, l }: { v: string; l: string }) {
+function Section({ title, children }: { title: string; children: React.ReactNode }) {
   return (
-    <Bevel bevel={12} border={GLASS_BORDER} bg={GLASS_BG} className="h-full">
-      <div className="flex h-full flex-col items-start p-5">
-        <span className="font-body bg-gradient-to-r from-brand-pink to-brand-blue bg-clip-text text-[1.9rem] font-bold leading-none text-transparent">
-          {v}
-        </span>
-        <span className="mt-2 text-[0.85rem] leading-snug text-ink/55">{l}</span>
+    <section className="mx-auto w-full max-w-[880px] border-t border-ink/10 px-6 py-12 sm:px-10 sm:py-14">
+      <h2
+        className="text-[clamp(1.5rem,3vw,2rem)] font-bold leading-tight tracking-tight text-ink"
+        style={{ fontFamily: DISPLAY }}
+      >
+        {title}
+      </h2>
+      <div className="mt-5 flex flex-col gap-4 text-[1.04rem] leading-[1.75] text-ink/62">
+        {children}
       </div>
-    </Bevel>
-  );
-}
-
-function Section({
-  eyebrow,
-  title,
-  children,
-}: {
-  eyebrow: string;
-  title: string;
-  children: React.ReactNode;
-}) {
-  return (
-    <section className="mx-auto w-full max-w-[880px] px-6 py-14 sm:px-10 sm:py-16">
-      <Reveal>
-        <Eyebrow>{eyebrow}</Eyebrow>
-        <h2 className="font-display mt-5 text-[clamp(1.5rem,3.4vw,2.2rem)] font-normal uppercase leading-tight tracking-tight">
-          {title}
-        </h2>
-        <div className="mt-5 flex flex-col gap-4 text-[1.02rem] leading-relaxed text-ink/60">
-          {children}
-        </div>
-      </Reveal>
     </section>
   );
 }
 
 export default function HarbsFarmCaseStudy() {
   return (
-    <>
-      <Nav
-        links={[
-          { label: "Services", href: "/#tl-services" },
-          { label: "Works", href: "/#tl-projects" },
-        ]}
-        contactHref="/#contact"
-      />
-      <main className="font-body relative isolate w-full overflow-hidden bg-page text-ink">
-        {/* ambient brand glow */}
-        <div
-          aria-hidden
-          className="pointer-events-none absolute left-1/2 top-0 -z-10 h-[40vw] w-[70vw] -translate-x-1/2 rounded-full opacity-[0.16] blur-[140px]"
-          style={{
-            background:
-              "radial-gradient(circle, rgba(231,2,141,0.32) 0%, rgba(5,106,252,0.16) 45%, transparent 72%)",
-          }}
-        />
-
+    <div>
+      <CaseHeader />
+      <main className="font-body w-full bg-page text-ink">
         {/* Header */}
-        <header className="mx-auto w-full max-w-[880px] px-6 pb-4 pt-16 sm:px-10 sm:pt-20">
-          <Eyebrow>Case study · Meat processing · New York</Eyebrow>
-          <Kinetic
-            as="h1"
-            segments={[{ text: "Harbs Farm", gradient: true }]}
-            className="font-display mt-6 text-[clamp(2.4rem,6vw,3.8rem)] font-normal uppercase leading-[1.0] tracking-tight"
-          />
-          <Reveal delay={0.15}>
-            <p className="mt-6 max-w-[40rem] text-[1.15rem] leading-relaxed text-ink/60">
-              A family-run farm and meat-processing facility that ran on phone
-              calls and paper. Today its customers book, pay, and track their
-              orders online — and the ads that keep the calendar full run on the
-              same system.
-            </p>
-          </Reveal>
-          <Reveal delay={0.25}>
-            <div className="mt-10 grid grid-cols-2 gap-3 sm:grid-cols-4">
-              {STATS.map((s) => (
-                <StatTile key={s.l} {...s} />
-              ))}
+        <header className="mx-auto w-full max-w-[880px] px-6 pb-12 pt-16 sm:px-10 sm:pt-20">
+          <p className="text-[0.95rem] text-ink/50">Case study — meat processing, New York</p>
+          <h1
+            className="mt-4 max-w-[16ch] text-[clamp(2.1rem,5vw,3.4rem)] font-extrabold leading-[1.06] tracking-tight text-ink"
+            style={{ fontFamily: DISPLAY }}
+          >
+            Harbs Farm runs online now.
+          </h1>
+          <p className="mt-6 max-w-[42rem] text-[1.12rem] leading-[1.7] text-ink/60">
+            A family-run farm and meat-processing facility that ran on phone
+            calls and paper. Today its customers book, pay, and track their
+            orders online — and the ads that keep the calendar full run on the
+            same system.
+          </p>
+
+          {/* Hero figure — the page's single gradient moment */}
+          <div className="mt-12 flex flex-wrap items-end gap-x-12 gap-y-8 border-y border-ink/10 py-8">
+            <div>
+              <div
+                className="bg-gradient-to-r from-brand-pink to-brand-blue bg-clip-text text-[clamp(4rem,9vw,6.5rem)] font-extrabold leading-none tracking-tight text-transparent"
+                style={{ fontFamily: DISPLAY }}
+              >
+                20
+              </div>
+              <div className="mt-2 text-[1rem] text-ink/60">
+                paid bookings in the first week of ads
+              </div>
             </div>
-          </Reveal>
+            <dl className="flex flex-wrap gap-x-10 gap-y-5 pb-1">
+              {[
+                ["100%", "of deposits collected up front"],
+                ["1 in 8", "Google visitors becomes a booking"],
+                ["7", "new farmer customers since launch"],
+              ].map(([v, l]) => (
+                <div key={l}>
+                  <dt className="sr-only">{l}</dt>
+                  <dd>
+                    <span className="text-[1.6rem] font-bold tracking-tight text-ink" style={{ fontFamily: DISPLAY }}>
+                      {v}
+                    </span>
+                    <span className="mt-1 block max-w-[11rem] text-[0.88rem] leading-snug text-ink/55">{l}</span>
+                  </dd>
+                </div>
+              ))}
+            </dl>
+          </div>
         </header>
 
-        <Section eyebrow="The problem" title="Everything went through the phone">
+        <Section title="Everything went through the phone">
           <p>
             Every booking was a phone call. Deposits weren&apos;t collected, so
             no-shows cost real money. Cut-sheet details lived on paper and got
@@ -158,22 +140,20 @@ export default function HarbsFarmCaseStudy() {
           </p>
         </Section>
 
-        <Section eyebrow="What we built" title="One system, from ad click to pickup">
-          <div className="mt-2 grid grid-cols-1 gap-4 sm:grid-cols-2">
+        <Section title="One system, from ad click to pickup">
+          <div className="mt-1 grid grid-cols-1 gap-4 sm:grid-cols-2">
             {BUILT.map((b) => (
-              <Bevel key={b.t} bevel={12} border={GLASS_BORDER} bg={GLASS_BG} className="h-full">
-                <div className="p-5">
-                  <h3 className="font-display text-[1.05rem] font-normal leading-tight tracking-tight">
-                    {b.t}
-                  </h3>
-                  <p className="mt-2 text-[0.9rem] leading-relaxed text-ink/55">{b.d}</p>
-                </div>
-              </Bevel>
+              <div key={b.t} className="border border-ink/10 p-5">
+                <h3 className="text-[1.02rem] font-bold leading-tight tracking-tight text-ink" style={{ fontFamily: DISPLAY }}>
+                  {b.t}
+                </h3>
+                <p className="mt-2 text-[0.9rem] leading-relaxed text-ink/55">{b.d}</p>
+              </div>
             ))}
           </div>
         </Section>
 
-        <Section eyebrow="The results" title="Paid bookings, not phone tag">
+        <Section title="Paid bookings, not phone tag">
           <p>
             In the first week of paid ads the farm took{" "}
             <strong className="font-semibold text-ink/85">
@@ -188,39 +168,39 @@ export default function HarbsFarmCaseStudy() {
           </p>
         </Section>
 
-        <Section eyebrow="What's next" title="Wiring in the processing line itself">
-          <p>
-            The next phase connects the scales and machines on the processing
-            line directly into the platform — weights flowing straight from the
-            floor into orders and pricing, no manual entry. The goal: admins run
-            the entire operation, from ad click to finished order, through a
-            single interface.
-          </p>
+        <Section title="Next: wiring in the processing line itself">
+          <div className="border-l-2 pl-6" style={{ borderColor: ACCENT }}>
+            <p>
+              The next phase connects the scales and machines on the processing
+              line directly into the platform — weights flowing straight from
+              the floor into orders and pricing, no manual entry. The goal:
+              admins run the entire operation, from ad click to finished order,
+              through a single interface.
+            </p>
+          </div>
         </Section>
 
-        {/* CTA */}
-        <section className="mx-auto w-full max-w-[880px] px-6 pb-20 pt-6 sm:px-10">
-          <Reveal>
-            <Bevel bevel={16} border={GLASS_BORDER} bg={GLASS_BG}>
-              <div className="flex flex-col items-start gap-5 p-8 sm:flex-row sm:items-center sm:justify-between sm:p-10">
-                <div>
-                  <h2 className="font-display text-[1.5rem] font-normal uppercase leading-tight tracking-tight">
-                    Run your operation like this
-                  </h2>
-                  <p className="mt-2 max-w-[30rem] text-[0.95rem] text-ink/55">
-                    If your business still runs on phone calls and paper, we can
-                    build the system that runs it instead.
-                  </p>
-                </div>
-                <Button href="/#contact" variant="primary">
-                  Start your project
-                </Button>
+        {/* CTA — the page's one chamfered panel */}
+        <section className="mx-auto w-full max-w-[880px] px-6 pb-20 pt-4 sm:px-10">
+          <Bevel bevel={16} border={GLASS_BORDER} bg={GLASS_BG}>
+            <div className="flex flex-col items-start gap-5 p-8 sm:flex-row sm:items-center sm:justify-between sm:p-10">
+              <div>
+                <h2 className="text-[1.4rem] font-bold leading-tight tracking-tight text-ink" style={{ fontFamily: DISPLAY }}>
+                  Run your operation like this
+                </h2>
+                <p className="mt-2 max-w-[30rem] text-[0.95rem] text-ink/55">
+                  If your business still runs on phone calls and paper, we can
+                  build the system that runs it instead.
+                </p>
               </div>
-            </Bevel>
-          </Reveal>
+              <Button href="/#contact" variant="primary">
+                Start your project
+              </Button>
+            </div>
+          </Bevel>
         </section>
       </main>
       <Footer />
-    </>
+    </div>
   );
 }

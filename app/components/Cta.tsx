@@ -1,16 +1,16 @@
-// Closing CTA — the in-browser voice agent is the centerpiece (and a live demo of the
-// product). Server component: reads env to decide whether voice is provisioned, and passes
-// a boolean + the Cal.com fallback URL to the client widget (no secrets reach the browser).
-// Scoped #tl-cta; carries a neutralized #contact anchor so existing #contact links land here.
+// Closing CTA (Telemetry redesign) — the in-browser voice agent stays the
+// centerpiece (it's a live demo of the product), now with a visible direct
+// booking link for visitors who won't take a voice call. Server component:
+// reads env to decide whether voice is provisioned (no secrets reach the
+// browser). Carries the #contact anchor every CTA on the site points at.
 import VoiceWidget from "./VoiceWidget";
-import Bevel, { GLASS_BORDER, GLASS_BG } from "./Bevel";
-import Eyebrow from "./Eyebrow";
-import { CountUp, Kinetic, Reveal } from "./motion";
+
+const DISPLAY = "var(--font-archivo), system-ui, sans-serif";
 
 const STEPS = [
-  { n: 1, t: "Talk to our AI", d: "A 2-minute voice chat — it asks what you're building." },
-  { n: 2, t: "It books your call", d: "Right there on the call, into our calendar." },
-  { n: 3, t: "We design & build", d: "Production-grade, shipped fast." },
+  { n: "1", t: "Talk to our AI", d: "A 2-minute voice chat — it asks what you're building." },
+  { n: "2", t: "It books your call", d: "Right there on the call, into our calendar." },
+  { n: "3", t: "We design & build", d: "Production-grade, shipped fast." },
 ];
 
 export default function Cta() {
@@ -18,74 +18,59 @@ export default function Cta() {
   const calcomUrl = process.env.NEXT_PUBLIC_CAL_BOOKING_LINK || "https://cal.com/team/tracerlabs/discovery-call";
 
   return (
-    <section id="tl-cta" className="font-body relative isolate w-full overflow-hidden bg-page text-ink">
-      {/* scroll anchor for #contact links (hero CTA, nav) — legacy #contact CSS neutralized in globals.css */}
+    <section id="tl-cta" className="font-body w-full bg-page text-ink">
+      {/* scroll anchor for #contact links (hero CTA, nav) */}
       <div id="contact" aria-hidden />
 
-      {/* ambient brand glow, centered behind the orb */}
-      <div
-        aria-hidden
-        className="pointer-events-none absolute left-1/2 top-1/3 -z-10 h-[52vw] w-[64vw] -translate-x-1/2 -translate-y-1/2 rounded-full opacity-[0.28] blur-[150px]"
-        style={{ background: "radial-gradient(circle, rgba(231,2,141,0.34) 0%, rgba(5,106,252,0.18) 45%, transparent 72%)" }}
-      />
+      <div className="mx-auto flex w-full max-w-[820px] flex-col items-center border-t border-ink/10 px-6 py-16 text-center sm:px-10 sm:py-20 lg:py-24">
+        <h2
+          className="max-w-[16ch] text-[clamp(1.9rem,4.4vw,3rem)] font-extrabold leading-[1.08] tracking-tight text-ink"
+          style={{ fontFamily: DISPLAY }}
+        >
+          Ready to put AI to work?
+        </h2>
 
-      <div className="mx-auto flex w-full max-w-[820px] flex-col items-center px-6 py-20 text-center sm:px-10 sm:py-24 lg:py-28">
-        <Eyebrow>Let&apos;s build</Eyebrow>
-
-        <Kinetic
-          segments={[{ text: "Ready to put " }, { text: "AI to work?", gradient: true }]}
-          className="font-display mt-7 text-[clamp(2.1rem,5.5vw,3.6rem)] font-normal uppercase leading-[1.02] tracking-tight"
-        />
-
-        <Reveal delay={0.2}>
-          <p className="mt-6 max-w-[34rem] text-[1.05rem] leading-relaxed text-ink/55">
-            Talk to our AI for two minutes — it&apos;ll learn what you&apos;re building and book your
-            call on the spot. Yes, it&apos;s one of ours.
-          </p>
-        </Reveal>
+        <p className="mt-5 max-w-[34rem] text-[1.05rem] leading-[1.7] text-ink/60">
+          Talk to our AI for two minutes — it&apos;ll learn what you&apos;re
+          building and book your call on the spot. Yes, it&apos;s one of ours.
+        </p>
 
         {/* The voice agent */}
-        <Reveal delay={0.35} amount={0.2}>
-          <div className="mt-12">
-            <VoiceWidget voiceEnabled={voiceEnabled} calcomUrl={calcomUrl} />
-          </div>
-        </Reveal>
+        <div className="mt-10">
+          <VoiceWidget voiceEnabled={voiceEnabled} calcomUrl={calcomUrl} />
+        </div>
+
+        {/* Fallback for visitors who won't take a voice call */}
+        <p className="mt-6 text-[0.95rem] text-ink/55">
+          Rather not talk to an AI?{" "}
+          <a
+            href={calcomUrl}
+            target="_blank"
+            rel="noopener noreferrer"
+            className="font-semibold text-ink/80 underline decoration-ink/25 underline-offset-4 transition-colors hover:text-ink hover:decoration-ink/60"
+          >
+            Book a call directly
+          </a>
+        </p>
 
         {/* What happens next */}
-        <ol className="mt-16 grid w-full grid-cols-1 gap-4 text-left sm:grid-cols-3">
-          {STEPS.map((s, i) => (
-            <li key={s.n}>
-              <Reveal delay={i * 0.12} y={24} amount={0.3} className="h-full">
-              <Bevel bevel={12} border={GLASS_BORDER} bg={GLASS_BG} className="h-full">
-                <div className="p-5">
-                  <span
-                    className="bv-6 inline-flex h-7 w-7 items-center justify-center text-[0.8rem] font-bold text-[#e9eaef]"
-                    style={{
-                      backgroundImage: "linear-gradient(145deg, #2b2c33, #16171b)",
-                      boxShadow:
-                        "inset 0 1px 1px rgba(255,255,255,0.14), inset 0 -2px 3px rgba(0,0,0,0.55), 0 4px 12px -6px rgba(0,0,0,0.6)",
-                      textShadow: "0 1px 1px rgba(0,0,0,0.75), 0 -0.5px 0.5px rgba(255,255,255,0.3)",
-                    }}
-                  >
-                    {s.n}
-                  </span>
-                  <h3 className="font-display mt-4 text-[1.05rem] font-normal leading-tight tracking-tight">{s.t}</h3>
-                  <p className="mt-2 text-[0.85rem] leading-relaxed text-ink/50">{s.d}</p>
-                </div>
-              </Bevel>
-              </Reveal>
+        <ol className="mt-14 grid w-full list-none grid-cols-1 gap-4 p-0 text-left sm:grid-cols-3">
+          {STEPS.map((s) => (
+            <li key={s.n} className="border border-ink/10 p-5">
+              <span className="text-[0.85rem] font-semibold text-ink/30" style={{ fontFamily: DISPLAY }}>
+                {s.n}
+              </span>
+              <h3 className="mt-3 text-[1.05rem] font-bold leading-tight tracking-tight text-ink" style={{ fontFamily: DISPLAY }}>
+                {s.t}
+              </h3>
+              <p className="mt-2 text-[0.88rem] leading-relaxed text-ink/55">{s.d}</p>
             </li>
           ))}
         </ol>
 
-        <Reveal amount={0.6} y={12}>
-          <p className="mt-10 text-[0.85rem] text-ink/40">
-            <span className="font-semibold text-ink/70">
-              <CountUp value={300} suffix="+" />
-            </span>{" "}
-            businesses served · we reply within a day
-          </p>
-        </Reveal>
+        <p className="mt-10 text-[0.88rem] text-ink/45">
+          We reply within a day.
+        </p>
       </div>
     </section>
   );

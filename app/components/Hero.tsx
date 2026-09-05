@@ -45,13 +45,13 @@ export default function Hero() {
             className="animate-rise mt-4 text-[clamp(2.6rem,5.6vw,4.4rem)] font-extrabold leading-[1.03] tracking-tight"
             style={{ fontFamily: DISPLAY, animationDelay: "0.08s" }}
           >
-            <span className="nt-sheen">We build the AI that runs your business.</span>
+            <span className="nt-sheen">We build the machine that grows your business.</span>
             <span aria-hidden className="nt-cursor" />
           </h1>
           <p className="animate-rise mt-6 max-w-[34rem] text-[1.1rem] leading-[1.7] text-ink/60" style={{ animationDelay: "0.18s" }}>
-            We generate the leads and build the systems that turn them into
-            revenue — ads, funnels, AI follow-up, and custom software. Designed,
-            built, and shipped by one team. Fast.
+            Ads in, booked jobs out. Funnels, AI follow-up, booking systems,
+            and the software to run it all — measured end to end, built and
+            run by one team.
           </p>
 
           <div className="animate-rise mt-8 flex flex-wrap items-center gap-4" style={{ animationDelay: "0.26s" }}>
@@ -59,15 +59,15 @@ export default function Hero() {
               Start your project
             </Button>
             <Button href="#tl-projects" variant="secondary" size="lg">
-              See our work
+              See the case studies
             </Button>
           </div>
 
           {/* Real proof, in words — replaces the old stock-avatar rating widget */}
           <p className="animate-rise mt-10 max-w-[32rem] border-t border-ink/10 pt-6 text-[0.95rem] leading-relaxed text-ink/55" style={{ animationDelay: "0.36s" }}>
-            Real systems in production for solar, roofing, insurance, and food
-            businesses — the numbers on the right are live client results, not a
-            demo.
+            Built for solar, roofing, insurance, and local operations. The
+            client telemetry here is live production data — the same meter we
+            run for every client.
           </p>
         </div>
 

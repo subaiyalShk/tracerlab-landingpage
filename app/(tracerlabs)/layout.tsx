@@ -2,13 +2,23 @@ import type { Metadata } from "next";
 // Tailwind (no-preflight) + the componentized hero styles + legacy coexistence rules.
 // Scoped to the main Tracerlabs site so it never touches standalone pages like /solar.
 import "../globals.css";
-import { Plus_Jakarta_Sans } from "next/font/google";
+import { Archivo, Plus_Jakarta_Sans } from "next/font/google";
 import localFont from "next/font/local";
 
 const jakarta = Plus_Jakarta_Sans({
   subsets: ["latin"],
   weight: ["400", "500", "600", "700"],
   variable: "--font-jakarta",
+  display: "swap",
+});
+
+// "Telemetry" redesign display face — heavy grotesque for headings and buttons.
+// Duborics remains only in the logo lockup. Rolled out incrementally: pages opt
+// in via var(--font-archivo) until --font-display flips over site-wide.
+const archivo = Archivo({
+  subsets: ["latin"],
+  weight: ["500", "600", "700", "800"],
+  variable: "--font-archivo",
   display: "swap",
 });
 
@@ -65,7 +75,7 @@ export default function TracerlabsLayout({
   // resolves to the self-hosted fonts and inherits into every #tl-* section.
   return (
     <div
-      className={`${jakarta.variable} ${duborics.variable}`}
+      className={`${jakarta.variable} ${duborics.variable} ${archivo.variable}`}
       style={
         {
           "--font-display": 'var(--font-duborics), "Plus Jakarta Sans", sans-serif',

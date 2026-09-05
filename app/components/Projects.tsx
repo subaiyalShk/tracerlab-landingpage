@@ -240,7 +240,7 @@ export default function Projects() {
       {/* scroll anchor: legacy/service links point at #projects (section id is tl-projects) */}
       <div id="projects" aria-hidden />
       <div className="mx-auto w-full max-w-[1280px] px-6 sm:px-10"><div className="nt-hairline" /></div>
-      <div className="mx-auto w-full max-w-[1280px] px-6 py-16 sm:px-10 sm:py-20 lg:py-24">
+      <div className="mx-auto w-full max-w-[1280px] px-6 py-20 sm:px-10 sm:py-28 lg:py-36">
         {/* header */}
         <div className="max-w-[44rem]">
           <p className="text-[0.98rem] text-ink/50">Recent work</p>

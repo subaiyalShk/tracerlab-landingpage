@@ -1,6 +1,6 @@
 import Nav from "../components/Nav";
 import Hero from "../components/Hero";
-import TechBar from "../components/TechBar";
+import ProofWall from "../components/ProofWall";
 import Services from "../components/Services";
 import Projects from "../components/Projects";
 import Cta from "../components/Cta";
@@ -17,7 +17,7 @@ export default function Home() {
       <Nav />
       <Hero />
       <main id="content">
-        <TechBar />
+        <ProofWall />
         <Services />
         <Projects />
         <Cta />

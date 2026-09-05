@@ -34,7 +34,7 @@ export default function Hero() {
           maskImage: "radial-gradient(ellipse 85% 70% at 55% 35%, #000 30%, transparent 75%)",
         }}
       />
-      <div className="mx-auto grid w-full max-w-[1280px] grid-cols-1 items-center gap-12 px-6 py-16 sm:px-10 sm:py-20 lg:grid-cols-[1.02fr_0.98fr] lg:gap-14 lg:py-24">
+      <div className="mx-auto grid w-full max-w-[1280px] grid-cols-1 items-center gap-12 px-6 py-20 sm:px-10 sm:py-24 lg:grid-cols-[1.02fr_0.98fr] lg:gap-14 lg:py-32">
         {/* Left: copy */}
         <div className="min-w-0 max-w-[40rem]">
           <p className="text-[0.98rem] text-ink/50">Tracerlabs — AI development studio</p>

@@ -146,7 +146,7 @@ export default function Services() {
   return (
     <section id="tl-services" className="font-body w-full bg-page text-ink">
       <div className="mx-auto w-full max-w-[1280px] px-6 sm:px-10"><div className="nt-hairline" /></div>
-      <div className="mx-auto w-full max-w-[1280px] px-6 py-16 sm:px-10 sm:py-20 lg:py-24">
+      <div className="mx-auto w-full max-w-[1280px] px-6 py-20 sm:px-10 sm:py-28 lg:py-36">
         {/* Header */}
         <div className="max-w-[44rem]">
           <p className="text-[0.98rem] text-ink/50">What we do</p>

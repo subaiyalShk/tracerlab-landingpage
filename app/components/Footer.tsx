@@ -44,6 +44,28 @@ export default function Footer() {
               </a>
             ))}
           </nav>
+
+          {/* contact — a real-world anchor */}
+          <div className="flex flex-col gap-3">
+            <span className="text-[0.85rem] font-semibold text-ink/45" style={{ fontFamily: DISPLAY }}>
+              Contact
+            </span>
+            <a
+              href="mailto:jarvis@tracerlabs.io"
+              className="text-[0.92rem] text-ink/60 transition-colors hover:text-ink"
+            >
+              jarvis@tracerlabs.io
+            </a>
+            <a
+              href="https://cal.com/team/tracerlabs/discovery-call"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="text-[0.92rem] text-ink/60 transition-colors hover:text-ink"
+            >
+              Book a call
+            </a>
+            <span className="text-[0.92rem] text-ink/45">Texas, USA</span>
+          </div>
         </div>
 
         {/* bottom bar */}

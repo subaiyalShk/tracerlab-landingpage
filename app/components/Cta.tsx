@@ -29,7 +29,7 @@ export default function Cta() {
       <div id="contact" aria-hidden />
 
       <div className="mx-auto w-full max-w-[1280px] px-6 sm:px-10"><div className="nt-hairline" /></div>
-      <div className="mx-auto flex w-full max-w-[820px] flex-col items-center px-6 py-16 text-center sm:px-10 sm:py-20 lg:py-24">
+      <div className="mx-auto flex w-full max-w-[820px] flex-col items-center px-6 py-20 text-center sm:px-10 sm:py-28 lg:py-36">
         <h2
           className="max-w-[16ch] text-[clamp(1.9rem,4.4vw,3rem)] font-extrabold leading-[1.08] tracking-tight text-ink"
           style={{ fontFamily: DISPLAY }}

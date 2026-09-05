@@ -112,12 +112,10 @@ function Metrics({ items }: { items: string[] }) {
 function CardHead({ s }: { s: Pick<Service, "stage" | "icon" | "title"> }) {
   return (
     <>
-      <div className="flex items-start justify-between text-ink/45">
-        {s.icon}
-        <span className="text-[0.85rem] font-semibold text-ink/30" style={{ fontFamily: DISPLAY }}>
-          {s.stage}
-        </span>
-      </div>
+      <span aria-hidden className="nt-ghost-num" style={{ fontFamily: DISPLAY }}>
+        {s.stage}
+      </span>
+      <div className="text-ink/45">{s.icon}</div>
       <h3
         className="mt-5 text-[1.35rem] font-bold leading-tight tracking-tight text-ink"
         style={{ fontFamily: DISPLAY }}
@@ -151,7 +149,7 @@ export default function Services() {
         <div className="max-w-[44rem]">
           <p className="text-[0.98rem] text-ink/50">What we do</p>
           <h2
-            className="mt-4 text-[clamp(1.9rem,4vw,2.8rem)] font-extrabold leading-[1.08] tracking-tight text-ink"
+            className="mt-4 text-[clamp(2.1rem,4.6vw,3.3rem)] font-extrabold leading-[1.06] tracking-tight text-ink"
             style={{ fontFamily: DISPLAY }}
           >
             One growth system, end to end.
@@ -169,7 +167,7 @@ export default function Services() {
         {/* Bento grid — flat hairline panels */}
         <div className="mt-12 grid grid-cols-1 gap-4 sm:grid-cols-2 lg:gap-5">
           {/* Featured — Lead Generation, stage 1 (spans both rows on the left at sm+) */}
-          <div className="nt-card flex flex-col p-7 sm:row-span-2 sm:p-8">
+          <div className="nt-card relative flex flex-col p-7 sm:row-span-2 sm:p-8">
             <CardHead s={FEATURED} />
             <p className="mt-4 max-w-[26rem] text-[0.98rem] leading-[1.7] text-ink/60">
               {FEATURED.blurb}
@@ -192,7 +190,7 @@ export default function Services() {
 
           {/* Two stacked tiles on the right at sm+ — stages 2 & 3 */}
           {SERVICES.map((s) => (
-            <div key={s.title} className="nt-card flex flex-col p-7 sm:p-8">
+            <div key={s.title} className="nt-card relative flex flex-col p-7 sm:p-8">
               <CardHead s={s} />
               <p className="mt-3 text-[0.95rem] leading-[1.65] text-ink/60">{s.blurb}</p>
               <Metrics items={s.metrics} />
@@ -203,7 +201,7 @@ export default function Services() {
           ))}
 
           {/* Stage 4 — full-width bar across the bottom at sm+ */}
-          <div className="nt-card p-7 sm:col-span-2 sm:p-8">
+          <div className="nt-card relative p-7 sm:col-span-2 sm:p-8">
             <div className="flex flex-col gap-6 sm:flex-row sm:items-start sm:gap-10">
               <div className="sm:flex-1">
                 <CardHead s={CUSTOM} />

@@ -4,6 +4,7 @@ import type { Metadata } from "next";
 import "../globals.css";
 import { Archivo, Plus_Jakarta_Sans } from "next/font/google";
 import localFont from "next/font/local";
+import ScrollProgress from "../components/ScrollProgress";
 
 const jakarta = Plus_Jakarta_Sans({
   subsets: ["latin"],
@@ -83,7 +84,10 @@ export default function TracerlabsLayout({
         } as React.CSSProperties
       }
     >
+      <ScrollProgress />
       {children}
+      {/* film grain over everything, dark mode only (globals .nt-grain) */}
+      <div aria-hidden className="nt-grain" />
     </div>
   );
 }

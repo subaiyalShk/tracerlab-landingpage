@@ -34,23 +34,26 @@ export default function Hero() {
           maskImage: "radial-gradient(ellipse 85% 70% at 55% 35%, #000 30%, transparent 75%)",
         }}
       />
+      {/* The scene: a perspective grid floor receding to a glowing horizon */}
+      <div aria-hidden className="nt-horizon -z-10" />
+      <div aria-hidden className="nt-gridfloor -z-10" />
       <div className="mx-auto grid w-full max-w-[1280px] grid-cols-1 items-center gap-12 px-6 py-20 sm:px-10 sm:py-24 lg:grid-cols-[1.02fr_0.98fr] lg:gap-14 lg:py-32">
         {/* Left: copy */}
         <div className="min-w-0 max-w-[40rem]">
-          <p className="text-[0.98rem] text-ink/50">Tracerlabs — AI development studio</p>
+          <p className="animate-rise text-[0.98rem] text-ink/50">Tracerlabs — AI development studio</p>
           <h1
-            className="mt-4 text-[clamp(2.2rem,4.8vw,3.6rem)] font-extrabold leading-[1.05] tracking-tight text-ink"
-            style={{ fontFamily: DISPLAY }}
+            className="animate-rise mt-4 text-[clamp(2.6rem,5.6vw,4.4rem)] font-extrabold leading-[1.03] tracking-tight text-ink"
+            style={{ fontFamily: DISPLAY, animationDelay: "0.08s" }}
           >
             We build the AI that runs your business.
           </h1>
-          <p className="mt-6 max-w-[34rem] text-[1.1rem] leading-[1.7] text-ink/60">
+          <p className="animate-rise mt-6 max-w-[34rem] text-[1.1rem] leading-[1.7] text-ink/60" style={{ animationDelay: "0.18s" }}>
             We generate the leads and build the systems that turn them into
             revenue — ads, funnels, AI follow-up, and custom software. Designed,
             built, and shipped by one team. Fast.
           </p>
 
-          <div className="mt-8 flex flex-wrap items-center gap-4">
+          <div className="animate-rise mt-8 flex flex-wrap items-center gap-4" style={{ animationDelay: "0.26s" }}>
             <Button href="#contact" variant="primary">
               Start your project
             </Button>
@@ -60,7 +63,7 @@ export default function Hero() {
           </div>
 
           {/* Real proof, in words — replaces the old stock-avatar rating widget */}
-          <p className="mt-10 max-w-[32rem] border-t border-ink/10 pt-6 text-[0.95rem] leading-relaxed text-ink/55">
+          <p className="animate-rise mt-10 max-w-[32rem] border-t border-ink/10 pt-6 text-[0.95rem] leading-relaxed text-ink/55" style={{ animationDelay: "0.36s" }}>
             Real systems in production for solar, roofing, insurance, and food
             businesses — the numbers on the right are live client results, not a
             demo.
@@ -69,7 +72,7 @@ export default function Hero() {
 
         {/* Right: client telemetry panel — the page's one full-treatment centerpiece:
             gradient edge, permanent underglow, corner brackets. */}
-        <div className="relative w-full min-w-0">
+        <div className="animate-rise relative w-full min-w-0" style={{ animationDelay: "0.22s" }}>
           <div aria-hidden className="nt-brackets">
             <span /><span /><span /><span />
           </div>

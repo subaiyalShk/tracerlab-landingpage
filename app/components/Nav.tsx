@@ -24,7 +24,7 @@ export default function Nav({
   return (
     <header
       id="tl-nav"
-      className="font-body sticky top-0 z-50 w-full border-b border-ink/10 bg-page/90 backdrop-blur-md"
+      className="font-body sticky top-0 z-50 w-full bg-page/80 backdrop-blur-xl"
     >
       <div className="mx-auto flex h-16 w-full max-w-[1280px] items-center justify-between gap-4 px-6 sm:px-10">
         <Link href="/" className="flex items-center transition-opacity hover:opacity-80" aria-label="Tracerlabs home">
@@ -56,6 +56,7 @@ export default function Nav({
           </Button>
         </div>
       </div>
+      <div aria-hidden className="nt-hairline" />
     </header>
   );
 }

@@ -245,7 +245,7 @@ export default function Projects() {
         <div className="max-w-[44rem]">
           <p className="text-[0.98rem] text-ink/50">Recent work</p>
           <h2
-            className="mt-4 text-[clamp(1.9rem,4vw,2.8rem)] font-extrabold leading-[1.08] tracking-tight text-ink"
+            className="mt-4 text-[clamp(2.1rem,4.6vw,3.3rem)] font-extrabold leading-[1.06] tracking-tight text-ink"
             style={{ fontFamily: DISPLAY }}
           >
             Work we&apos;ve shipped.

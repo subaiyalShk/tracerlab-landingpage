@@ -41,10 +41,11 @@ export default function Nav({
             <a
               key={l.label}
               href={l.href}
-              className="text-[0.92rem] font-medium text-ink/55 transition-colors hover:text-ink"
+              className="group relative text-[0.92rem] font-medium text-ink/55 transition-colors hover:text-ink"
               style={{ fontFamily: DISPLAY }}
             >
               {l.label}
+              <span className="absolute -bottom-1 left-0 h-px w-0 bg-gradient-to-r from-brand-pink to-brand-blue transition-all duration-300 group-hover:w-full" />
             </a>
           ))}
         </nav>

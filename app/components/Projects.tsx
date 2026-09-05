@@ -243,6 +243,7 @@ export default function Projects() {
       <div className="mx-auto w-full max-w-[1280px] px-6 py-20 sm:px-10 sm:py-28 lg:py-36">
         {/* header */}
         <div className="max-w-[44rem]">
+          <span aria-hidden className="nt-kicker" />
           <p className="text-[0.98rem] text-ink/50">Recent work</p>
           <h2
             className="mt-4 text-[clamp(2.1rem,4.6vw,3.3rem)] font-extrabold leading-[1.06] tracking-tight text-ink"

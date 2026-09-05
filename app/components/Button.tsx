@@ -15,7 +15,7 @@ function clip(corner: number) {
 type Props = {
   children: ReactNode;
   variant?: "primary" | "secondary";
-  size?: "md" | "sm";
+  size?: "md" | "sm" | "lg";
   href?: string;
   external?: boolean;
   onClick?: () => void;
@@ -36,8 +36,9 @@ export default function Button({
   ...rest
 }: Props) {
   const primary = variant === "primary";
-  const CLIP = clip(size === "sm" ? 10 : 12);
-  const sizeCls = size === "sm" ? "px-4 py-2.5 text-[0.88rem]" : "px-7 py-3 text-[0.98rem]";
+  const CLIP = clip(size === "sm" ? 10 : size === "lg" ? 14 : 12);
+  const sizeCls =
+    size === "sm" ? "px-4 py-2.5 text-[0.88rem]" : size === "lg" ? "px-9 py-4 text-[1.05rem]" : "px-7 py-3 text-[0.98rem]";
 
   const base = `group/btn relative inline-flex shrink-0 items-center justify-center gap-2 ${sizeCls} font-semibold leading-none whitespace-nowrap outline-none transition-[transform,box-shadow,opacity] duration-300 hover:-translate-y-0.5`;
 

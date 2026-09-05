@@ -115,7 +115,7 @@ function CardHead({ s }: { s: Pick<Service, "stage" | "icon" | "title"> }) {
       <span aria-hidden className="nt-ghost-num" style={{ fontFamily: DISPLAY }}>
         {s.stage}
       </span>
-      <div className="text-ink/45">{s.icon}</div>
+      <div style={{ color: ACCENT, filter: "var(--nt-chart-glow)" }}>{s.icon}</div>
       <h3
         className="mt-5 text-[1.35rem] font-bold leading-tight tracking-tight text-ink"
         style={{ fontFamily: DISPLAY }}
@@ -147,6 +147,7 @@ export default function Services() {
       <div className="mx-auto w-full max-w-[1280px] px-6 py-20 sm:px-10 sm:py-28 lg:py-36">
         {/* Header */}
         <div className="max-w-[44rem]">
+          <span aria-hidden className="nt-kicker" />
           <p className="text-[0.98rem] text-ink/50">What we do</p>
           <h2
             className="mt-4 text-[clamp(2.1rem,4.6vw,3.3rem)] font-extrabold leading-[1.06] tracking-tight text-ink"
@@ -167,7 +168,7 @@ export default function Services() {
         {/* Bento grid — flat hairline panels */}
         <div className="mt-12 grid grid-cols-1 gap-4 sm:grid-cols-2 lg:gap-5">
           {/* Featured — Lead Generation, stage 1 (spans both rows on the left at sm+) */}
-          <div className="nt-card relative flex flex-col p-7 sm:row-span-2 sm:p-8">
+          <div className="nt-card nt-card-featured relative flex flex-col p-7 sm:row-span-2 sm:p-8">
             <CardHead s={FEATURED} />
             <p className="mt-4 max-w-[26rem] text-[0.98rem] leading-[1.7] text-ink/60">
               {FEATURED.blurb}

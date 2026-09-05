@@ -68,6 +68,16 @@ export default function Footer() {
           </div>
         </div>
 
+        {/* ghost wordmark */}
+        <div aria-hidden className="pointer-events-none select-none overflow-hidden">
+          <div
+            className="-mb-[0.34em] mt-10 text-center text-[clamp(4rem,13vw,11rem)] font-extrabold leading-none tracking-tight text-ink/[0.05]"
+            style={{ fontFamily: DISPLAY }}
+          >
+            TRACERLABS
+          </div>
+        </div>
+
         {/* bottom bar */}
         <div className="mt-12 flex flex-col gap-2 border-t border-ink/10 pt-6 sm:flex-row sm:items-center sm:justify-between">
           <p className="text-[0.8rem] text-ink/40">© 2026 Tracerlabs. All rights reserved.</p>

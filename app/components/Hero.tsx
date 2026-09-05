@@ -42,10 +42,11 @@ export default function Hero() {
         <div className="min-w-0 max-w-[40rem]">
           <p className="animate-rise text-[0.98rem] text-ink/50">Tracerlabs — AI development studio</p>
           <h1
-            className="animate-rise mt-4 text-[clamp(2.6rem,5.6vw,4.4rem)] font-extrabold leading-[1.03] tracking-tight text-ink"
+            className="animate-rise mt-4 text-[clamp(2.6rem,5.6vw,4.4rem)] font-extrabold leading-[1.03] tracking-tight"
             style={{ fontFamily: DISPLAY, animationDelay: "0.08s" }}
           >
-            We build the AI that runs your business.
+            <span className="nt-sheen">We build the AI that runs your business.</span>
+            <span aria-hidden className="nt-cursor" />
           </h1>
           <p className="animate-rise mt-6 max-w-[34rem] text-[1.1rem] leading-[1.7] text-ink/60" style={{ animationDelay: "0.18s" }}>
             We generate the leads and build the systems that turn them into
@@ -54,10 +55,10 @@ export default function Hero() {
           </p>
 
           <div className="animate-rise mt-8 flex flex-wrap items-center gap-4" style={{ animationDelay: "0.26s" }}>
-            <Button href="#contact" variant="primary">
+            <Button href="#contact" variant="primary" size="lg">
               Start your project
             </Button>
-            <Button href="#tl-projects" variant="secondary">
+            <Button href="#tl-projects" variant="secondary" size="lg">
               See our work
             </Button>
           </div>
@@ -89,7 +90,10 @@ export default function Hero() {
                 Client telemetry
               </span>
               <span className="flex items-center gap-2 text-[0.8rem] text-ink/45">
-                <span className="inline-block h-2 w-2 rounded-full bg-[#056AFC]" aria-hidden />
+                <span aria-hidden className="relative flex h-2 w-2">
+                  <span className="absolute inline-flex h-full w-full animate-ping rounded-full bg-[#056AFC] opacity-60" />
+                  <span className="relative inline-flex h-2 w-2 rounded-full bg-[#056AFC]" />
+                </span>
                 production data
               </span>
             </div>

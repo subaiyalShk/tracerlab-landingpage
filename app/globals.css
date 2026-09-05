@@ -581,3 +581,79 @@ html[data-theme="light"] .nt-grain {
     animation: none;
   }
 }
+
+/* ── Night Telemetry: micro-craft layer ─────────────────────────────────────
+   The living details: a metallic sheen sweeping the headline, a terminal
+   cursor, gradient card reveals, section kickers, brand selection color. */
+
+/* Slow light-sweep across display text (frozen = plain ink under reduced motion). */
+.nt-sheen {
+  background-image: linear-gradient(110deg, var(--tl-ink) 0%, var(--tl-ink) 42%, #7da2ff 50%, var(--tl-ink) 58%, var(--tl-ink) 100%);
+  background-size: 250% 100%;
+  background-position: 120% 0;
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+  animation: ntSheen 7s ease-in-out infinite;
+}
+@keyframes ntSheen {
+  0% { background-position: 120% 0; }
+  55% { background-position: -80% 0; }
+  100% { background-position: -80% 0; }
+}
+
+/* Blinking terminal cursor (reuses the typing-dot blink keyframes). */
+.nt-cursor {
+  display: inline-block;
+  width: 0.1em;
+  height: 0.82em;
+  margin-left: 0.1em;
+  background: #056afc;
+  box-shadow: 0 0 14px rgba(5, 106, 252, 0.8);
+  animation: blink 1.2s steps(1) infinite;
+}
+
+/* Gradient top edge that draws itself across a card on hover. */
+.nt-card { position: relative; }
+.nt-card::after {
+  content: "";
+  position: absolute;
+  left: 0;
+  right: 0;
+  top: -1px;
+  height: 2px;
+  background: linear-gradient(90deg, #e7028d, #056afc);
+  transform: scaleX(0);
+  transform-origin: left;
+  transition: transform 0.45s ease;
+}
+.nt-card:hover::after {
+  transform: scaleX(1);
+}
+
+/* Featured card — a static gradient edge (the "second loudest" element). */
+.nt-card-featured {
+  border-color: transparent;
+  background:
+    linear-gradient(var(--tl-surface), var(--tl-surface)) padding-box,
+    linear-gradient(135deg, rgba(231, 2, 141, 0.55), rgba(5, 106, 252, 0.55)) border-box;
+}
+
+/* Section kicker — a short gradient dash above section labels. */
+.nt-kicker {
+  display: block;
+  width: 34px;
+  height: 3px;
+  margin-bottom: 0.9rem;
+  background: linear-gradient(90deg, #e7028d, #056afc);
+}
+
+::selection {
+  background: rgba(5, 106, 252, 0.35);
+  color: var(--tl-ink);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .nt-sheen { animation: none; background-position: 120% 0; }
+  .nt-cursor { animation: none; }
+}

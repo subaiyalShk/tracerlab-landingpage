@@ -95,7 +95,7 @@ button {
   --tl-surface: #0b0b0e;
 
   /* shared card recipe (Bevel.tsx GLASS_BG/GLASS_BORDER + defaults point here) */
-  --tl-card-bg: linear-gradient(160deg, rgba(255,255,255,0.045) 0%, rgba(255,255,255,0.01) 35%, rgba(255,255,255,0) 70%), rgba(7,8,10,0.82);
+  --tl-card-bg: linear-gradient(160deg, rgba(255,255,255,0.05) 0%, rgba(255,255,255,0.012) 35%, rgba(255,255,255,0) 70%), rgba(8,9,13,0.55);
   --tl-card-border: rgba(255,255,255,0.10);
   --tl-card-shadow: none;
 
@@ -118,7 +118,7 @@ html[data-theme="light"] {
 
   /* cards become solid white + a soft drop-shadow (applied via filter: drop-shadow in
      Bevel — box-shadow is clipped by the bevel clip-path, drop-shadow follows the shape) */
-  --tl-card-bg: #ffffff;
+  --tl-card-bg: rgba(255,255,255,0.66);
   --tl-card-border: rgba(11,13,18,0.08);
   --tl-card-shadow: drop-shadow(0 1px 2px rgba(11,13,18,0.05)) drop-shadow(0 12px 24px rgba(11,13,18,0.10));
 
@@ -456,15 +456,23 @@ html[data-theme="light"] {
   --nt-figure-glow: none;
 }
 
-/* Glass card: rest = quiet glass + hairline; hover = lift + brand underglow. */
+/* Frosted glass card: translucent fill + backdrop blur (the scene shows
+   through, softened), an inner top-edge highlight so the glass catches
+   light, hover = lift + brand underglow. */
 .nt-card {
   background: var(--tl-card-bg);
   border: 1px solid var(--tl-card-border);
+  backdrop-filter: blur(16px) saturate(140%);
+  -webkit-backdrop-filter: blur(16px) saturate(140%);
+  box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.07);
   transition: transform 0.3s ease, box-shadow 0.3s ease, border-color 0.3s ease;
+}
+html[data-theme="light"] .nt-card {
+  box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.85);
 }
 .nt-card:hover {
   transform: translateY(-3px);
-  box-shadow: var(--nt-underglow);
+  box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.07), var(--nt-underglow);
   border-color: color-mix(in oklab, var(--tl-ink) 20%, transparent);
 }
 

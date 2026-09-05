@@ -82,6 +82,7 @@ export default function Hero() {
           border={GLASS_BORDER}
           bg={GLASS_BG}
           className="w-full min-w-0"
+          innerClassName="backdrop-blur-xl"
           style={{ background: "var(--nt-edge)", filter: "var(--nt-underglow-filter)" }}
         >
           <div className="flex flex-col p-6 sm:p-7">

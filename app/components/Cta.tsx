@@ -78,7 +78,7 @@ export default function Cta() {
           <div aria-hidden className="nt-hairline absolute left-0 right-0 top-[2.6rem] hidden sm:block" />
           <ol className="grid w-full list-none grid-cols-1 gap-4 p-0 text-left sm:grid-cols-3">
             {STEPS.map((s) => (
-              <li key={s.n} className="nt-card relative p-5 pt-6">
+              <li key={s.n} className="nt-card backdrop-blur-xl backdrop-saturate-150 relative p-5 pt-6">
                 <span
                   aria-hidden
                   className="nt-ghost-num"

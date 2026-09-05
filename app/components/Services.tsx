@@ -168,7 +168,7 @@ export default function Services() {
         {/* Bento grid — flat hairline panels */}
         <div className="mt-12 grid grid-cols-1 gap-4 sm:grid-cols-2 lg:gap-5">
           {/* Featured — Lead Generation, stage 1 (spans both rows on the left at sm+) */}
-          <div className="nt-card nt-card-featured relative flex flex-col p-7 sm:row-span-2 sm:p-8">
+          <div className="nt-card backdrop-blur-xl backdrop-saturate-150 nt-card-featured relative flex flex-col p-7 sm:row-span-2 sm:p-8">
             <CardHead s={FEATURED} />
             <p className="mt-4 max-w-[26rem] text-[0.98rem] leading-[1.7] text-ink/60">
               {FEATURED.blurb}
@@ -191,7 +191,7 @@ export default function Services() {
 
           {/* Two stacked tiles on the right at sm+ — stages 2 & 3 */}
           {SERVICES.map((s) => (
-            <div key={s.title} className="nt-card relative flex flex-col p-7 sm:p-8">
+            <div key={s.title} className="nt-card backdrop-blur-xl backdrop-saturate-150 relative flex flex-col p-7 sm:p-8">
               <CardHead s={s} />
               <p className="mt-3 text-[0.95rem] leading-[1.65] text-ink/60">{s.blurb}</p>
               <Metrics items={s.metrics} />
@@ -202,7 +202,7 @@ export default function Services() {
           ))}
 
           {/* Stage 4 — full-width bar across the bottom at sm+ */}
-          <div className="nt-card relative p-7 sm:col-span-2 sm:p-8">
+          <div className="nt-card backdrop-blur-xl backdrop-saturate-150 relative p-7 sm:col-span-2 sm:p-8">
             <div className="flex flex-col gap-6 sm:flex-row sm:items-start sm:gap-10">
               <div className="sm:flex-1">
                 <CardHead s={CUSTOM} />

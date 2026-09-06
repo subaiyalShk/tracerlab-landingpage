@@ -42,8 +42,8 @@ export default function Hero() {
         <div className="min-w-0 max-w-[40rem]">
           <p className="animate-rise text-[0.98rem] text-ink/50">Tracerlabs — AI development studio</p>
           <h1
-            className="animate-rise mt-4 text-[clamp(2.4rem,min(5.2vw,7.5vh),4.4rem)] font-extrabold leading-[1.03] tracking-tight"
-            style={{ fontFamily: DISPLAY, animationDelay: "0.08s" }}
+            className="animate-rise mt-4 text-[clamp(1.9rem,min(4.2vw,6.5vh),3.4rem)] font-normal uppercase leading-[1.08] tracking-tight"
+            style={{ fontFamily: "var(--font-duborics), var(--font-archivo), sans-serif", animationDelay: "0.08s" }}
           >
             <span className="nt-sheen">We build the machine that grows your business.</span>
             <span aria-hidden className="nt-cursor" />

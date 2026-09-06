@@ -32,8 +32,11 @@ export default function Bevel({
   style?: CSSProperties;
 }) {
   const c = clip(bevel);
+  // Perf: no drop-shadow filter here — light mode ran two blur filters on
+  // every Bevel, which was the light-only scroll lag. The card shadow now
+  // lives as a cheap box-shadow on .nt-cardframe (the unclipped wrapper).
   return (
-    <div className={`relative ${className}`} style={{ filter: "var(--tl-card-shadow, none)", clipPath: c, backgroundColor: border, ...style }}>
+    <div className={`relative ${className}`} style={{ clipPath: c, backgroundColor: border, ...style }}>
       <div
         className={`absolute inset-px overflow-hidden ${innerClassName}`}
         style={{ clipPath: c, background: bg }}

@@ -20,7 +20,10 @@ export default function TechBar() {
       {/* edge fades */}
       <div className="pointer-events-none absolute inset-y-0 left-0 z-10 w-20 bg-gradient-to-r from-page to-transparent sm:w-28" />
       <div className="pointer-events-none absolute inset-y-0 right-0 z-10 w-20 bg-gradient-to-l from-page to-transparent sm:w-28" />
-      <div className="animate-marquee flex w-max items-center gap-14 sm:gap-20">
+      {/* Perf: ONE filter on the moving row, not 18 individually-filtered
+          logos — each filtered element is its own rasterized layer, and 18 of
+          them translating forever was a constant compositing tax. */}
+      <div className="animate-marquee flex w-max items-center gap-14 sm:gap-20" style={{ filter: "var(--tl-logo-filter)" }}>
         {[...LOGOS, ...LOGOS].map((l, i) => (
           <Image
             key={i}
@@ -29,7 +32,6 @@ export default function TechBar() {
             width={120}
             height={32}
             className="h-6 w-auto shrink-0 opacity-40 transition-opacity duration-300 hover:opacity-70 sm:h-7"
-            style={{ filter: "var(--tl-logo-filter)" }}
             loading="lazy"
           />
         ))}

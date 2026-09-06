@@ -121,6 +121,7 @@ html[data-theme="light"] {
   --tl-card-bg: linear-gradient(160deg, rgba(255,255,255,0.93) 0%, rgba(255,255,255,0.78) 45%, rgba(240,244,255,0.72) 100%);
   --tl-card-border: rgba(11,13,18,0.08);
   --tl-card-shadow: drop-shadow(0 1px 2px rgba(11,13,18,0.05)) drop-shadow(0 12px 24px rgba(11,13,18,0.10));
+  --tl-card-shadow-box: 0 1px 2px rgba(11, 13, 18, 0.05), 0 12px 24px rgba(11, 13, 18, 0.1);
 
   /* decorative */
   --tl-dot-grid: rgba(11,13,18,0.06);
@@ -582,14 +583,14 @@ html[data-theme="light"] {
   height: 130px;
   margin-left: -0.5px;
   background: linear-gradient(180deg, transparent 0%, var(--nt-pulse-blue) 75%, var(--nt-pulse-blue) 100%);
-  filter: drop-shadow(0 0 5px var(--nt-pulse-blue));
+  box-shadow: 0 0 9px var(--nt-pulse-blue); /* box-shadow, not drop-shadow: no filter layer */
   opacity: 0;
   animation: ntPulse var(--pulse-dur, 9s) linear infinite;
   animation-delay: var(--pulse-delay, 0s);
 }
 .nt-pulse-pink {
   background: linear-gradient(180deg, transparent 0%, var(--nt-pulse-pink) 75%, var(--nt-pulse-pink) 100%);
-  filter: drop-shadow(0 0 5px var(--nt-pulse-pink));
+  box-shadow: 0 0 9px var(--nt-pulse-pink);
 }
 @keyframes ntPulse {
   0% { transform: translateY(0); opacity: 0; }
@@ -616,8 +617,9 @@ html[data-theme="light"] {
   height: 34%;
   pointer-events: none;
   transform: translateX(-50%);
+  /* Perf: no blur filter — the radial gradient is already soft, and a 24px
+     blur on two huge layers (hero + CTA) cost real compositing. */
   background: var(--nt-horizon);
-  filter: blur(24px);
 }
 
 /* Film grain over the whole page (dark mode only) — the "expensive texture". */
@@ -710,12 +712,15 @@ html[data-theme="light"] .nt-grain {
   .nt-cursor { animation: none; }
 }
 
-/* Card frame (Card.tsx wrapper): hover lift + underglow that follows the
-   chamfered shape — drop-shadow, since box-shadow is clipped by the bevel. */
+/* Card frame (Card.tsx wrapper): hover lift + shadows. Shadows are BOX-SHADOW
+   on this unclipped wrapper, not drop-shadow filters on the clipped Bevel —
+   filters rasterize every card (the light-only scroll lag); the soft blur
+   hides the rectangular-vs-chamfered corner mismatch completely. */
 .nt-cardframe {
-  transition: transform 0.3s ease, filter 0.3s ease;
+  box-shadow: var(--tl-card-shadow-box, none);
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
 }
 .nt-cardframe:hover {
   transform: translateY(-3px);
-  filter: var(--nt-underglow-filter);
+  box-shadow: var(--nt-underglow);
 }

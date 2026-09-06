@@ -29,12 +29,20 @@ Components (`app/components/`):
   unmounted; restoring either is a two-line change in Hero.
 - **TechBar** — monochrome tech-logo marquee. Swappable with **ProofWall** (outcome-figures
   strip, on disk unmounted) for the under-hero slot; user chose the marquee (2026-09-05).
-- **Services** (4-stage bento; per-card `Figures` = attributed outcome numbers),
-  **Projects** (2 spotlight case studies w/ flush full-height media + product bento + portfolio
-  strip), **Team** (co-founder cards; portrait crops aligned via per-member
-  `imgTransform`/`imgOrigin` — Subaiyal's photo has zero headroom above the face),
-  **Cta** (embedded Retell voice agent that books via Cal.com), **StickyCtaBar** (slides in
-  after hero, hides near CTA).
+- **Services** (4-stage bento; per-card `Figures` = attributed outcome numbers; featured card
+  tops with a fal.ai funnel illustration), **Projects** (2 spotlight case studies + portfolio
+  strip + products: a WIDE canvassing card whose media column derives width from card height
+  at exactly 9:16, then two tiles), **Team** (co-founder cards, square portraits sized to fit
+  one viewport; crops aligned via per-member `imgTransform`/`imgOrigin` — Subaiyal's photo has
+  zero headroom above the face), **Cta** (embedded Retell voice agent that books via Cal.com),
+  **StickyCtaBar** (slides in after hero, hides near CTA).
+- **Card media/videos (`ProjectVideo`)**: CLICK-TO-PLAY with sound — no autoplay, no mute
+  dance (the click is the browser-required gesture); center play button → corner pause chip; a
+  courtesy IO pauses anything scrolled fully off-screen. All 5 reels carry audio (solar +
+  canvassing = user-supplied voiced originals; Harbs = narrated demo; BeastMode = Higgsfield
+  Seedance 2.0 w/ generated audio; encode recipe: ffmpeg 540×960/720p, crf 26-30, aac 96k,
+  +faststart). The faux-browser chrome bar on media windows was retired 2026-09-06. Whole
+  cards are clickable (stretched-link pattern; Team excluded deliberately).
 - Shared: **Button** (angular red CTA, `variant` + `size`), **Bevel** (chamfered bordered panel;
   exports `GLASS_BORDER`/`GLASS_BG` dark-frosted tokens), **Eyebrow** (section eyebrow),
   **Card** (THE site card — bevel + glass + hover glow).

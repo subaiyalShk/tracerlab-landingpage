@@ -219,9 +219,25 @@ function MediaBody({ media }: { media: Media }) {
 
 // Product-window media frame: slim chrome bar (dots + label), 9:16 body,
 // hover glow. The media reads as a running application, not a picture.
-function MediaChrome({ media, chrome }: { media: Media; chrome: string }) {
+function MediaChrome({
+  media,
+  chrome,
+  aspect = "aspect-[9/16]",
+  frameless = false,
+}: {
+  media: Media;
+  chrome: string;
+  aspect?: string;
+  frameless?: boolean;
+}) {
   return (
-    <div className="overflow-hidden border border-ink/15 bg-[#0b0b0f] transition-shadow duration-300 hover:shadow-[var(--nt-underglow)]">
+    <div
+      className={
+        frameless
+          ? "overflow-hidden bg-[#0b0b0f]"
+          : "overflow-hidden border border-ink/15 bg-[#0b0b0f] transition-shadow duration-300 hover:shadow-[var(--nt-underglow)]"
+      }
+    >
       <div className="flex items-center gap-1.5 border-b border-white/10 bg-white/[0.03] px-3 py-2">
         <span className="h-2 w-2 rounded-full bg-white/15" />
         <span className="h-2 w-2 rounded-full bg-white/15" />
@@ -233,7 +249,7 @@ function MediaChrome({ media, chrome }: { media: Media; chrome: string }) {
           <span className="h-1.5 w-1.5 rounded-full bg-[#056afc]" />
         </span>
       </div>
-      <div className="relative aspect-[9/16] w-full">
+      <div className={`relative ${aspect} w-full`}>
         <MediaBody media={media} />
       </div>
     </div>
@@ -295,43 +311,39 @@ function CaseCard({ cs, mediaRight }: { cs: CaseStudy; mediaRight: boolean }) {
   );
 }
 
-// Quiet editorial row for a product — the calm tier.
-function ProductRow({ p, mediaRight }: { p: Product; mediaRight: boolean }) {
+// Bento tile for a product — media up top (wide crop), copy below, link
+// pinned to the card's foot so the grid stays flush.
+function ProductCard({ p }: { p: Product }) {
   return (
-    <article
-      id={`work-${p.id}`}
-      className={`scroll-mt-24 flex flex-col gap-8 border-t border-ink/10 pt-12 lg:flex-row lg:gap-14 ${
-        mediaRight ? "lg:flex-row-reverse" : ""
-      }`}
-    >
-      <div className="w-full lg:w-[17rem] lg:shrink-0">
-        <MediaChrome media={p.media} chrome={p.chrome} />
-      </div>
-      <div className="w-full min-w-0 lg:flex-1 lg:self-center">
-        <p className="text-[0.9rem] text-ink/50">{p.client}</p>
-        <h3
-          className="mt-2 max-w-[26ch] text-[clamp(1.35rem,2.2vw,1.7rem)] font-bold leading-[1.15] tracking-tight text-ink"
-          style={{ fontFamily: DISPLAY }}
-        >
-          {p.title}
-        </h3>
-        <p className="mt-4 max-w-[40rem] text-[0.96rem] leading-[1.7] text-ink/60">{p.blurb}</p>
-        <ul className="mt-4 flex list-none flex-col gap-1.5 p-0">
-          {p.metrics.map((m) => (
-            <li key={m} className="text-[0.92rem] font-semibold" style={{ color: ACCENT }}>
-              {m}
-            </li>
-          ))}
-        </ul>
-        <p className="mt-3 text-[0.82rem] text-ink/40">{p.tech}</p>
-        <a
-          href={p.link.href}
-          {...(p.link.external ? { target: "_blank", rel: "noopener noreferrer" } : {})}
-          className="mt-5 inline-block text-[0.95rem] font-semibold text-ink/75 underline decoration-ink/25 underline-offset-4 transition-colors hover:text-ink hover:decoration-ink/60"
-        >
-          {p.link.label}
-        </a>
-      </div>
+    <article id={`work-${p.id}`} className="scroll-mt-24">
+      <Card bevel={12} className="h-full" contentClassName="h-full">
+        <MediaChrome media={p.media} chrome={p.chrome} aspect="aspect-[16/10]" frameless />
+        <div className="flex flex-1 flex-col p-6">
+          <p className="text-[0.85rem] text-ink/50">{p.client}</p>
+          <h3
+            className="mt-1.5 text-[1.15rem] font-bold leading-[1.25] tracking-tight text-ink"
+            style={{ fontFamily: DISPLAY }}
+          >
+            {p.title}
+          </h3>
+          <p className="mt-3 text-[0.92rem] leading-[1.65] text-ink/60">{p.blurb}</p>
+          <ul className="mt-4 flex list-none flex-col gap-1 p-0">
+            {p.metrics.map((m) => (
+              <li key={m} className="text-[0.88rem] font-semibold" style={{ color: ACCENT }}>
+                {m}
+              </li>
+            ))}
+          </ul>
+          <p className="mt-2.5 text-[0.78rem] text-ink/40">{p.tech}</p>
+          <a
+            href={p.link.href}
+            {...(p.link.external ? { target: "_blank", rel: "noopener noreferrer" } : {})}
+            className="mt-auto inline-block pt-5 text-[0.92rem] font-semibold text-ink/75 underline decoration-ink/25 underline-offset-4 transition-colors hover:text-ink hover:decoration-ink/60"
+          >
+            {p.link.label}
+          </a>
+        </div>
+      </Card>
     </article>
   );
 }
@@ -384,9 +396,11 @@ export default function Projects() {
         <p className="mt-16 text-[0.9rem] font-semibold text-ink/45" style={{ fontFamily: DISPLAY }}>
           Our products &amp; experiments
         </p>
-        <div className="mt-6 flex flex-col gap-12">
+        <div className="mt-6 grid grid-cols-1 gap-4 md:grid-cols-2 lg:grid-cols-3 lg:gap-5">
           {PRODUCTS.map((p, i) => (
-            <ProductRow key={p.id} p={p} mediaRight={i % 2 === 1} />
+            <div key={p.id} className={i === 2 ? "md:col-span-2 lg:col-span-1" : ""}>
+              <ProductCard p={p} />
+            </div>
           ))}
         </div>
 

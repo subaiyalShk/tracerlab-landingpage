@@ -62,6 +62,7 @@ const CASE_STUDIES: CaseStudy[] = [
       poster: "/assets/solar-funnel-poster.jpg",
       fit: "cover",
       label: "Demo reel of the solar lead-gen funnel that books appointments daily.",
+      hasAudio: true,
     },
   },
   {

@@ -70,11 +70,11 @@ export default function Team() {
           </p>
         </div>
 
-        <div className="mt-10 grid max-w-[58rem] grid-cols-1 gap-4 sm:grid-cols-2 lg:gap-5">
+        <div className="mt-10 grid max-w-[48rem] grid-cols-1 gap-4 sm:grid-cols-2 lg:gap-5">
           {TEAM.map((m) => (
             <article key={m.name} className="group h-full">
               <Card bevel={12} className="h-full" contentClassName="h-full">
-                <div className="relative aspect-[4/5] w-full overflow-hidden bg-[#0b0b0f]">
+                <div className="relative aspect-square w-full overflow-hidden bg-[#0b0b0f]">
                   <Image
                     src={m.img}
                     alt={`Portrait of ${m.name}`}
@@ -88,12 +88,12 @@ export default function Team() {
                     loading="lazy"
                   />
                 </div>
-                <div className="flex flex-1 flex-col p-6">
+                <div className="flex flex-1 flex-col p-5">
                   <h3 className="text-[1.2rem] font-bold tracking-tight text-ink" style={{ fontFamily: DISPLAY }}>
                     {m.name}
                   </h3>
                   <p className="mt-1 text-[0.88rem] text-ink/50">{m.role}</p>
-                  <p className="mt-3 text-[0.92rem] leading-[1.65] text-ink/60">{m.bio}</p>
+                  <p className="mt-2.5 text-[0.88rem] leading-[1.6] text-ink/60">{m.bio}</p>
                   <a
                     href={m.linkedin}
                     target="_blank"

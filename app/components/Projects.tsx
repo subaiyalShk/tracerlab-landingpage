@@ -8,7 +8,7 @@ import Button from "./Button";
 import Card from "./Card";
 
 type Media =
-  | { kind: "video"; src: string; poster: string; fit?: "cover" | "contain"; label: string; hasAudio?: boolean }
+  | { kind: "video"; src: string; poster: string; fit?: "cover" | "contain"; label: string }
   | { kind: "image"; src: string; alt: string; fit?: "cover" | "contain" }
   | { kind: "panel" };
 
@@ -62,7 +62,6 @@ const CASE_STUDIES: CaseStudy[] = [
       poster: "/assets/solar-funnel-poster.jpg",
       fit: "cover",
       label: "Demo reel of the solar lead-gen funnel that books appointments daily.",
-      hasAudio: true,
     },
   },
   {
@@ -85,7 +84,6 @@ const CASE_STUDIES: CaseStudy[] = [
       poster: "/assets/harbs-demo-poster.jpg",
       fit: "cover",
       label: "Demo video of the Harbs Farm booking and operations platform.",
-      hasAudio: true,
     },
   },
 ];
@@ -109,7 +107,6 @@ const PRODUCTS: Product[] = [
       // so contain costs only ~10px side bars and never cuts the frame.
       fit: "contain",
       label: "Demo reel of the Offset Canvassing GIS app and companion mobile CRM for door-to-door teams.",
-      hasAudio: true,
     },
   },
   {
@@ -128,7 +125,6 @@ const PRODUCTS: Product[] = [
       poster: "/assets/reel-beastmode-poster.jpg",
       fit: "cover",
       label: "Cinematic training reel for the BeastMode AI fitness coach.",
-      hasAudio: true,
     },
   },
   {
@@ -147,7 +143,6 @@ const PRODUCTS: Product[] = [
       poster: "/assets/reel-aivideo-poster.jpg",
       fit: "cover",
       label: "AI-generated cinematic car advertisement reel.",
-      hasAudio: true,
     },
   },
 ];
@@ -220,7 +215,7 @@ function MediaBody({ media }: { media: Media }) {
   return (
     <>
       {media.kind === "video" && (
-        <ProjectVideo src={media.src} poster={media.poster} label={media.label} fit={media.fit} hasAudio={media.hasAudio} />
+        <ProjectVideo src={media.src} poster={media.poster} label={media.label} fit={media.fit} />
       )}
       {media.kind === "image" && (
         <Image

@@ -2,88 +2,66 @@
 
 import { useEffect, useRef, useState } from "react";
 
-// One SOUND PREFERENCE shared by every ProjectVideo on the page: unmuting any
-// video unmutes them all, so scrolling from card to card keeps the audio
-// coming without re-tapping each speaker. Module-level singleton (all
-// instances live in the same client bundle); the first tap is the user
-// gesture that satisfies the browser's unmuted-playback policy.
-let soundOn = false;
-const soundListeners = new Set<(on: boolean) => void>();
-function setSoundOn(on: boolean) {
-  soundOn = on;
-  soundListeners.forEach((l) => l(on));
-}
-
-// Lazy, in-view project demo video. preload="none" + a poster means nothing
-// downloads until the card scrolls near the viewport. Playback is gated on the
-// CENTER band of the viewport: an IntersectionObserver with a -38% top/bottom
-// rootMargin plays the video while it sits in the middle ~quarter of the
-// screen and pauses it the moment it drifts out — so exactly one card tends to
-// be alive at a time as you scroll.
-// Sound: browsers block unmuted autoplay, so every video starts muted; clips
-// that carry an audio track (`hasAudio`) render a speaker toggle. The tap is a
-// real user gesture, so unmuting sticks — from then on the scroll-driven
-// play/pause keeps the sound. Honors prefers-reduced-motion: no autoplay, the
-// poster just shows.
+// Click-to-play project demo video. No autoplay: the poster shows with a
+// center play button, and the click — a real user gesture — starts playback
+// WITH sound (which browsers allow only on gesture, so this sidesteps the
+// muted-autoplay dance entirely). Nothing downloads or decodes until someone
+// asks (preload="none"), which beats scroll-autoplay for bandwidth/battery.
+// One small courtesy observer pauses a running video if it scrolls fully out
+// of the viewport, so audio never talks from off-screen.
 // `fit="contain"` shows the whole frame over the dark stage; `fit="cover"` fills.
 export default function ProjectVideo({
   src,
   poster,
   label,
   fit = "cover",
-  hasAudio = false,
 }: {
   src: string;
   poster: string;
   label: string;
   fit?: "cover" | "contain";
-  hasAudio?: boolean;
 }) {
   const ref = useRef<HTMLVideoElement>(null);
-  const [muted, setMuted] = useState(true);
+  const [playing, setPlaying] = useState(false);
 
-  // Follow the shared sound preference. React is unreliable about syncing the
-  // `muted` prop to the DOM after mount (react#10389), so the element is
-  // always driven directly; state only drives the icon.
-  useEffect(() => {
-    if (!hasAudio) return;
-    const apply = (on: boolean) => {
-      const v = ref.current;
-      if (!v) return;
-      v.muted = !on;
-      setMuted(!on);
-    };
-    apply(soundOn);
-    soundListeners.add(apply);
-    return () => {
-      soundListeners.delete(apply);
-    };
-  }, [hasAudio]);
-
-  const toggleMuted = () => {
-    setSoundOn(muted); // muted → turn sound ON everywhere; else off everywhere
-    const v = ref.current;
-    if (v && muted && v.paused) v.play().catch(() => {});
-  };
-
+  // Keep the icon honest whatever pauses/plays the element.
   useEffect(() => {
     const v = ref.current;
     if (!v) return;
-    const reduce = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
-    if (reduce) return; // leave the poster frame; never autoplay
+    const onPlay = () => setPlaying(true);
+    const onPause = () => setPlaying(false);
+    v.addEventListener("play", onPlay);
+    v.addEventListener("pause", onPause);
+    return () => {
+      v.removeEventListener("play", onPlay);
+      v.removeEventListener("pause", onPause);
+    };
+  }, []);
 
+  // Courtesy pause when a running video leaves the viewport entirely.
+  useEffect(() => {
+    const v = ref.current;
+    if (!v) return;
     const io = new IntersectionObserver(
       (entries) => {
-        if (entries[0].isIntersecting) v.play().catch(() => {});
-        else v.pause();
+        if (!entries[0].isIntersecting && !v.paused) v.pause();
       },
-      // Shrink the observation window to the middle band of the viewport:
-      // the video plays only while it overlaps the central ~24%.
-      { threshold: 0, rootMargin: "-38% 0px -38% 0px" },
+      { threshold: 0 },
     );
     io.observe(v);
     return () => io.disconnect();
   }, []);
+
+  const toggle = () => {
+    const v = ref.current;
+    if (!v) return;
+    if (v.paused) {
+      v.muted = false; // the click is the gesture — sound is allowed
+      v.play().catch(() => {});
+    } else {
+      v.pause();
+    }
+  };
 
   return (
     <>
@@ -92,31 +70,36 @@ export default function ProjectVideo({
         className={`absolute inset-0 h-full w-full ${fit === "contain" ? "object-contain" : "object-cover"}`}
         src={src}
         poster={poster}
-        muted={muted}
         loop
         playsInline
         preload="none"
         aria-label={label}
       />
-      {hasAudio && (
+      {playing ? (
+        // Playing: quiet pause chip in the corner, out of the frame's way.
         <button
           type="button"
-          onClick={toggleMuted}
-          aria-label={muted ? "Unmute video" : "Mute video"}
-          aria-pressed={!muted}
-          className="bv-6 absolute bottom-2.5 right-2.5 z-30 flex h-8 w-8 items-center justify-center bg-black/55 text-white/80 backdrop-blur-sm transition-colors hover:bg-black/75 hover:text-white"
+          onClick={toggle}
+          aria-label="Pause video"
+          className="bv-6 absolute bottom-2.5 right-2.5 z-30 flex h-9 w-9 items-center justify-center bg-black/55 text-white/85 backdrop-blur-sm transition-colors hover:bg-black/75 hover:text-white"
         >
-          {muted ? (
-            <svg className="h-4 w-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" aria-hidden>
-              <path d="M11 5 6 9H2v6h4l5 4V5Z" />
-              <path d="m16 9 6 6M22 9l-6 6" />
+          <svg className="h-4 w-4" viewBox="0 0 24 24" fill="currentColor" aria-hidden>
+            <path d="M7 5h4v14H7zM13 5h4v14h-4z" />
+          </svg>
+        </button>
+      ) : (
+        // Idle: center play button over the poster — plays with sound.
+        <button
+          type="button"
+          onClick={toggle}
+          aria-label={`Play: ${label}`}
+          className="group/play absolute inset-0 z-30 flex items-center justify-center"
+        >
+          <span className="bv-9 flex h-14 w-14 items-center justify-center bg-black/55 text-white/90 backdrop-blur-sm transition-all duration-300 group-hover/play:scale-110 group-hover/play:bg-black/75 group-hover/play:text-white">
+            <svg className="ml-0.5 h-6 w-6" viewBox="0 0 24 24" fill="currentColor" aria-hidden>
+              <path d="M8 5v14l11-7z" />
             </svg>
-          ) : (
-            <svg className="h-4 w-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" aria-hidden>
-              <path d="M11 5 6 9H2v6h4l5 4V5Z" />
-              <path d="M15.5 8.5a5 5 0 0 1 0 7M18.5 5.5a9 9 0 0 1 0 13" />
-            </svg>
-          )}
+          </span>
         </button>
       )}
     </>

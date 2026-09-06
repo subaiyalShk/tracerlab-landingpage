@@ -97,7 +97,9 @@ const PRODUCTS: Product[] = [
       kind: "video",
       src: "/assets/offset-canvassing.mp4",
       poster: "/assets/offset-canvassing-poster.jpg",
-      fit: "cover",
+      // contain: the wide card's media column is 9:16 minus the chrome bar,
+      // so contain costs only ~10px side bars and never cuts the frame.
+      fit: "contain",
       label: "Demo reel of the Offset Canvassing GIS app and companion mobile CRM for door-to-door teams.",
     },
   },
@@ -339,8 +341,10 @@ function ProductCardWide({ p }: { p: Product }) {
   return (
     <article id={`work-${p.id}`} className="scroll-mt-24">
       <Card bevel={12} contentClassName="h-full">
-        <div className="grid h-full grid-cols-1 lg:grid-cols-[minmax(0,19rem)_1fr]">
-          <div>
+        <div className="grid h-full grid-cols-1 lg:grid-cols-[auto_1fr]">
+          {/* the media column's WIDTH derives from the card's height at 9:16,
+              so the portrait reel displays essentially uncropped */}
+          <div className="lg:aspect-[9/16] lg:h-full">
             <MediaChrome media={p.media} chrome={p.chrome} frameless fill className="h-full" />
           </div>
           <div className="flex min-w-0 flex-col p-6 sm:p-8">

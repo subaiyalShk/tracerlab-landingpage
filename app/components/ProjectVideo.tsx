@@ -30,6 +30,17 @@ export default function ProjectVideo({
   const ref = useRef<HTMLVideoElement>(null);
   const [muted, setMuted] = useState(true);
 
+  // React is unreliable about syncing the `muted` prop to the DOM after mount
+  // (long-standing react#10389), so the toggle drives the element directly.
+  const toggleMuted = () => {
+    const v = ref.current;
+    if (!v) return;
+    const next = !v.muted;
+    v.muted = next;
+    if (!next && v.paused) v.play().catch(() => {});
+    setMuted(next);
+  };
+
   useEffect(() => {
     const v = ref.current;
     if (!v) return;
@@ -65,7 +76,7 @@ export default function ProjectVideo({
       {hasAudio && (
         <button
           type="button"
-          onClick={() => setMuted((m) => !m)}
+          onClick={toggleMuted}
           aria-label={muted ? "Unmute video" : "Mute video"}
           aria-pressed={!muted}
           className="bv-6 absolute bottom-2.5 right-2.5 z-30 flex h-8 w-8 items-center justify-center bg-black/55 text-white/80 backdrop-blur-sm transition-colors hover:bg-black/75 hover:text-white"

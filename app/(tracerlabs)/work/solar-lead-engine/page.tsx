@@ -1,4 +1,5 @@
 import type { Metadata } from "next";
+import Image from "next/image";
 import Footer from "../../../components/Footer";
 import Card from "../../../components/Card";
 import Button from "../../../components/Button";
@@ -73,11 +74,15 @@ function Scenario({
   id,
   n,
   title,
+  img,
   children,
 }: {
   id: string;
   n: string;
   title: string;
+  // Decorative scenario illustration (fal.ai, Night Telemetry palette) —
+  // rendered in a dark media window like the homepage cards, aria-hidden.
+  img?: string;
   children: React.ReactNode;
 }) {
   return (
@@ -89,6 +94,11 @@ function Scenario({
         <span className="mr-3 text-ink/30">{n}</span>
         {title}
       </h2>
+      {img && (
+        <div aria-hidden className="relative mt-6 aspect-[21/9] w-full max-w-[42rem] overflow-hidden bg-[#0b0b0f]">
+          <Image src={img} alt="" fill sizes="(max-width: 700px) 100vw, 42rem" className="object-cover" loading="lazy" />
+        </div>
+      )}
       <div className="mt-5 flex max-w-[42rem] flex-col gap-4">{children}</div>
     </section>
   );
@@ -165,7 +175,7 @@ export default function SolarCaseStudy() {
           </nav>
 
           <div className="min-w-0 pt-2">
-            <Scenario id="visibility" n="1" title="Flying blind">
+            <Scenario id="visibility" n="1" title="Flying blind" img="/assets/work-solar-visibility.jpg">
               <RunIn label="The problem">
                 You can&apos;t fix a funnel you can&apos;t see. The ad platform reported
                 clicks, the CRM showed leads, and nothing explained the gap between
@@ -191,7 +201,7 @@ export default function SolarCaseStudy() {
               </Result>
             </Scenario>
 
-            <Scenario id="lead-quality" n="2" title="Fake numbers">
+            <Scenario id="lead-quality" n="2" title="Fake numbers" img="/assets/work-solar-verify.jpg">
               <RunIn label="The problem">
                 Meta delivered volume, but the sales reps kept coming back with the
                 same report: &ldquo;the number doesn&apos;t work&rdquo;, &ldquo;wrong
@@ -214,7 +224,7 @@ export default function SolarCaseStudy() {
               </Result>
             </Scenario>
 
-            <Scenario id="speed" n="3" title="Cold leads">
+            <Scenario id="speed" n="3" title="Cold leads" img="/assets/work-solar-speed.jpg">
               <RunIn label="The problem">
                 Solar leads decay by the hour. Leads waited hours — sometimes days —
                 for a callback, and by then they&apos;d filled out three
@@ -236,7 +246,7 @@ export default function SolarCaseStudy() {
               </Result>
             </Scenario>
 
-            <Scenario id="show-rate" n="4" title="No-shows">
+            <Scenario id="show-rate" n="4" title="No-shows" img="/assets/work-solar-shows.jpg">
               <RunIn label="The problem">
                 People book in good faith, then life happens — plans change, work
                 runs late, and a sales rep burns an hour on someone who was never

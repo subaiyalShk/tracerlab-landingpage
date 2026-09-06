@@ -48,6 +48,29 @@ Components (`app/components/`):
 - CTA framing = **discovery call** (understand the business, uncover bottlenecks) — not
   "build your AI"; keep "machine" to the hero headline + one Services mention.
 
+## ⚠️ Performance rules (hard-won 2026-09-06 — scroll-jank hunt)
+The page died by a thousand compositing cuts. Do not reintroduce these:
+- **No CSS `filter`/`backdrop-filter` at scale.** Light mode once ran `drop-shadow` filters
+  on every Bevel (the light-only scroll lag) and the marquee filtered 18 logos individually.
+  Card shadows = `box-shadow` on the UNCLIPPED `.nt-cardframe` (a box-shadow on the Bevel
+  itself gets clipped by the chamfer; the soft blur hides the corner mismatch). If a moving
+  row needs a filter, put ONE on the container. Page-wide budget: a handful of small,
+  non-animated filtered elements (marquee row, grayscale portraits) — audit with
+  `[...document.querySelectorAll('*')].filter(e=>getComputedStyle(e).filter!=='none')`.
+- **No giant blurred layers.** Ambient glows are plain `radial-gradient(circle closest-side …)`
+  divs — the old `blur(120–140px)` filters were redundant and expensive. Same for the horizon.
+- **Animate transform/opacity only.** The grid floor scrolls via a `::before` translateY,
+  never `background-position` (per-frame repaint).
+- **Sticky/fixed elements keep blur ≤ `md`** (nav) / `sm` (CTA bar) — a fixed backdrop-blur
+  re-blurs everything under it every scrolled frame.
+- **`content-visibility:auto`** on the 4 below-fold sections, masked by `.cv-fade` (a
+  TRANSFORM-ONLY slide-up — an opacity keyframe can strand sections invisible when
+  animations don't run, e.g. throttled tabs).
+- **No session-replay scripts** (Hotjar/Contentsquare removed — they hook every scroll and
+  were the dominant jank after the rendering fixes). Re-add only as a deliberate decision.
+- TypedHeadline renders the FULL headline visible in server HTML (LCP); the ghost goes
+  transparent only after the first typed character. Don't "simplify" that away.
+
 ## Design system — "sharp technical dark"
 - **Geometry:** chamfered corners everywhere via `clip-path` — `.bv-6`/`.bv-9` utilities (globals)
   for chips/pills, `<Bevel>` for bordered panels. No rounded UI (the logo image is exempt — it’s

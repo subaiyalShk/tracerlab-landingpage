@@ -4,6 +4,7 @@
 // The cards are deliberately a PIPELINE, not a taxonomy: every engagement runs
 // the same arc (get leads → engage instantly → take payment → run on software).
 
+import Image from "next/image";
 import Card from "./Card";
 
 type Figure = { v: string; l: string };
@@ -212,8 +213,22 @@ export default function Services() {
 
         {/* Bento grid — flat hairline panels */}
         <div className="mt-12 grid grid-cols-1 gap-4 sm:grid-cols-2 lg:gap-5">
-          {/* Featured — Lead Generation, stage 1 (spans both rows on the left at sm+) */}
-          <Card className="sm:row-span-2" contentClassName="p-7 sm:p-8">
+          {/* Featured — Lead Generation, stage 1 (spans both rows on the left at sm+).
+              The tall column leaves surplus height, so a flush illustration
+              (fal.ai, Night Telemetry palette) fills the card's top. */}
+          <Card className="sm:row-span-2" contentClassName="h-full">
+            <div className="relative aspect-[16/9] w-full overflow-hidden bg-[#0b0b0f]">
+              <Image
+                src="/assets/leadgen-funnel.jpg"
+                alt=""
+                aria-hidden
+                fill
+                sizes="(max-width: 640px) 100vw, 40rem"
+                className="object-cover"
+                loading="lazy"
+              />
+            </div>
+            <div className="flex flex-1 flex-col p-7 sm:p-8">
             <CardHead s={FEATURED} />
             <p className="mt-4 max-w-[26rem] text-[0.98rem] leading-[1.7] text-ink/60">
               {FEATURED.blurb}
@@ -231,6 +246,7 @@ export default function Services() {
             <Figures items={FEATURED.figures} who={FEATURED.who} />
             <div className="mt-auto pt-2">
               <CardFoot s={FEATURED} />
+            </div>
             </div>
           </Card>
 

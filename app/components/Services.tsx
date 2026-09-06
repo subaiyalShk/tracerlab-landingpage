@@ -23,7 +23,7 @@ type Service = {
 };
 
 const DISPLAY = "var(--font-archivo), system-ui, sans-serif";
-const ACCENT = "#056AFC";
+const ACCENT = "var(--tl-accent-text)";
 
 const iconCls = "h-6 w-6";
 

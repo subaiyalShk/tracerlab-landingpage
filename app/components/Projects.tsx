@@ -39,7 +39,7 @@ type Product = {
 };
 
 const DISPLAY = "var(--font-archivo), system-ui, sans-serif";
-const ACCENT = "#056AFC";
+const ACCENT = "var(--tl-accent-text)";
 
 const CASE_STUDIES: CaseStudy[] = [
   {

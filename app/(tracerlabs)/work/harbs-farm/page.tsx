@@ -29,7 +29,6 @@ export const metadata: Metadata = {
 };
 
 const DISPLAY = "var(--font-archivo), system-ui, sans-serif";
-const ACCENT = "#056AFC";
 
 const SECTIONS = [
   { id: "phone", n: "1", nav: "Run by phone" },
@@ -60,10 +59,10 @@ function RunIn({ label, children }: { label: string; children: React.ReactNode }
 
 function Result({ figure, children }: { figure: string; children: React.ReactNode }) {
   return (
-    <div className="mt-7 border-l-2 border-[#056AFC] pl-6">
+    <div className="mt-7 border-l-2 pl-6" style={{ borderColor: "var(--tl-accent-text)" }}>
       <div
-        className="nt-figure text-[2.1rem] font-bold leading-none tracking-tight text-[#056AFC]"
-        style={{ fontFamily: DISPLAY }}
+        className="nt-figure text-[2.1rem] font-bold leading-none tracking-tight"
+        style={{ fontFamily: DISPLAY, color: "var(--tl-accent-text)" }}
       >
         {figure}
       </div>

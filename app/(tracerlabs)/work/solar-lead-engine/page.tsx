@@ -57,10 +57,10 @@ function Result({
   chart?: React.ReactNode;
 }) {
   return (
-    <div className="mt-7 border-l-2 border-[#056AFC] pl-6">
+    <div className="mt-7 border-l-2 pl-6" style={{ borderColor: "var(--tl-accent-text)" }}>
       <div
-        className="nt-figure text-[2.1rem] font-bold leading-none tracking-tight text-[#056AFC]"
-        style={{ fontFamily: DISPLAY }}
+        className="nt-figure text-[2.1rem] font-bold leading-none tracking-tight"
+        style={{ fontFamily: DISPLAY, color: "var(--tl-accent-text)" }}
       >
         {figure}
       </div>

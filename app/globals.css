@@ -665,8 +665,9 @@ html[data-theme="light"] .nt-grain {
   background: linear-gradient(90deg, #e7028d, #056afc);
 }
 
+/* Selection = the gradient's warm pole: one of pink's few sanctioned jobs. */
 ::selection {
-  background: rgba(5, 106, 252, 0.35);
+  background: rgba(231, 2, 141, 0.3);
   color: var(--tl-ink);
 }
 

@@ -183,9 +183,10 @@ function OpsPanel() {
                 <div className="mt-1.5 h-1.5 w-1/2 rounded-full bg-white/10" />
               </div>
               <span
-                className="shrink-0 px-2 py-0.5 text-[0.55rem] font-semibold"
-                style={{ color: s.color, backgroundColor: s.bg }}
+                className="flex shrink-0 items-center gap-1.5 px-2 py-0.5 text-[0.55rem] font-semibold text-white/65"
+                style={{ backgroundColor: s.bg }}
               >
+                <span aria-hidden className="h-1.5 w-1.5 rounded-full" style={{ backgroundColor: s.color }} />
                 {s.label}
               </span>
             </div>

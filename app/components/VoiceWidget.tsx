@@ -182,6 +182,20 @@ export default function VoiceWidget({
         {state === "speaking" && <span className="text-[0.95rem] font-medium text-ink/80">Speaking… <span className="text-ink/45">(tap to end)</span></span>}
         {state === "ended" && (
           <>
+            {/* the payoff tick — pink marks the machine producing its output */}
+            <svg
+              aria-hidden
+              className="animate-rise h-7 w-7"
+              viewBox="0 0 24 24"
+              fill="none"
+              stroke="#e7028d"
+              strokeWidth="2.4"
+              strokeLinecap="round"
+              strokeLinejoin="round"
+              style={{ filter: "drop-shadow(0 0 8px rgba(231,2,141,0.55))" }}
+            >
+              <path d="M4 12.5l5.5 5.5L20 6.5" />
+            </svg>
             <span className="text-[1.02rem] font-semibold text-ink">Thanks — talk soon.</span>
             <button type="button" onClick={() => setState("idle")} className="text-[0.85rem] font-semibold text-ink/70 transition-colors hover:text-ink">
               Start over

@@ -108,6 +108,7 @@ const PRODUCTS: Product[] = [
       // so contain costs only ~10px side bars and never cuts the frame.
       fit: "contain",
       label: "Demo reel of the Offset Canvassing GIS app and companion mobile CRM for door-to-door teams.",
+      hasAudio: true,
     },
   },
   {

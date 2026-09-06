@@ -4,6 +4,8 @@
 // The cards are deliberately a PIPELINE, not a taxonomy: every engagement runs
 // the same arc (get leads → engage instantly → take payment → run on software).
 
+import Card from "./Card";
+
 type Service = {
   stage: string;
   title: string;
@@ -179,7 +181,7 @@ export default function Services() {
         {/* Bento grid — flat hairline panels */}
         <div className="mt-12 grid grid-cols-1 gap-4 sm:grid-cols-2 lg:gap-5">
           {/* Featured — Lead Generation, stage 1 (spans both rows on the left at sm+) */}
-          <div className="nt-card backdrop-blur-xl backdrop-saturate-150 nt-card-featured relative flex flex-col p-7 sm:row-span-2 sm:p-8">
+          <Card className="sm:row-span-2" contentClassName="p-7 sm:p-8">
             <CardHead s={FEATURED} />
             <p className="mt-4 max-w-[26rem] text-[0.98rem] leading-[1.7] text-ink/60">
               {FEATURED.blurb}
@@ -198,22 +200,22 @@ export default function Services() {
             <div className="mt-auto pt-2">
               <CardFoot s={FEATURED} />
             </div>
-          </div>
+          </Card>
 
           {/* Two stacked tiles on the right at sm+ — stages 2 & 3 */}
           {SERVICES.map((s) => (
-            <div key={s.title} className="nt-card backdrop-blur-xl backdrop-saturate-150 relative flex flex-col p-7 sm:p-8">
+            <Card key={s.title} contentClassName="p-7 sm:p-8">
               <CardHead s={s} />
               <p className="mt-3 text-[0.95rem] leading-[1.65] text-ink/60">{s.blurb}</p>
               <Metrics items={s.metrics} />
               <div className="mt-auto">
                 <CardFoot s={s} />
               </div>
-            </div>
+            </Card>
           ))}
 
           {/* Stage 4 — full-width bar across the bottom at sm+ */}
-          <div className="nt-card backdrop-blur-xl backdrop-saturate-150 relative p-7 sm:col-span-2 sm:p-8">
+          <Card className="sm:col-span-2" contentClassName="p-7 sm:p-8">
             <div className="flex flex-col gap-6 sm:flex-row sm:items-start sm:gap-10">
               <div className="sm:flex-1">
                 <CardHead s={CUSTOM} />
@@ -226,7 +228,7 @@ export default function Services() {
                 <CardFoot s={CUSTOM} />
               </div>
             </div>
-          </div>
+          </Card>
         </div>
 
         {/* Section CTA → conversion */}

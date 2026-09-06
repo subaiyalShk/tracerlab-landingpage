@@ -456,25 +456,6 @@ html[data-theme="light"] {
   --nt-figure-glow: none;
 }
 
-/* Frosted glass card: translucent fill + backdrop blur (the scene shows
-   through, softened), an inner top-edge highlight so the glass catches
-   light, hover = lift + brand underglow. */
-.nt-card {
-  background: var(--tl-card-bg);
-  border: 1px solid var(--tl-card-border);
-  backdrop-filter: blur(16px) saturate(140%);
-  -webkit-backdrop-filter: blur(16px) saturate(140%);
-  box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.07);
-  transition: transform 0.3s ease, box-shadow 0.3s ease, border-color 0.3s ease;
-}
-html[data-theme="light"] .nt-card {
-  box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.9), 0 14px 36px -16px rgba(11, 13, 18, 0.18);
-}
-.nt-card:hover {
-  transform: translateY(-3px);
-  box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.07), var(--nt-underglow);
-  border-color: color-mix(in oklab, var(--tl-ink) 20%, transparent);
-}
 
 /* Gradient hairline — section dividers (fades at both ends). */
 .nt-hairline {
@@ -621,31 +602,7 @@ html[data-theme="light"] .nt-grain {
   animation: blink 1.2s steps(1) infinite;
 }
 
-/* Gradient top edge that draws itself across a card on hover. */
-.nt-card { position: relative; }
-.nt-card::after {
-  content: "";
-  position: absolute;
-  left: 0;
-  right: 0;
-  top: -1px;
-  height: 2px;
-  background: linear-gradient(90deg, #e7028d, #056afc);
-  transform: scaleX(0);
-  transform-origin: left;
-  transition: transform 0.45s ease;
-}
-.nt-card:hover::after {
-  transform: scaleX(1);
-}
 
-/* Featured card — a static gradient edge (the "second loudest" element). */
-.nt-card-featured {
-  border-color: transparent;
-  background:
-    linear-gradient(var(--tl-surface), var(--tl-surface)) padding-box,
-    linear-gradient(135deg, rgba(231, 2, 141, 0.55), rgba(5, 106, 252, 0.55)) border-box;
-}
 
 /* Section kicker — a short gradient dash above section labels. */
 .nt-kicker {
@@ -664,4 +621,14 @@ html[data-theme="light"] .nt-grain {
 @media (prefers-reduced-motion: reduce) {
   .nt-sheen { animation: none; background-position: 120% 0; }
   .nt-cursor { animation: none; }
+}
+
+/* Card frame (Card.tsx wrapper): hover lift + underglow that follows the
+   chamfered shape — drop-shadow, since box-shadow is clipped by the bevel. */
+.nt-cardframe {
+  transition: transform 0.3s ease, filter 0.3s ease;
+}
+.nt-cardframe:hover {
+  transform: translateY(-3px);
+  filter: var(--nt-underglow-filter);
 }

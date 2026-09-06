@@ -6,6 +6,7 @@
 // Server component: reads env to decide whether voice is provisioned.
 import VoiceWidget from "./VoiceWidget";
 import Button from "./Button";
+import Card from "./Card";
 
 const DISPLAY = "var(--font-archivo), system-ui, sans-serif";
 
@@ -78,7 +79,8 @@ export default function Cta() {
           <div aria-hidden className="nt-hairline absolute left-0 right-0 top-[2.6rem] hidden sm:block" />
           <ol className="grid w-full list-none grid-cols-1 gap-4 p-0 text-left sm:grid-cols-3">
             {STEPS.map((s) => (
-              <li key={s.n} className="nt-card backdrop-blur-xl backdrop-saturate-150 relative p-5 pt-6">
+              <li key={s.n}>
+                <Card bevel={10} className="h-full" contentClassName="p-5 pt-6">
                 <span
                   aria-hidden
                   className="nt-ghost-num"
@@ -93,6 +95,7 @@ export default function Cta() {
                   {s.t}
                 </h3>
                 <p className="mt-2 max-w-[15rem] text-[0.88rem] leading-relaxed text-ink/55">{s.d}</p>
+                </Card>
               </li>
             ))}
           </ol>

@@ -1,6 +1,6 @@
 import type { Metadata } from "next";
 import Footer from "../../../components/Footer";
-import Bevel, { GLASS_BORDER, GLASS_BG } from "../../../components/Bevel";
+import Card from "../../../components/Card";
 import Button from "../../../components/Button";
 import CaseHeader from "../../../components/CaseHeader";
 import RateChart from "../../../components/RateChart";
@@ -277,25 +277,23 @@ export default function SolarCaseStudy() {
 
             {/* CTA — the page's one chamfered panel */}
             <section className="pb-20">
-              <Bevel bevel={16} border={GLASS_BORDER} bg={GLASS_BG}>
-                <div className="flex flex-col items-start gap-5 p-8 sm:flex-row sm:items-center sm:justify-between sm:p-10">
-                  <div>
-                    <h2
-                      className="text-[1.4rem] font-bold leading-tight tracking-tight text-ink"
-                      style={{ fontFamily: DISPLAY }}
-                    >
-                      Have the same problems?
-                    </h2>
-                    <p className="mt-2 max-w-[30rem] text-[0.95rem] text-ink/55">
-                      Fake numbers, cold leads, and no-shows are fixable. We&apos;ll
-                      build the engine that fixes them.
-                    </p>
-                  </div>
-                  <Button href="/#contact" variant="primary">
-                    Start your project
-                  </Button>
+              <Card bevel={16} contentClassName="items-start gap-5 p-8 sm:flex-row sm:items-center sm:justify-between sm:p-10">
+                <div>
+                  <h2
+                    className="text-[1.4rem] font-bold leading-tight tracking-tight text-ink"
+                    style={{ fontFamily: DISPLAY }}
+                  >
+                    Have the same problems?
+                  </h2>
+                  <p className="mt-2 max-w-[30rem] text-[0.95rem] text-ink/55">
+                    Fake numbers, cold leads, and no-shows are fixable. We&apos;ll
+                    build the engine that fixes them.
+                  </p>
                 </div>
-              </Bevel>
+                <Button href="/#contact" variant="primary">
+                  Start your project
+                </Button>
+              </Card>
             </section>
           </div>
         </div>

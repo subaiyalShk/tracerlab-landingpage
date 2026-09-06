@@ -1,6 +1,6 @@
 import type { Metadata } from "next";
 import Footer from "../../../components/Footer";
-import Bevel, { GLASS_BORDER, GLASS_BG } from "../../../components/Bevel";
+import Card from "../../../components/Card";
 import Button from "../../../components/Button";
 import CaseHeader from "../../../components/CaseHeader";
 
@@ -143,12 +143,12 @@ export default function HarbsFarmCaseStudy() {
         <Section title="One system, from ad click to pickup">
           <div className="mt-1 grid grid-cols-1 gap-4 sm:grid-cols-2">
             {BUILT.map((b) => (
-              <div key={b.t} className="border border-ink/10 p-5">
+              <Card key={b.t} bevel={10} contentClassName="p-5">
                 <h3 className="text-[1.02rem] font-bold leading-tight tracking-tight text-ink" style={{ fontFamily: DISPLAY }}>
                   {b.t}
                 </h3>
                 <p className="mt-2 text-[0.9rem] leading-relaxed text-ink/55">{b.d}</p>
-              </div>
+              </Card>
             ))}
           </div>
         </Section>
@@ -182,8 +182,8 @@ export default function HarbsFarmCaseStudy() {
 
         {/* CTA — the page's one chamfered panel */}
         <section className="mx-auto w-full max-w-[880px] px-6 pb-20 pt-4 sm:px-10">
-          <Bevel bevel={16} border={GLASS_BORDER} bg={GLASS_BG}>
-            <div className="flex flex-col items-start gap-5 p-8 sm:flex-row sm:items-center sm:justify-between sm:p-10">
+          <Card bevel={16} contentClassName="sm:flex-row sm:items-center sm:justify-between gap-5 p-8 sm:p-10 items-start">
+            <div className="contents">
               <div>
                 <h2 className="text-[1.4rem] font-bold leading-tight tracking-tight text-ink" style={{ fontFamily: DISPLAY }}>
                   Run your operation like this
@@ -197,7 +197,7 @@ export default function HarbsFarmCaseStudy() {
                 Start your project
               </Button>
             </div>
-          </Bevel>
+          </Card>
         </section>
       </main>
       <Footer />

@@ -5,6 +5,7 @@
 import Image from "next/image";
 import ProjectVideo from "./ProjectVideo";
 import Button from "./Button";
+import Card from "./Card";
 
 type Media =
   | { kind: "video"; src: string; poster: string; fit?: "cover" | "contain"; label: string }
@@ -242,7 +243,8 @@ function MediaChrome({ media, chrome }: { media: Media; chrome: string }) {
 // Spotlight panel for a client case study — the loud tier.
 function CaseCard({ cs, mediaRight }: { cs: CaseStudy; mediaRight: boolean }) {
   return (
-    <article id={`work-${cs.id}`} className="nt-card backdrop-blur-xl backdrop-saturate-150 relative scroll-mt-24 p-6 sm:p-8">
+    <article id={`work-${cs.id}`} className="scroll-mt-24">
+      <Card bevel={16} contentClassName="p-6 sm:p-8">
       <div
         className={`grid grid-cols-1 items-center gap-8 lg:gap-14 ${
           mediaRight ? "lg:grid-cols-[1fr_minmax(0,19rem)]" : "lg:grid-cols-[minmax(0,19rem)_1fr]"
@@ -288,6 +290,7 @@ function CaseCard({ cs, mediaRight }: { cs: CaseStudy; mediaRight: boolean }) {
           </div>
         </div>
       </div>
+      </Card>
     </article>
   );
 }

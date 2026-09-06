@@ -313,11 +313,11 @@ function CaseCard({ cs, mediaRight }: { cs: CaseStudy; mediaRight: boolean }) {
 
 // Bento tile for a product — media up top (wide crop), copy below, link
 // pinned to the card's foot so the grid stays flush.
-function ProductCard({ p }: { p: Product }) {
+function ProductCard({ p, aspect = "aspect-[16/10]" }: { p: Product; aspect?: string }) {
   return (
-    <article id={`work-${p.id}`} className="scroll-mt-24">
+    <article id={`work-${p.id}`} className="h-full scroll-mt-24">
       <Card bevel={12} className="h-full" contentClassName="h-full">
-        <MediaChrome media={p.media} chrome={p.chrome} aspect="aspect-[16/10]" frameless />
+        <MediaChrome media={p.media} chrome={p.chrome} aspect={aspect} frameless />
         <div className="flex flex-1 flex-col p-6">
           <p className="text-[0.85rem] text-ink/50">{p.client}</p>
           <h3
@@ -396,12 +396,13 @@ export default function Projects() {
         <p className="mt-16 text-[0.9rem] font-semibold text-ink/45" style={{ fontFamily: DISPLAY }}>
           Our products &amp; experiments
         </p>
-        <div className="mt-6 grid grid-cols-1 gap-4 md:grid-cols-2 lg:grid-cols-3 lg:gap-5">
-          {PRODUCTS.map((p, i) => (
-            <div key={p.id} className={i === 2 ? "md:col-span-2 lg:col-span-1" : ""}>
-              <ProductCard p={p} />
-            </div>
-          ))}
+        <div className="mt-6 grid grid-cols-1 gap-4 lg:grid-cols-[minmax(0,26rem)_1fr] lg:gap-5">
+          {/* tall feature — the 9:16 canvassing reel shown in full */}
+          <ProductCard p={PRODUCTS[0]} aspect="aspect-[9/16]" />
+          <div className="flex flex-col gap-4 lg:gap-5">
+            <ProductCard p={PRODUCTS[1]} />
+            <ProductCard p={PRODUCTS[2]} />
+          </div>
         </div>
 
         {/* section CTA → conversion */}

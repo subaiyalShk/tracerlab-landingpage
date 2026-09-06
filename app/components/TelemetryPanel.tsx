@@ -65,7 +65,7 @@ export default function TelemetryPanel() {
 
   return (
     <div
-      className="flex flex-col p-6 sm:p-7"
+      className="flex flex-col p-5 sm:p-6"
       onMouseEnter={() => setPaused(true)}
       onMouseLeave={() => setPaused(false)}
     >
@@ -80,7 +80,7 @@ export default function TelemetryPanel() {
       </div>
 
       {/* pane — keyed remount replays the rise animation on switch */}
-      <div key={i} className="animate-rise flex min-h-[352px] flex-col">
+      <div key={i} className="animate-rise flex min-h-[330px] flex-col">
         <div className="pt-5">
           <div
             className="bg-gradient-to-r from-brand-pink to-brand-blue bg-clip-text text-[clamp(3rem,6vw,4.2rem)] font-extrabold leading-none tracking-tight text-transparent"

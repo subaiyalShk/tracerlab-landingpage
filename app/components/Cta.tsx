@@ -21,12 +21,12 @@ export default function Cta() {
   const calcomUrl = process.env.NEXT_PUBLIC_CAL_BOOKING_LINK || "https://cal.com/team/tracerlabs/discovery-call";
 
   return (
-    <section id="tl-cta" className="font-body relative isolate w-full overflow-hidden bg-page text-ink">
+    <section id="tl-cta" className="cv-auto font-body relative isolate w-full overflow-hidden bg-page text-ink" style={{ containIntrinsicSize: "auto 1400px" }}>
       {/* ambient glow behind the orb — the page's second (and last) ambient light */}
       <div
         aria-hidden
-        className="pointer-events-none absolute left-1/2 top-1/3 -z-10 h-[46vw] w-[58vw] -translate-x-1/2 -translate-y-1/2 rounded-full blur-[140px]"
-        style={{ background: "radial-gradient(circle, var(--nt-ambient-pink) 0%, var(--nt-ambient-blue) 50%, transparent 75%)" }}
+        className="pointer-events-none absolute left-1/2 top-1/3 -z-10 h-[46vw] w-[58vw] -translate-x-1/2 -translate-y-1/2 rounded-full"
+        style={{ background: "radial-gradient(circle closest-side, var(--nt-ambient-pink) 0%, var(--nt-ambient-blue) 55%, transparent 100%)" }}
       />
       {/* the scene returns — closing bookend to the hero's grid floor */}
       <div aria-hidden className="nt-horizon -z-10" />

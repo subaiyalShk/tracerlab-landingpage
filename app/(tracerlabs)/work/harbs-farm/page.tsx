@@ -1,18 +1,21 @@
 import type { Metadata } from "next";
+import Image from "next/image";
 import Footer from "../../../components/Footer";
 import Card from "../../../components/Card";
 import Button from "../../../components/Button";
 import CaseHeader from "../../../components/CaseHeader";
 
 // Case study: Harbs Farm — the flagship client story (named with permission).
-// Telemetry design language (matches /work/solar-lead-engine): Archivo
-// headings, flat hairline panels, blue results accent, no reveal gating,
-// the brand gradient exactly once (the hero number).
+// Rewritten 2026-09 as problem → solution → outcome scenarios (mirrors
+// /work/solar-lead-engine): the farm's constraint was CAPACITY, not demand —
+// every scenario is a manual process the platform absorbed. Telemetry design
+// language: Archivo headings, hairline panels, blue results accent, the brand
+// gradient exactly once (the hero number), decorative fal.ai scenario banners.
 
 export const metadata: Metadata = {
   title: "Case Study: Harbs Farm",
   description:
-    "How a family farm in New York went from phone calls and paper to an online operation — bookings, deposits, staff boards, reminders, and the ads that fill the calendar. 20 paid bookings in week one.",
+    "A meat-processing farm that ran on phone calls and paper cut sheets. We digitized the whole operation — self-serve bookings, deposit-gated slots, automated status updates, invoicing — and freed the capacity they were losing to coordination.",
   alternates: { canonical: "/work/harbs-farm" },
   openGraph: {
     type: "article",
@@ -21,52 +24,82 @@ export const metadata: Metadata = {
     locale: "en_US",
     title: "Case Study: Harbs Farm | Tracerlabs",
     description:
-      "From phone calls and paper to a self-serve online operation — 20 paid bookings in the first week of ads, every deposit collected.",
+      "From phone calls and paper cut sheets to a self-serve operation — deposit-gated bookings, automated updates, digital invoicing. 20 paid bookings in the first week of ads.",
   },
 };
 
 const DISPLAY = "var(--font-archivo), system-ui, sans-serif";
 const ACCENT = "#056AFC";
 
-const BUILT = [
-  {
-    t: "Self-serve booking",
-    d: "A step-by-step wizard where farmers book drop-offs, fill out cut sheets, and pay deposits through Square — no phone call required.",
-  },
-  {
-    t: "Staff ops board",
-    d: "A kanban processing board that tracks every order from drop-off through processing to ready — the whole floor sees the same live status.",
-  },
-  {
-    t: "Owner-controlled capacity",
-    d: "The owner blocks days, sets per-day caps, and adjusts schedules from an admin calendar — the system stops overbooking before it happens.",
-  },
-  {
-    t: "Automated customer updates",
-    d: "Drop-off reminders, order-status texts and emails at every stage — customers stay informed without calling in, and fewer bookings fall through.",
-  },
-  {
-    t: "Ads that fill the calendar",
-    d: "Meta and Google campaigns wired to conversion tracking that actually works (Pixel + CAPI), with a campaign dashboard the owner reads himself.",
-  },
-  {
-    t: "An AI receptionist",
-    d: "When customers do call, an AI answers, looks up their order status in real time, and handles the routine questions.",
-  },
+const SECTIONS = [
+  { id: "phone", n: "1", nav: "Run by phone" },
+  { id: "no-shows", n: "2", nav: "Wasted slots" },
+  { id: "status", n: "3", nav: "“Is my order ready?”" },
+  { id: "back-office", n: "4", nav: "The back office" },
+] as const;
+
+const STACK = [
+  "Next.js",
+  "Supabase (Postgres + phone-OTP auth)",
+  "Square (deposits & payments)",
+  "Twilio SMS",
+  "Resend email",
+  "Retell voice AI",
+  "Meta Pixel + CAPI",
+  "Vercel",
 ];
 
-function Section({ title, children }: { title: string; children: React.ReactNode }) {
+function RunIn({ label, children }: { label: string; children: React.ReactNode }) {
   return (
-    <section className="mx-auto w-full max-w-[880px] border-t border-ink/10 px-6 py-12 sm:px-10 sm:py-14">
+    <p className="text-[1.04rem] leading-[1.75] text-ink/62">
+      <strong className="font-semibold text-ink">{label} — </strong>
+      {children}
+    </p>
+  );
+}
+
+function Result({ figure, children }: { figure: string; children: React.ReactNode }) {
+  return (
+    <div className="mt-7 border-l-2 border-[#056AFC] pl-6">
+      <div
+        className="nt-figure text-[2.1rem] font-bold leading-none tracking-tight text-[#056AFC]"
+        style={{ fontFamily: DISPLAY }}
+      >
+        {figure}
+      </div>
+      <p className="mt-3 max-w-[38rem] text-[1.02rem] leading-[1.7] text-ink/70">{children}</p>
+    </div>
+  );
+}
+
+function Scenario({
+  id,
+  n,
+  title,
+  img,
+  children,
+}: {
+  id: string;
+  n: string;
+  title: string;
+  img?: string;
+  children: React.ReactNode;
+}) {
+  return (
+    <section id={id} className="scroll-mt-28 border-t border-ink/10 py-12 sm:py-14">
       <h2
         className="text-[clamp(1.5rem,3vw,2rem)] font-bold leading-tight tracking-tight text-ink"
         style={{ fontFamily: DISPLAY }}
       >
+        <span className="mr-3 text-ink/30">{n}</span>
         {title}
       </h2>
-      <div className="mt-5 flex flex-col gap-4 text-[1.04rem] leading-[1.75] text-ink/62">
-        {children}
-      </div>
+      {img && (
+        <div aria-hidden className="relative mt-6 aspect-[21/9] w-full max-w-[42rem] overflow-hidden bg-[#0b0b0f]">
+          <Image src={img} alt="" fill sizes="(max-width: 700px) 100vw, 42rem" className="object-cover" loading="lazy" />
+        </div>
+      )}
+      <div className="mt-5 flex max-w-[42rem] flex-col gap-4">{children}</div>
     </section>
   );
 }
@@ -77,19 +110,22 @@ export default function HarbsFarmCaseStudy() {
       <CaseHeader />
       <main className="font-body w-full bg-page text-ink">
         {/* Header */}
-        <header className="mx-auto w-full max-w-[880px] px-6 pb-12 pt-16 sm:px-10 sm:pt-20">
+        <header className="mx-auto w-full max-w-[1060px] px-6 pt-16 sm:px-10 sm:pt-20">
           <p className="text-[0.95rem] text-ink/50">Case study — meat processing, New York</p>
           <h1
-            className="mt-4 max-w-[16ch] text-[clamp(2.1rem,5vw,3.4rem)] font-extrabold leading-[1.06] tracking-tight text-ink"
+            className="mt-4 max-w-[17ch] text-[clamp(2.1rem,5vw,3.4rem)] font-extrabold leading-[1.06] tracking-tight text-ink"
             style={{ fontFamily: DISPLAY }}
           >
-            Harbs Farm runs online now.
+            The farm that ran on phone calls runs on software now.
           </h1>
-          <p className="mt-6 max-w-[42rem] text-[1.12rem] leading-[1.7] text-ink/60">
-            A family-run farm and meat-processing facility that ran on phone
-            calls and paper. Today its customers book, pay, and track their
-            orders online — and the ads that keep the calendar full run on the
-            same system.
+          <p className="mt-6 max-w-[44rem] text-[1.12rem] leading-[1.7] text-ink/60">
+            Harbs Farm never had a demand problem — customers were already
+            asking for a website where they could book. They had a capacity
+            problem: every booking, every cut-sheet preference, every
+            &ldquo;is my order ready?&rdquo; went through a phone call and a
+            piece of paper, and the coordination work was eating the hours the
+            family needed for the actual processing. We digitized the whole
+            operation. Here are the four manual processes that fell.
           </p>
 
           {/* Hero figure — the page's single gradient moment */}
@@ -99,17 +135,17 @@ export default function HarbsFarmCaseStudy() {
                 className="bg-gradient-to-r from-brand-pink to-brand-blue bg-clip-text text-[clamp(4rem,9vw,6.5rem)] font-extrabold leading-none tracking-tight text-transparent"
                 style={{ fontFamily: DISPLAY }}
               >
-                20
+                0
               </div>
               <div className="mt-2 text-[1rem] text-ink/60">
-                paid bookings in the first week of ads
+                phone calls needed to book, pay, or check an order
               </div>
             </div>
             <dl className="flex flex-wrap gap-x-10 gap-y-5 pb-1">
               {[
                 ["100%", "of deposits collected up front"],
-                ["1 in 8", "Google visitors becomes a booking"],
-                ["7", "new farmer customers since launch"],
+                ["20", "paid bookings, first week of ads"],
+                ["1 in 8", "search visitors becomes a booking"],
               ].map(([v, l]) => (
                 <div key={l}>
                   <dt className="sr-only">{l}</dt>
@@ -125,80 +161,176 @@ export default function HarbsFarmCaseStudy() {
           </div>
         </header>
 
-        <Section title="Everything went through the phone">
-          <p>
-            Every booking was a phone call. Deposits weren&apos;t collected, so
-            no-shows cost real money. Cut-sheet details lived on paper and got
-            re-asked at drop-off. Customers called throughout the week to check
-            on their orders, and during peak season the volume buried the family
-            in coordination work that had nothing to do with processing meat.
-          </p>
-          <p>
-            The farm didn&apos;t need a website. It needed an operating system —
-            and a way to grow beyond word of mouth without adding more phone
-            calls.
-          </p>
-        </Section>
+        {/* Body: sticky index + content */}
+        <div className="mx-auto grid w-full max-w-[1060px] grid-cols-1 gap-x-14 px-6 pb-8 pt-4 sm:px-10 lg:grid-cols-[180px_1fr]">
+          <nav aria-label="Case study sections" className="hidden lg:block">
+            <ol className="sticky top-28 flex list-none flex-col gap-3 p-0 pt-14">
+              {SECTIONS.map((s) => (
+                <li key={s.id}>
+                  <a
+                    href={`#${s.id}`}
+                    className="group flex items-baseline gap-2.5 text-[0.92rem] text-ink/50 transition-colors hover:text-ink"
+                  >
+                    <span className="text-[0.8rem] text-ink/30 group-hover:text-ink/50">{s.n}</span>
+                    {s.nav}
+                  </a>
+                </li>
+              ))}
+            </ol>
+          </nav>
 
-        <Section title="One system, from ad click to pickup">
-          <div className="mt-1 grid grid-cols-1 gap-4 sm:grid-cols-2">
-            {BUILT.map((b) => (
-              <Card key={b.t} bevel={10} contentClassName="p-5">
-                <h3 className="text-[1.02rem] font-bold leading-tight tracking-tight text-ink" style={{ fontFamily: DISPLAY }}>
-                  {b.t}
-                </h3>
-                <p className="mt-2 text-[0.9rem] leading-relaxed text-ink/55">{b.d}</p>
+          <div className="min-w-0 pt-2">
+            <Scenario id="phone" n="1" title="Run by phone" img="/assets/work-harbs-phone.jpg">
+              <RunIn label="The problem">
+                The phone was the front desk, the order form, and the filing
+                cabinet. Every booking was a call. Cut sheets — how each
+                customer wants each animal processed — were emailed as paper
+                forms or taken down verbally, preference by preference, and
+                noted by hand. Pricing lived in someone&apos;s head. During peak
+                season, answering the phone was a full-time job that produced
+                zero pounds of processed meat.
+              </RunIn>
+              <RunIn label="What we did">
+                An online booking system built around the cut sheet: farmers
+                book their own slot, add each animal, and pick exactly how they
+                want it processed — beef broken down primal by primal (chuck as
+                roast or steak, pack sizes for ground, sausage flavors), with
+                separate sheets for lamb, goat, and poultry. The farm&apos;s
+                entire rate card is encoded in the system, so the price and the
+                estimate compute themselves as the cut sheet fills in. Nothing
+                gets re-asked at drop-off, and nothing depends on whoever
+                answered the phone that day.
+              </RunIn>
+              <Result figure="Cut sheets fill themselves in">
+                The single biggest chunk of manual coordination — collecting
+                preferences and pricing them — is now done by the customer,
+                correctly, before the animal ever arrives.
+              </Result>
+            </Scenario>
+
+            <Scenario id="no-shows" n="2" title="Wasted slots" img="/assets/work-harbs-deposit.jpg">
+              <RunIn label="The problem">
+                Processing capacity is the whole business — there are only so
+                many slots in a week. People would book one, then never show
+                up. That slot was gone: it could have gone to a paying customer,
+                and instead it produced nothing.
+              </RunIn>
+              <RunIn label="What we did">
+                A deposit gate, integrated with Square: a booking slot is only
+                reserved once the deposit is paid, and the amount is calculated
+                automatically from what&apos;s in the booking — per animal, per
+                species, straight from the cart rules. No deposit, no slot.
+                Under the hood the card is authorized first and captured only
+                after the booking lands, with an hourly reconciliation job that
+                flags any charge that ever ends up without a booking. The owner
+                controls capacity directly too — blocking days and setting
+                per-day caps (500 chickens on a Wednesday, 1,200 on a Friday)
+                from an admin calendar, so the system stops overbooking before
+                it happens.
+              </RunIn>
+              <Result figure="100% of deposits collected">
+                Every booking on the calendar is now backed by money. In the
+                first week of paid ads, all 20 bookings arrived with the deposit
+                already paid — no-shows stopped costing slots.
+              </Result>
+            </Scenario>
+
+            <Scenario id="status" n="3" title="&ldquo;Is my order ready?&rdquo;" img="/assets/work-harbs-kanban.jpg">
+              <RunIn label="The problem">
+                Once an animal was dropped off, the only way for a customer to
+                know its status was to call — and someone at the farm had to
+                stop working, find out, and call back. Multiply by every active
+                order, every week.
+              </RunIn>
+              <RunIn label="What we did">
+                A kanban board for the processing floor — Dropped Off →
+                Processing → Ready for Pickup → Picked Up. Staff move each
+                order through the stages as they work, and the board is not
+                just internal tracking: every stage move automatically texts
+                the customer, and the one that matters most — &ldquo;your order
+                is ready for pickup&rdquo; — arrives with their invoice and a
+                one-tap sign-in link to their account. When customers do still
+                call, an AI receptionist answers, looks up their live order
+                status from the same data, and handles the routine questions.
+              </RunIn>
+              <Result figure="Status calls → status texts">
+                Customers stopped needing to call, and the farm stopped playing
+                switchboard. The same board the staff already use to run the
+                floor is the thing that keeps every customer informed.
+              </Result>
+            </Scenario>
+
+            <Scenario id="back-office" n="4" title="The back office" img="/assets/work-harbs-finance.jpg">
+              <RunIn label="The problem">
+                Invoicing was manual — hours of it — and financial visibility
+                was whatever could be reconstructed from paper, memory, and the
+                bank statement. Customers had no way to see an invoice or
+                change a booking without another phone call.
+              </RunIn>
+              <RunIn label="What we did">
+                Automated invoicing generated straight from the cut-sheet data
+                the system already holds — the same numbers the floor entered,
+                priced by the same rate card, editable line by line when
+                reality differs. Every invoice and order flows into one admin
+                dashboard with a live revenue view the owners can actually plan
+                against. And customers got a portal of their own: their
+                invoices, their bookings, and the ability to reschedule a slot
+                themselves.
+              </RunIn>
+              <Result figure="Hours of admin → one dashboard">
+                The invoicing hours are gone, the paper is gone, and for the
+                first time the farm has a live financial overview of its own
+                operation.
+              </Result>
+            </Scenario>
+
+            {/* Closing */}
+            <section className="border-t border-ink/10 py-12 sm:py-14">
+              <h2
+                className="text-[clamp(1.5rem,3vw,2rem)] font-bold leading-tight tracking-tight text-ink"
+                style={{ fontFamily: DISPLAY }}
+              >
+                One platform, and what&apos;s next
+              </h2>
+              <p className="mt-5 max-w-[42rem] text-[1.04rem] leading-[1.75] text-ink/62">
+                Bookings, cut sheets, deposits, the processing board, customer
+                notifications, the portal, and invoicing all run as one system —
+                the coordination work that used to bury the family now happens
+                on its own. With the capacity problem solved, the engagement has
+                moved to the growth side: ad campaigns with real conversion
+                tracking are already filling the calendar (20 paid bookings in
+                week one, roughly 1 booking per 8 search visitors). Next up:
+                wiring the processing line itself into the platform — scales and
+                machines feeding weights straight into orders and invoices, no
+                manual entry anywhere from ad click to pickup.
+              </p>
+              <p className="mt-5 max-w-[42rem] text-[0.92rem] leading-relaxed text-ink/45">
+                Built with {STACK.join(" · ")}.
+              </p>
+            </section>
+
+            {/* CTA — the page's one chamfered panel */}
+            <section className="pb-20">
+              <Card bevel={16} contentClassName="items-start gap-5 p-8 sm:flex-row sm:items-center sm:justify-between sm:p-10">
+                <div>
+                  <h2
+                    className="text-[1.4rem] font-bold leading-tight tracking-tight text-ink"
+                    style={{ fontFamily: DISPLAY }}
+                  >
+                    Still running your operation by phone?
+                  </h2>
+                  <p className="mt-2 max-w-[30rem] text-[0.95rem] text-ink/55">
+                    If coordination work is eating your capacity, we&apos;ll
+                    build the system that absorbs it.
+                  </p>
+                </div>
+                <Button href="/#contact" variant="primary">
+                  Book a discovery call
+                </Button>
               </Card>
-            ))}
+            </section>
           </div>
-        </Section>
-
-        <Section title="Paid bookings, not phone tag">
-          <p>
-            In the first week of paid ads the farm took{" "}
-            <strong className="font-semibold text-ink/85">
-              20 online bookings — every one with the deposit collected up front
-            </strong>
-            . Search traffic converts at roughly 1 booking per 8 visitors, and
-            the campaigns have brought in 7 brand-new farmer customers the farm
-            had never worked with before. Status texts and emails answer the
-            &quot;where&apos;s my order?&quot; calls before they happen, and the
-            reminder ladder quietly recovers bookings that would have been
-            abandoned.
-          </p>
-        </Section>
-
-        <Section title="Next: wiring in the processing line itself">
-          <div className="border-l-2 pl-6" style={{ borderColor: ACCENT }}>
-            <p>
-              The next phase connects the scales and machines on the processing
-              line directly into the platform — weights flowing straight from
-              the floor into orders and pricing, no manual entry. The goal:
-              admins run the entire operation, from ad click to finished order,
-              through a single interface.
-            </p>
-          </div>
-        </Section>
-
-        {/* CTA — the page's one chamfered panel */}
-        <section className="mx-auto w-full max-w-[880px] px-6 pb-20 pt-4 sm:px-10">
-          <Card bevel={16} contentClassName="sm:flex-row sm:items-center sm:justify-between gap-5 p-8 sm:p-10 items-start">
-            <div className="contents">
-              <div>
-                <h2 className="text-[1.4rem] font-bold leading-tight tracking-tight text-ink" style={{ fontFamily: DISPLAY }}>
-                  Run your operation like this
-                </h2>
-                <p className="mt-2 max-w-[30rem] text-[0.95rem] text-ink/55">
-                  If your business still runs on phone calls and paper, we can
-                  build the system that runs it instead.
-                </p>
-              </div>
-              <Button href="/#contact" variant="primary">
-                Start your project
-              </Button>
-            </div>
-          </Card>
-        </section>
+        </div>
       </main>
       <Footer />
     </div>

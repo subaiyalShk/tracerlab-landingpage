@@ -21,7 +21,7 @@ export default function Cta() {
   const calcomUrl = process.env.NEXT_PUBLIC_CAL_BOOKING_LINK || "https://cal.com/team/tracerlabs/discovery-call";
 
   return (
-    <section id="tl-cta" className="cv-auto font-body relative isolate w-full overflow-hidden bg-page text-ink" style={{ containIntrinsicSize: "auto 1400px" }}>
+    <section id="tl-cta" style={{ containIntrinsicSize: "auto 1400px" }} className="cv-auto font-body relative isolate w-full overflow-hidden bg-page text-ink">
       {/* ambient glow behind the orb — the page's second (and last) ambient light */}
       <div
         aria-hidden
@@ -36,7 +36,7 @@ export default function Cta() {
       <div id="contact" aria-hidden />
 
       <div className="mx-auto w-full max-w-[1280px] px-6 sm:px-10"><div className="nt-hairline" /></div>
-      <div className="mx-auto flex w-full max-w-[820px] flex-col items-center px-6 py-20 text-center sm:px-10 sm:py-28 lg:py-36">
+      <div className="cv-fade mx-auto flex w-full max-w-[820px] flex-col items-center px-6 py-20 text-center sm:px-10 sm:py-28 lg:py-36">
         <span aria-hidden className="nt-kicker" style={{ marginLeft: "auto", marginRight: "auto" }} />
         <h2
           className="max-w-[16ch] text-[clamp(2.2rem,5vw,3.6rem)] font-extrabold leading-[1.05] tracking-tight text-ink"

@@ -20,12 +20,14 @@ export default function Card({
 }) {
   return (
     <div className={`nt-cardframe ${className}`}>
+      {/* Perf: no backdrop-filter — a dozen simultaneously-painting blur-xl
+          cards was the page's largest continuous compositing cost. The glass
+          look is faked with a slightly more opaque card fill instead. */}
       <Bevel
         bevel={bevel}
         border={GLASS_BORDER}
         bg={GLASS_BG}
         className="h-full"
-        innerClassName="backdrop-blur-xl backdrop-saturate-150"
       >
         <div className={`relative flex h-full flex-col ${contentClassName}`}>{children}</div>
       </Bevel>

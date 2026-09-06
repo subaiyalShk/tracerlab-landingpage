@@ -95,7 +95,7 @@ button {
   --tl-surface: #0b0b0e;
 
   /* shared card recipe (Bevel.tsx GLASS_BG/GLASS_BORDER + defaults point here) */
-  --tl-card-bg: linear-gradient(160deg, rgba(255,255,255,0.05) 0%, rgba(255,255,255,0.012) 35%, rgba(255,255,255,0) 70%), rgba(8,9,13,0.55);
+  --tl-card-bg: linear-gradient(160deg, rgba(255,255,255,0.05) 0%, rgba(255,255,255,0.012) 35%, rgba(255,255,255,0) 70%), rgba(8,9,13,0.8);
   --tl-card-border: rgba(255,255,255,0.10);
   --tl-card-shadow: none;
 
@@ -118,7 +118,7 @@ html[data-theme="light"] {
 
   /* cards become solid white + a soft drop-shadow (applied via filter: drop-shadow in
      Bevel — box-shadow is clipped by the bevel clip-path, drop-shadow follows the shape) */
-  --tl-card-bg: linear-gradient(160deg, rgba(255,255,255,0.85) 0%, rgba(255,255,255,0.55) 45%, rgba(240,244,255,0.5) 100%);
+  --tl-card-bg: linear-gradient(160deg, rgba(255,255,255,0.93) 0%, rgba(255,255,255,0.78) 45%, rgba(240,244,255,0.72) 100%);
   --tl-card-border: rgba(11,13,18,0.08);
   --tl-card-shadow: drop-shadow(0 1px 2px rgba(11,13,18,0.05)) drop-shadow(0 12px 24px rgba(11,13,18,0.10));
 
@@ -462,13 +462,26 @@ html[data-theme="light"] {
 }
 
 
-/* Perf: below-fold sections skip layout + paint entirely while off-screen
-   (their frosted cards, videos, and images cost nothing until approached).
-   contain-intrinsic-size keeps the scrollbar stable; per-section estimates
-   are set inline where the default is far off. */
+/* Perf: below-fold sections skip layout + paint while off-screen; the inner
+   content carries a short fade-up that only starts when the subtree actually
+   renders, so the deferred render reads as an intentional reveal instead of
+   pop-in. contain-intrinsic-size (inline, per section) keeps the scrollbar
+   stable. */
 .cv-auto {
   content-visibility: auto;
-  contain-intrinsic-size: auto 1000px;
+}
+/* Transform-only on purpose: if the animation ever fails to run (throttled
+   tab, unsupported browser), the content still sits fully visible at rest —
+   an opacity keyframe here could leave whole sections invisible. */
+.cv-auto .cv-fade {
+  animation: cvReveal 0.5s ease-out both;
+}
+@keyframes cvReveal {
+  from { transform: translateY(16px); }
+  to { transform: none; }
+}
+@media (prefers-reduced-motion: reduce) {
+  .cv-auto .cv-fade { animation: none; }
 }
 
 /* Gradient hairline — section dividers (fades at both ends). */

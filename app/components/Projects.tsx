@@ -440,7 +440,7 @@ function ProductCard({
 
 export default function Projects() {
   return (
-    <section id="tl-projects" className="cv-auto font-body relative isolate w-full overflow-hidden bg-page text-ink" style={{ containIntrinsicSize: "auto 3800px" }}>
+    <section id="tl-projects" style={{ containIntrinsicSize: "auto 3800px" }} className="cv-auto font-body relative isolate w-full overflow-hidden bg-page text-ink">
       {/* ambient color field — gives the frosted spotlight panels something to blur */}
       <div
         aria-hidden
@@ -455,7 +455,7 @@ export default function Projects() {
       {/* scroll anchor: legacy/service links point at #projects (section id is tl-projects) */}
       <div id="projects" aria-hidden />
       <div className="mx-auto w-full max-w-[1280px] px-6 sm:px-10"><div className="nt-hairline" /></div>
-      <div className="mx-auto w-full max-w-[1280px] px-6 py-20 sm:px-10 sm:py-28 lg:py-36">
+      <div className="cv-fade mx-auto w-full max-w-[1280px] px-6 py-20 sm:px-10 sm:py-28 lg:py-36">
         {/* header */}
         <div className="max-w-[44rem]">
           <span aria-hidden className="nt-kicker" />

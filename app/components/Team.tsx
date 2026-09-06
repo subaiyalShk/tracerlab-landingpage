@@ -52,9 +52,9 @@ const LinkedInIcon = (
 
 export default function Team() {
   return (
-    <section id="tl-team" className="cv-auto font-body relative isolate w-full overflow-hidden bg-page text-ink" style={{ containIntrinsicSize: "auto 1100px" }}>
+    <section id="tl-team" style={{ containIntrinsicSize: "auto 1100px" }} className="cv-auto font-body relative isolate w-full overflow-hidden bg-page text-ink">
       <div className="mx-auto w-full max-w-[1280px] px-6 sm:px-10"><div className="nt-hairline" /></div>
-      <div className="mx-auto w-full max-w-[1280px] px-6 py-20 sm:px-10 sm:py-28">
+      <div className="cv-fade mx-auto w-full max-w-[1280px] px-6 py-20 sm:px-10 sm:py-28">
         <div className="max-w-[44rem]">
           <span aria-hidden className="nt-kicker" />
           <p className="text-[0.98rem] text-ink/50">The team</p>

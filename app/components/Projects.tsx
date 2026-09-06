@@ -22,7 +22,6 @@ type CaseStudy = {
   figures: Figure[];
   tech: string;
   href: string;
-  chrome: string;
   media: Media;
 };
 
@@ -34,7 +33,6 @@ type Product = {
   metrics: string[];
   tech: string;
   link: { label: string; href: string; external?: boolean };
-  chrome: string;
   media: Media;
 };
 
@@ -55,7 +53,6 @@ const CASE_STUDIES: CaseStudy[] = [
     ],
     tech: "Next.js, Retell, Twilio, GoHighLevel",
     href: "/work/solar-lead-engine",
-    chrome: "solar lead engine — live",
     media: {
       kind: "video",
       src: "/assets/solar-funnel.mp4",
@@ -77,7 +74,6 @@ const CASE_STUDIES: CaseStudy[] = [
     ],
     tech: "Next.js, Supabase, Square, Meta Ads",
     href: "/work/harbs-farm",
-    chrome: "harbsfarm.com — production",
     media: {
       kind: "video",
       src: "/assets/harbs-demo.mp4",
@@ -98,13 +94,12 @@ const PRODUCTS: Product[] = [
     metrics: ["GIS + public homeowner data", "Companion mobile CRM"],
     tech: "Next.js, React Native, Google Maps, Supabase",
     link: { label: "See the live page", href: "https://offset-canvassing.vercel.app/", external: true },
-    chrome: "offset-canvassing — demo",
     media: {
       kind: "video",
       src: "/assets/offset-canvassing.mp4",
       poster: "/assets/offset-canvassing-poster.jpg",
-      // contain: the wide card's media column is 9:16 minus the chrome bar,
-      // so contain costs only ~10px side bars and never cuts the frame.
+      // contain: the wide card's media column is exactly 9:16 (bar-less
+      // window), so the reel fits pixel-perfect with no crop.
       fit: "contain",
       label: "Demo reel of the Offset Canvassing GIS app and companion mobile CRM for door-to-door teams.",
     },
@@ -118,7 +113,6 @@ const PRODUCTS: Product[] = [
     metrics: ["Personalized AI coach", "iOS, Android & web"],
     tech: "Flutter, React, Gemini, Supabase",
     link: { label: "See it live", href: "https://beastmode.tracerlabs.io/", external: true },
-    chrome: "beastmode.tracerlabs.io",
     media: {
       kind: "video",
       src: "/assets/reel-beastmode.mp4",
@@ -136,7 +130,6 @@ const PRODUCTS: Product[] = [
     metrics: ["Campaigns in days", "10+ reels shipped"],
     tech: "Remotion, fal.ai, Next.js",
     link: { label: "Get a reel for your brand", href: "#contact" },
-    chrome: "ai-video reel",
     media: {
       kind: "video",
       src: "/assets/reel-aivideo.mp4",
@@ -234,22 +227,22 @@ function MediaBody({ media }: { media: Media }) {
 
 // Product-window media frame: slim chrome bar (dots + label), 9:16 body,
 // hover glow. The media reads as a running application, not a picture.
+// Media window — a plain dark stage for the reels (the old faux-browser
+// chrome bar with dots + label was retired 2026-09-06).
 function MediaChrome({
   media,
-  chrome,
   aspect = "aspect-[9/16]",
   frameless = false,
   fill = false,
   className = "",
 }: {
   media: Media;
-  chrome: string;
   aspect?: string;
   frameless?: boolean;
-  // fill: the media body soaks up whatever height the frame is given (chrome
-  // bar stays fixed); the aspect ratio still sizes the body on small screens
-  // where the frame has no imposed height. Pair with a className that sets the
-  // frame's height ("h-full" in a grid cell, "flex-1" in a flex column).
+  // fill: the media body soaks up whatever height the frame is given; the
+  // aspect ratio still sizes the body on small screens where the frame has no
+  // imposed height. Pair with a className that sets the frame's height
+  // ("h-full" in a grid cell, "flex-1" in a flex column).
   fill?: boolean;
   className?: string;
 }) {
@@ -261,17 +254,6 @@ function MediaChrome({
           : "overflow-hidden border border-ink/15 bg-[#0b0b0f] transition-shadow duration-300 hover:shadow-[var(--nt-underglow)]"
       }${fill ? " flex flex-col" : ""} ${className}`}
     >
-      <div className="flex items-center gap-1.5 border-b border-white/10 bg-white/[0.03] px-3 py-2">
-        <span className="h-2 w-2 rounded-full bg-white/15" />
-        <span className="h-2 w-2 rounded-full bg-white/15" />
-        <span className="h-2 w-2 rounded-full bg-white/15" />
-        <span className="ml-2 min-w-0 truncate text-[0.68rem] font-medium tracking-wide text-white/35">
-          {chrome}
-        </span>
-        <span aria-hidden className="ml-auto flex shrink-0 items-center gap-1.5">
-          <span className="h-1.5 w-1.5 rounded-full bg-[#056afc]" />
-        </span>
-      </div>
       <div className={`relative w-full ${fill ? `${aspect} lg:aspect-auto lg:flex-1` : aspect}`}>
         <MediaBody media={media} />
       </div>
@@ -292,7 +274,7 @@ function CaseCard({ cs, mediaRight }: { cs: CaseStudy; mediaRight: boolean }) {
         }`}
       >
         <div className={mediaRight ? "lg:order-2" : ""}>
-          <MediaChrome media={cs.media} chrome={cs.chrome} frameless fill className="h-full" />
+          <MediaChrome media={cs.media} frameless fill className="h-full" />
         </div>
         <div className={`min-w-0 p-6 sm:p-8 lg:p-10 ${mediaRight ? "lg:order-1" : ""}`}>
           <p className="text-[0.9rem] text-ink/50">{cs.client}</p>
@@ -351,7 +333,7 @@ function ProductCardWide({ p }: { p: Product }) {
           {/* the media column's WIDTH derives from the card's height at 9:16,
               so the portrait reel displays essentially uncropped */}
           <div className="lg:aspect-[9/16] lg:h-full">
-            <MediaChrome media={p.media} chrome={p.chrome} frameless fill className="h-full" />
+            <MediaChrome media={p.media} frameless fill className="h-full" />
           </div>
           <div className="flex min-w-0 flex-col p-6 sm:p-8">
             <p className="text-[0.85rem] text-ink/50">{p.client}</p>
@@ -402,7 +384,6 @@ function ProductCard({
       <Card bevel={12} className="h-full" contentClassName="h-full">
         <MediaChrome
           media={p.media}
-          chrome={p.chrome}
           aspect={aspect}
           frameless
           fill={fillMedia}

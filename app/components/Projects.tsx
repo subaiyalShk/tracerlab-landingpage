@@ -8,7 +8,7 @@ import Button from "./Button";
 import Card from "./Card";
 
 type Media =
-  | { kind: "video"; src: string; poster: string; fit?: "cover" | "contain"; label: string }
+  | { kind: "video"; src: string; poster: string; fit?: "cover" | "contain"; label: string; hasAudio?: boolean }
   | { kind: "image"; src: string; alt: string; fit?: "cover" | "contain" }
   | { kind: "panel" };
 
@@ -84,6 +84,7 @@ const CASE_STUDIES: CaseStudy[] = [
       poster: "/assets/harbs-demo-poster.jpg",
       fit: "cover",
       label: "Demo video of the Harbs Farm booking and operations platform.",
+      hasAudio: true,
     },
   },
 ];
@@ -143,6 +144,7 @@ const PRODUCTS: Product[] = [
       poster: "/assets/reel-aivideo-poster.jpg",
       fit: "cover",
       label: "AI-generated cinematic car advertisement reel.",
+      hasAudio: true,
     },
   },
 ];
@@ -215,7 +217,7 @@ function MediaBody({ media }: { media: Media }) {
   return (
     <>
       {media.kind === "video" && (
-        <ProjectVideo src={media.src} poster={media.poster} label={media.label} fit={media.fit} />
+        <ProjectVideo src={media.src} poster={media.poster} label={media.label} fit={media.fit} hasAudio={media.hasAudio} />
       )}
       {media.kind === "image" && (
         <Image

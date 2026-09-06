@@ -97,10 +97,7 @@ const PRODUCTS: Product[] = [
       kind: "video",
       src: "/assets/offset-canvassing.mp4",
       poster: "/assets/offset-canvassing-poster.jpg",
-      // contain, not cover: this card's media window fills the whole bento
-      // column (far taller than 9:16), and cover zoomed the reel past
-      // recognition — contain shows the full reel on the dark stage instead.
-      fit: "contain",
+      fit: "cover",
       label: "Demo reel of the Offset Canvassing GIS app and companion mobile CRM for door-to-door teams.",
     },
   },
@@ -334,6 +331,49 @@ function CaseCard({ cs, mediaRight }: { cs: CaseStudy; mediaRight: boolean }) {
   );
 }
 
+// Wide feature tile — case-card layout for a product: portrait media column
+// (fills the card height, same mechanism as CaseCard) beside the copy. Used
+// for the canvassing reel, whose 9:16 footage was unwatchable when stretched
+// across a full bento column.
+function ProductCardWide({ p }: { p: Product }) {
+  return (
+    <article id={`work-${p.id}`} className="scroll-mt-24">
+      <Card bevel={12} contentClassName="h-full">
+        <div className="grid h-full grid-cols-1 lg:grid-cols-[minmax(0,19rem)_1fr]">
+          <div>
+            <MediaChrome media={p.media} chrome={p.chrome} frameless fill className="h-full" />
+          </div>
+          <div className="flex min-w-0 flex-col p-6 sm:p-8">
+            <p className="text-[0.85rem] text-ink/50">{p.client}</p>
+            <h3
+              className="mt-1.5 text-[1.35rem] font-bold leading-[1.25] tracking-tight text-ink"
+              style={{ fontFamily: DISPLAY }}
+            >
+              {p.title}
+            </h3>
+            <p className="mt-3 max-w-[40rem] text-[0.95rem] leading-[1.65] text-ink/60">{p.blurb}</p>
+            <ul className="mt-4 flex list-none flex-col gap-1 p-0">
+              {p.metrics.map((m) => (
+                <li key={m} className="text-[0.88rem] font-semibold" style={{ color: ACCENT }}>
+                  {m}
+                </li>
+              ))}
+            </ul>
+            <p className="mt-2.5 text-[0.78rem] text-ink/40">{p.tech}</p>
+            <a
+              href={p.link.href}
+              {...(p.link.external ? { target: "_blank", rel: "noopener noreferrer" } : {})}
+              className="mt-auto inline-block pt-5 text-[0.92rem] font-semibold text-ink/75 underline decoration-ink/25 underline-offset-4 transition-colors after:absolute after:inset-0 after:content-[''] hover:text-ink hover:decoration-ink/60"
+            >
+              {p.link.label}
+            </a>
+          </div>
+        </div>
+      </Card>
+    </article>
+  );
+}
+
 // Bento tile for a product — media up top (wide crop), copy below, link
 // pinned to the card's foot so the grid stays flush. `fillMedia` lets the
 // media soak up any surplus height the grid hands the card (the tall feature
@@ -443,11 +483,11 @@ export default function Projects() {
         <p className="mt-16 text-[0.9rem] font-semibold text-ink/45" style={{ fontFamily: DISPLAY }}>
           Our products &amp; experiments
         </p>
-        <div className="mt-6 grid grid-cols-1 gap-4 lg:grid-cols-[minmax(0,26rem)_1fr] lg:gap-5">
-          {/* tall feature — the 9:16 canvassing reel; media absorbs whatever
-              extra height the two stacked cards force on this column */}
-          <ProductCard p={PRODUCTS[0]} aspect="aspect-[9/16]" fillMedia />
-          <div className="flex flex-col gap-4 lg:gap-5">
+        <div className="mt-6 flex flex-col gap-4 lg:gap-5">
+          {/* wide feature — the canvassing reel in a case-card layout, so the
+              9:16 footage keeps sane proportions instead of filling a column */}
+          <ProductCardWide p={PRODUCTS[0]} />
+          <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:gap-5">
             <ProductCard p={PRODUCTS[1]} />
             <ProductCard p={PRODUCTS[2]} />
           </div>

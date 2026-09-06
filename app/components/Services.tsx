@@ -164,9 +164,10 @@ function CardFoot({ s }: { s: Pick<Service, "tools" | "cta"> }) {
   return (
     <>
       <p className="mt-3 text-[0.82rem] text-ink/40">{s.tools}</p>
+      {/* stretched link — the whole card is the hit target for the CTA */}
       <a
         href={s.cta.href}
-        className="mt-5 inline-block text-[0.92rem] font-semibold text-ink/70 underline decoration-ink/25 underline-offset-4 transition-colors hover:text-ink hover:decoration-ink/60"
+        className="mt-5 inline-block text-[0.92rem] font-semibold text-ink/70 underline decoration-ink/25 underline-offset-4 transition-colors after:absolute after:inset-0 after:content-[''] hover:text-ink hover:decoration-ink/60"
       >
         {s.cta.label}
       </a>

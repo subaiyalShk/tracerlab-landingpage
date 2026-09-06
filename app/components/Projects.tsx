@@ -310,13 +310,16 @@ function CaseCard({ cs, mediaRight }: { cs: CaseStudy; mediaRight: boolean }) {
 
           <p className="mt-5 text-[0.82rem] text-ink/40">{cs.tech}</p>
 
-          <div className="mt-6">
+          <div className="relative z-10 mt-6">
             <Button href={cs.href} variant="secondary">
               Read the full case study
             </Button>
           </div>
         </div>
       </div>
+      {/* stretched overlay — whole card opens the case study (the visible
+          Button carries the accessible name; this is pointer convenience) */}
+      <a href={cs.href} aria-hidden tabIndex={-1} className="absolute inset-0" />
       </Card>
     </article>
   );
@@ -366,7 +369,7 @@ function ProductCard({
           <a
             href={p.link.href}
             {...(p.link.external ? { target: "_blank", rel: "noopener noreferrer" } : {})}
-            className="mt-auto inline-block pt-5 text-[0.92rem] font-semibold text-ink/75 underline decoration-ink/25 underline-offset-4 transition-colors hover:text-ink hover:decoration-ink/60"
+            className="mt-auto inline-block pt-5 text-[0.92rem] font-semibold text-ink/75 underline decoration-ink/25 underline-offset-4 transition-colors after:absolute after:inset-0 after:content-[''] hover:text-ink hover:decoration-ink/60"
           >
             {p.link.label}
           </a>

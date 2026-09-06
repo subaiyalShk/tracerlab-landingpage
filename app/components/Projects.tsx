@@ -97,7 +97,10 @@ const PRODUCTS: Product[] = [
       kind: "video",
       src: "/assets/offset-canvassing.mp4",
       poster: "/assets/offset-canvassing-poster.jpg",
-      fit: "cover",
+      // contain, not cover: this card's media window fills the whole bento
+      // column (far taller than 9:16), and cover zoomed the reel past
+      // recognition — contain shows the full reel on the dark stage instead.
+      fit: "contain",
       label: "Demo reel of the Offset Canvassing GIS app and companion mobile CRM for door-to-door teams.",
     },
   },
@@ -111,7 +114,13 @@ const PRODUCTS: Product[] = [
     tech: "Flutter, React, Gemini, Supabase",
     link: { label: "See it live", href: "https://beastmode.tracerlabs.io/", external: true },
     chrome: "beastmode.tracerlabs.io",
-    media: { kind: "image", src: "/assets/project2.png", alt: "AI fitness app on phone and laptop.", fit: "contain" },
+    media: {
+      kind: "video",
+      src: "/assets/reel-beastmode.mp4",
+      poster: "/assets/reel-beastmode-poster.jpg",
+      fit: "cover",
+      label: "Cinematic training reel for the BeastMode AI fitness coach.",
+    },
   },
   {
     id: "aivideo",

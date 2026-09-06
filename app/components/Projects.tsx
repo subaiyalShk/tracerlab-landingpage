@@ -78,7 +78,13 @@ const CASE_STUDIES: CaseStudy[] = [
     tech: "Next.js, Supabase, Square, Meta Ads",
     href: "/work/harbs-farm",
     chrome: "harbsfarm.com — production",
-    media: { kind: "panel" },
+    media: {
+      kind: "video",
+      src: "/assets/harbs-demo.mp4",
+      poster: "/assets/harbs-demo-poster.jpg",
+      fit: "cover",
+      label: "Demo video of the Harbs Farm booking and operations platform.",
+    },
   },
 ];
 

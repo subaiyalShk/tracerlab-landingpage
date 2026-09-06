@@ -2,6 +2,18 @@
 
 import { useEffect, useRef, useState } from "react";
 
+// One SOUND PREFERENCE shared by every ProjectVideo on the page: unmuting any
+// video unmutes them all, so scrolling from card to card keeps the audio
+// coming without re-tapping each speaker. Module-level singleton (all
+// instances live in the same client bundle); the first tap is the user
+// gesture that satisfies the browser's unmuted-playback policy.
+let soundOn = false;
+const soundListeners = new Set<(on: boolean) => void>();
+function setSoundOn(on: boolean) {
+  soundOn = on;
+  soundListeners.forEach((l) => l(on));
+}
+
 // Lazy, in-view project demo video. preload="none" + a poster means nothing
 // downloads until the card scrolls near the viewport. Playback is gated on the
 // CENTER band of the viewport: an IntersectionObserver with a -38% top/bottom
@@ -30,15 +42,28 @@ export default function ProjectVideo({
   const ref = useRef<HTMLVideoElement>(null);
   const [muted, setMuted] = useState(true);
 
-  // React is unreliable about syncing the `muted` prop to the DOM after mount
-  // (long-standing react#10389), so the toggle drives the element directly.
+  // Follow the shared sound preference. React is unreliable about syncing the
+  // `muted` prop to the DOM after mount (react#10389), so the element is
+  // always driven directly; state only drives the icon.
+  useEffect(() => {
+    if (!hasAudio) return;
+    const apply = (on: boolean) => {
+      const v = ref.current;
+      if (!v) return;
+      v.muted = !on;
+      setMuted(!on);
+    };
+    apply(soundOn);
+    soundListeners.add(apply);
+    return () => {
+      soundListeners.delete(apply);
+    };
+  }, [hasAudio]);
+
   const toggleMuted = () => {
+    setSoundOn(muted); // muted → turn sound ON everywhere; else off everywhere
     const v = ref.current;
-    if (!v) return;
-    const next = !v.muted;
-    v.muted = next;
-    if (!next && v.paused) v.play().catch(() => {});
-    setMuted(next);
+    if (v && muted && v.paused) v.play().catch(() => {});
   };
 
   useEffect(() => {

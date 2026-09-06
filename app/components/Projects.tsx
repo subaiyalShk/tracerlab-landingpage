@@ -126,6 +126,7 @@ const PRODUCTS: Product[] = [
       poster: "/assets/reel-beastmode-poster.jpg",
       fit: "cover",
       label: "Cinematic training reel for the BeastMode AI fitness coach.",
+      hasAudio: true,
     },
   },
   {

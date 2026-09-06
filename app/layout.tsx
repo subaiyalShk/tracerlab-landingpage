@@ -47,16 +47,12 @@ export default function RootLayout({
         {children}
 
         {/* The legacy app drives ONLY the hero <canvas> (ScreenAnimation). It's decorative and
-            above-the-fold but NOT critical to first paint, so it runs afterInteractive (off the
-            render-blocking path) instead of beforeInteractive. The <canvas> is server-rendered in
-            Hero, so deferring the JS causes no layout shift. app.js self-gates its init off /solar. */}
-        <Script src="/legacy/app.js" strategy="afterInteractive" />
+            above-the-fold but NOT critical to first paint. RETIRED 2026-09-06: the hero canvas
+            it drove was removed in the copy-only hero redesign, so the script was dead weight. */}
 
-        {/* Hotjar / Contentsquare analytics (hjid 5253738). lazyOnload = browser-idle, off the
-            INP/LCP path (analytics is never critical to first interaction). */}
-        <Script id="hotjar" strategy="lazyOnload">
-          {`(function (c, s, q, u, a, r, e) { c.hj=c.hj||function(){(c.hj.q=c.hj.q||[]).push(arguments)}; c._hjSettings = { hjid: a }; r = s.getElementsByTagName('head')[0]; e = s.createElement('script'); e.async = true; e.src = q + c._hjSettings.hjid + u; r.appendChild(e); })(window, document, 'https://static.hj.contentsquare.net/c/csq-', '.js', 5253738);`}
-        </Script>
+        {/* Hotjar/Contentsquare (hjid 5253738) REMOVED 2026-09-06: session replay hooks every
+            scroll/mutation and was the dominant remaining source of scroll jank. Re-add
+            deliberately if heatmaps are ever wanted again. */}
       </body>
     </html>
   );

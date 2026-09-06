@@ -33,13 +33,22 @@ export default function TypedHeadline({ text }: { text: string }) {
     return () => cancelAnimationFrame(raf);
   }, [text]);
 
+  // LCP: the ghost renders VISIBLE on first paint (server HTML shows the full
+  // headline immediately — no waiting for hydration) and turns transparent
+  // only once the first character has typed. No-JS clients keep the full
+  // headline forever.
+  const typingStarted = count > 0;
   return (
     <span className="relative block">
-      <span style={{ color: "transparent" }}>{text}</span>
-      <span aria-hidden className="absolute inset-0" style={{ userSelect: "none" }}>
-        <span className="nt-sheen">{text.slice(0, count)}</span>
-        <span className="nt-cursor" style={done ? undefined : { animation: "none" }} />
+      <span className={typingStarted ? undefined : "nt-sheen"} style={typingStarted ? { color: "transparent" } : undefined}>
+        {text}
       </span>
+      {typingStarted && (
+        <span aria-hidden className="absolute inset-0" style={{ userSelect: "none" }}>
+          <span className="nt-sheen">{text.slice(0, count)}</span>
+          <span className="nt-cursor" style={done ? undefined : { animation: "none" }} />
+        </span>
+      )}
     </span>
   );
 }

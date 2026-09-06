@@ -224,19 +224,27 @@ function MediaChrome({
   chrome,
   aspect = "aspect-[9/16]",
   frameless = false,
+  fill = false,
+  className = "",
 }: {
   media: Media;
   chrome: string;
   aspect?: string;
   frameless?: boolean;
+  // fill: the media body soaks up whatever height the frame is given (chrome
+  // bar stays fixed); the aspect ratio still sizes the body on small screens
+  // where the frame has no imposed height. Pair with a className that sets the
+  // frame's height ("h-full" in a grid cell, "flex-1" in a flex column).
+  fill?: boolean;
+  className?: string;
 }) {
   return (
     <div
-      className={
+      className={`${
         frameless
           ? "overflow-hidden bg-[#0b0b0f]"
           : "overflow-hidden border border-ink/15 bg-[#0b0b0f] transition-shadow duration-300 hover:shadow-[var(--nt-underglow)]"
-      }
+      }${fill ? " flex flex-col" : ""} ${className}`}
     >
       <div className="flex items-center gap-1.5 border-b border-white/10 bg-white/[0.03] px-3 py-2">
         <span className="h-2 w-2 rounded-full bg-white/15" />
@@ -249,7 +257,7 @@ function MediaChrome({
           <span className="h-1.5 w-1.5 rounded-full bg-[#056afc]" />
         </span>
       </div>
-      <div className={`relative ${aspect} w-full`}>
+      <div className={`relative w-full ${fill ? `${aspect} lg:aspect-auto lg:flex-1` : aspect}`}>
         <MediaBody media={media} />
       </div>
     </div>
@@ -260,16 +268,18 @@ function MediaChrome({
 function CaseCard({ cs, mediaRight }: { cs: CaseStudy; mediaRight: boolean }) {
   return (
     <article id={`work-${cs.id}`} className="scroll-mt-24">
-      <Card bevel={16} contentClassName="p-6 sm:p-8">
+      <Card bevel={16} contentClassName="h-full">
+      {/* media bleeds flush to the card border (full column height); only the
+          copy column carries the padding */}
       <div
-        className={`grid grid-cols-1 items-center gap-8 lg:gap-14 ${
+        className={`grid h-full grid-cols-1 ${
           mediaRight ? "lg:grid-cols-[1fr_minmax(0,19rem)]" : "lg:grid-cols-[minmax(0,19rem)_1fr]"
         }`}
       >
         <div className={mediaRight ? "lg:order-2" : ""}>
-          <MediaChrome media={cs.media} chrome={cs.chrome} />
+          <MediaChrome media={cs.media} chrome={cs.chrome} frameless fill className="h-full" />
         </div>
-        <div className={`min-w-0 ${mediaRight ? "lg:order-1" : ""}`}>
+        <div className={`min-w-0 p-6 sm:p-8 lg:p-10 ${mediaRight ? "lg:order-1" : ""}`}>
           <p className="text-[0.9rem] text-ink/50">{cs.client}</p>
           <h3
             className="mt-2 max-w-[24ch] text-[clamp(1.6rem,2.8vw,2.2rem)] font-extrabold leading-[1.12] tracking-tight text-ink"
@@ -312,13 +322,30 @@ function CaseCard({ cs, mediaRight }: { cs: CaseStudy; mediaRight: boolean }) {
 }
 
 // Bento tile for a product — media up top (wide crop), copy below, link
-// pinned to the card's foot so the grid stays flush.
-function ProductCard({ p, aspect = "aspect-[16/10]" }: { p: Product; aspect?: string }) {
+// pinned to the card's foot so the grid stays flush. `fillMedia` lets the
+// media soak up any surplus height the grid hands the card (the tall feature
+// tile), so a stretched card never shows dead space under the copy.
+function ProductCard({
+  p,
+  aspect = "aspect-[16/10]",
+  fillMedia = false,
+}: {
+  p: Product;
+  aspect?: string;
+  fillMedia?: boolean;
+}) {
   return (
     <article id={`work-${p.id}`} className="h-full scroll-mt-24">
       <Card bevel={12} className="h-full" contentClassName="h-full">
-        <MediaChrome media={p.media} chrome={p.chrome} aspect={aspect} frameless />
-        <div className="flex flex-1 flex-col p-6">
+        <MediaChrome
+          media={p.media}
+          chrome={p.chrome}
+          aspect={aspect}
+          frameless
+          fill={fillMedia}
+          className={fillMedia ? "min-h-0 lg:flex-1" : ""}
+        />
+        <div className={`flex flex-col p-6 ${fillMedia ? "" : "flex-1"}`}>
           <p className="text-[0.85rem] text-ink/50">{p.client}</p>
           <h3
             className="mt-1.5 text-[1.15rem] font-bold leading-[1.25] tracking-tight text-ink"
@@ -392,13 +419,21 @@ export default function Projects() {
           ))}
         </div>
 
+        {/* Portfolio strip — breadth beyond the two spotlights, kept quiet */}
+        <p className="mt-6 text-[0.9rem] leading-relaxed text-ink/45">
+          Also in production across the portfolio: more solar lead funnels,
+          live analytics dashboards, and AI SMS agents. Next build: a DTC
+          meat-delivery storefront.
+        </p>
+
         {/* Tier 2 — products & experiments */}
         <p className="mt-16 text-[0.9rem] font-semibold text-ink/45" style={{ fontFamily: DISPLAY }}>
           Our products &amp; experiments
         </p>
         <div className="mt-6 grid grid-cols-1 gap-4 lg:grid-cols-[minmax(0,26rem)_1fr] lg:gap-5">
-          {/* tall feature — the 9:16 canvassing reel shown in full */}
-          <ProductCard p={PRODUCTS[0]} aspect="aspect-[9/16]" />
+          {/* tall feature — the 9:16 canvassing reel; media absorbs whatever
+              extra height the two stacked cards force on this column */}
+          <ProductCard p={PRODUCTS[0]} aspect="aspect-[9/16]" fillMedia />
           <div className="flex flex-col gap-4 lg:gap-5">
             <ProductCard p={PRODUCTS[1]} />
             <ProductCard p={PRODUCTS[2]} />

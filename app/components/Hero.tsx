@@ -1,12 +1,10 @@
-// Homepage hero (Telemetry redesign) — the headline plus a REAL client-results
-// panel instead of the old simulated "live demo" canvas. Real telemetry beats
-// fake telemetry: every number here comes from client systems in production
-// (see /work/solar-lead-engine and /work/harbs-farm for the sources).
-// Quiet by design: no auroras/scanlines/particles, no scroll-reveal gating,
-// and the brand gradient appears exactly once (the panel's headline number).
+// Homepage hero — copy only, centered: the typewriter headline IS the hero,
+// staged on the grid-floor scene with nothing competing for attention. The
+// real client numbers live in the case studies below (/work/*); TelemetryPanel
+// and MachinePanel are kept on disk if a side visual is ever wanted back.
+// Quiet by design: no auroras/scanlines/particles, no scroll-reveal gating.
 import Button from "./Button";
-import Bevel, { GLASS_BORDER, GLASS_BG } from "./Bevel";
-import TelemetryPanel from "./TelemetryPanel";
+import TypedHeadline from "./TypedHeadline";
 
 const DISPLAY = "var(--font-archivo), system-ui, sans-serif";
 
@@ -31,32 +29,36 @@ export default function Hero() {
         style={{
           backgroundImage: "radial-gradient(circle, var(--tl-dot-grid) 1px, transparent 1px)",
           backgroundSize: "24px 24px",
-          maskImage: "radial-gradient(ellipse 85% 70% at 55% 35%, #000 30%, transparent 75%)",
+          maskImage: "radial-gradient(ellipse 85% 70% at 50% 38%, #000 30%, transparent 75%)",
         }}
       />
-      {/* The scene: a perspective grid floor receding to a glowing horizon */}
+      {/* The scene: a perspective grid floor receding to a glowing horizon,
+          with signal pulses shooting along its lines (offsets = 46px columns) */}
       <div aria-hidden className="nt-horizon -z-10" />
-      <div aria-hidden className="nt-gridfloor -z-10" />
-      <div className="mx-auto grid min-h-[calc(100dvh-4rem)] w-full max-w-[1280px] grid-cols-1 items-center gap-10 px-6 py-10 sm:px-10 sm:py-12 lg:grid-cols-[1.02fr_0.98fr] lg:gap-14 lg:py-8">
-        {/* Left: copy */}
-        <div className="min-w-0 max-w-[40rem]">
+      <div aria-hidden className="nt-gridfloor -z-10">
+        <span className="nt-pulse" style={{ left: 230, ["--pulse-dur" as string]: "8s", ["--pulse-delay" as string]: "1.2s" }} />
+        <span className="nt-pulse" style={{ left: 598, ["--pulse-dur" as string]: "12s", ["--pulse-delay" as string]: "5s" }} />
+        <span className="nt-pulse" style={{ left: 1012, ["--pulse-dur" as string]: "10s", ["--pulse-delay" as string]: "0s" }} />
+        <span className="nt-pulse nt-pulse-pink" style={{ left: 1380, ["--pulse-dur" as string]: "17s", ["--pulse-delay" as string]: "7.5s" }} />
+      </div>
+      <div className="mx-auto flex min-h-[calc(100dvh-4rem)] w-full max-w-[1280px] items-center justify-center px-6 py-10 sm:px-10 sm:py-12">
+        <div className="flex min-w-0 max-w-[52rem] flex-col items-center text-center">
           <p className="animate-rise text-[0.98rem] text-ink/50">Tracerlabs — AI development studio</p>
           <h1
-            className="animate-rise mt-4 text-[clamp(1.9rem,min(4.2vw,6.5vh),3.4rem)] font-normal uppercase leading-[1.08] tracking-tight"
+            className="animate-rise mt-5 text-[clamp(2rem,min(4.8vw,7vh),3.9rem)] font-normal uppercase leading-[1.1] tracking-tight"
             style={{ fontFamily: "var(--font-duborics), var(--font-archivo), sans-serif", animationDelay: "0.08s" }}
           >
-            <span className="nt-sheen">We build the machine that grows your business.</span>
-            <span aria-hidden className="nt-cursor" />
+            <TypedHeadline text="We build the machine that grows your business." />
           </h1>
-          <p className="animate-rise mt-5 max-w-[34rem] text-[1.08rem] leading-[1.65] text-ink/60" style={{ animationDelay: "0.18s" }}>
+          <p className="animate-rise mt-6 max-w-[38rem] text-[1.1rem] leading-[1.65] text-ink/60" style={{ animationDelay: "0.18s" }}>
             Ads in, booked jobs out. Funnels, AI follow-up, booking systems,
             and the software to run it all — measured end to end, built and
             run by one team.
           </p>
 
-          <div className="animate-rise mt-7 flex flex-wrap items-center gap-4" style={{ animationDelay: "0.26s" }}>
+          <div className="animate-rise mt-8 flex flex-wrap items-center justify-center gap-4" style={{ animationDelay: "0.26s" }}>
             <Button href="#contact" variant="primary" size="lg">
-              Start your project
+              Book a discovery call
             </Button>
             <Button href="#tl-projects" variant="secondary" size="lg">
               See the case studies
@@ -64,29 +66,11 @@ export default function Hero() {
           </div>
 
           {/* Real proof, in words — replaces the old stock-avatar rating widget */}
-          <p className="animate-rise mt-8 max-w-[32rem] border-t border-ink/10 pt-5 text-[0.92rem] leading-relaxed text-ink/55" style={{ animationDelay: "0.36s" }}>
-            Built for solar, roofing, insurance, and local operations. The
-            client telemetry here is live production data — the same meter we
-            run for every client.
+          <p className="animate-rise mt-9 max-w-[34rem] border-t border-ink/10 pt-5 text-[0.92rem] leading-relaxed text-ink/55" style={{ animationDelay: "0.36s" }}>
+            Solar companies, meat processors, and local service businesses run
+            on systems we built. Every number in the case studies below is
+            live production data.
           </p>
-        </div>
-
-        {/* Right: client telemetry panel — the page's one full-treatment centerpiece:
-            gradient edge, permanent underglow, corner brackets. */}
-        <div className="animate-rise relative w-full min-w-0" style={{ animationDelay: "0.22s" }}>
-          <div aria-hidden className="nt-brackets">
-            <span /><span /><span /><span />
-          </div>
-        <Bevel
-          bevel={16}
-          border={GLASS_BORDER}
-          bg={GLASS_BG}
-          className="w-full min-w-0"
-          innerClassName="backdrop-blur-xl"
-          style={{ filter: "var(--nt-underglow-filter)" }}
-        >
-          <TelemetryPanel />
-        </Bevel>
         </div>
       </div>
     </section>

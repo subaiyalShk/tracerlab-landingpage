@@ -500,10 +500,14 @@ html[data-theme="light"] .nt-hairline {
 :root {
   --nt-grid-line: rgba(5, 106, 252, 0.16);
   --nt-horizon: radial-gradient(50% 100% at 50% 100%, rgba(5, 106, 252, 0.32) 0%, rgba(231, 2, 141, 0.14) 45%, transparent 75%);
+  --nt-pulse-blue: rgba(5, 106, 252, 0.7);
+  --nt-pulse-pink: rgba(231, 2, 141, 0.55);
 }
 html[data-theme="light"] {
   --nt-grid-line: rgba(5, 106, 252, 0.10);
   --nt-horizon: radial-gradient(50% 100% at 50% 100%, rgba(5, 106, 252, 0.10) 0%, transparent 70%);
+  --nt-pulse-blue: rgba(5, 106, 252, 0.4);
+  --nt-pulse-pink: rgba(231, 2, 141, 0.3);
 }
 
 .nt-gridfloor {
@@ -525,6 +529,45 @@ html[data-theme="light"] {
 @keyframes ntGridScroll {
   from { background-position: 0 0; }
   to { background-position: 0 46px; }
+}
+
+/* Signal pulses: thin streaks of light that shoot along the floor's grid
+   lines from the horizon toward the viewer — the machine, running in the
+   environment. Children of .nt-gridfloor, so they inherit its perspective
+   (streaks scale up as they approach) and its mask (they fade in at the
+   horizon and out at the bottom edge). left offsets are multiples of the
+   46px grid column so each streak rides an actual line. Transform-only. */
+.nt-pulse {
+  position: absolute;
+  top: -150px;
+  width: 2px;
+  height: 130px;
+  margin-left: -0.5px;
+  background: linear-gradient(180deg, transparent 0%, var(--nt-pulse-blue) 75%, var(--nt-pulse-blue) 100%);
+  filter: drop-shadow(0 0 5px var(--nt-pulse-blue));
+  opacity: 0;
+  animation: ntPulse var(--pulse-dur, 9s) linear infinite;
+  animation-delay: var(--pulse-delay, 0s);
+}
+.nt-pulse-pink {
+  background: linear-gradient(180deg, transparent 0%, var(--nt-pulse-pink) 75%, var(--nt-pulse-pink) 100%);
+  filter: drop-shadow(0 0 5px var(--nt-pulse-pink));
+}
+@keyframes ntPulse {
+  0% { transform: translateY(0); opacity: 0; }
+  2% { opacity: 1; }
+  19% { opacity: 1; }
+  23% { transform: translateY(780px); opacity: 0; }
+  100% { transform: translateY(780px); opacity: 0; }
+}
+
+/* The horizon breathes — barely: the pulses feel like they come from it. */
+.nt-horizon {
+  animation: ntHorizonBreathe 11s ease-in-out infinite;
+}
+@keyframes ntHorizonBreathe {
+  0%, 100% { opacity: 0.82; }
+  50% { opacity: 1; }
 }
 
 .nt-horizon {
@@ -566,8 +609,12 @@ html[data-theme="light"] .nt-grain {
 }
 
 @media (prefers-reduced-motion: reduce) {
-  .nt-gridfloor {
+  .nt-gridfloor,
+  .nt-horizon {
     animation: none;
+  }
+  .nt-pulse {
+    display: none;
   }
 }
 

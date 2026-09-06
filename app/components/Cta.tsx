@@ -12,8 +12,8 @@ const DISPLAY = "var(--font-archivo), system-ui, sans-serif";
 
 const STEPS = [
   { n: "1", t: "Talk to our AI", d: "A 2-minute voice chat — it asks what you're building." },
-  { n: "2", t: "It books your call", d: "Right there on the call, into our calendar." },
-  { n: "3", t: "We design & build", d: "Production-grade, shipped fast." },
+  { n: "2", t: "It books your discovery call", d: "Right there on the call, into our calendar." },
+  { n: "3", t: "We dig in & build", d: "We map your bottlenecks on the call — then design and ship the fix." },
 ];
 
 export default function Cta() {
@@ -42,12 +42,14 @@ export default function Cta() {
           className="max-w-[16ch] text-[clamp(2.2rem,5vw,3.6rem)] font-extrabold leading-[1.05] tracking-tight text-ink"
           style={{ fontFamily: DISPLAY }}
         >
-          Ready to put AI to work?
+          Let&apos;s find your bottlenecks.
         </h2>
 
         <p className="mt-5 max-w-[34rem] text-[1.05rem] leading-[1.7] text-ink/60">
-          Talk to our AI for two minutes — it&apos;ll learn what you&apos;re
-          building and book your call on the spot. Yes, it&apos;s one of ours.
+          A free discovery call: we dig into how your business runs and
+          uncover where it&apos;s leaking leads, time, and revenue. Talk to
+          our AI for two minutes and it books the call on the spot — yes,
+          it&apos;s one of ours.
         </p>
 
         {/* The voice agent, ringed by its field */}
@@ -67,7 +69,7 @@ export default function Cta() {
         <div className="mt-8 flex flex-col items-center gap-3">
           <p className="text-[0.92rem] text-ink/50">Rather not talk to an AI?</p>
           <Button href={calcomUrl} external variant="secondary" size="sm">
-            Book a call directly
+            Book the discovery call directly
           </Button>
         </div>
 

@@ -6,11 +6,16 @@
 
 import Card from "./Card";
 
+type Figure = { v: string; l: string };
+
 type Service = {
   stage: string;
   title: string;
   blurb: string;
-  metrics: string[];
+  // Attributed outcome figures (Meta Ads / production systems — see /work/*),
+  // rendered ProofWall-style: big value, small label.
+  figures: Figure[];
+  who: string;
   tools: string;
   cta: { label: string; href: string };
   icon: React.ReactNode;
@@ -58,7 +63,12 @@ const FEATURED: Service & { highlights: string[] } = {
     "Landing pages & funnels built to convert",
     "Pixel, CAPI & attribution set up properly",
   ],
-  metrics: ["360+ solar consults booked", "≈$96 / booked consult"],
+  figures: [
+    { v: "1,000+", l: "solar leads generated" },
+    { v: "$40–52", l: "per lead on live funnels" },
+    { v: "367", l: "consults booked" },
+  ],
+  who: "Across our solar portfolio — verified in-platform",
   tools: "Meta Ads, Google Ads, GoHighLevel",
   cta: { label: "Read the solar case study", href: "/work/solar-lead-engine" },
   icon: TrendIcon,
@@ -70,7 +80,11 @@ const SERVICES: Service[] = [
     title: "Automated Engagement",
     blurb:
       "AI that handles the whole conversation — it reaches every lead in minutes, finds a time and books it, reschedules by text, nudges your reps before appointments, and keeps customers updated on their order so they never have to call and ask.",
-    metrics: ["Lead → consult rate doubled", "94% appointment show rate"],
+    figures: [
+      { v: "2×", l: "lead → consult rate" },
+      { v: "94%", l: "show rate" },
+    ],
+    who: "After the AI texting agent — across 487 appointments",
     tools: "AI SMS agents, voice AI, Twilio",
     cta: { label: "See it in action", href: "/work/solar-lead-engine" },
     icon: BoltIcon,
@@ -80,7 +94,11 @@ const SERVICES: Service[] = [
     title: "Online Booking & Payments",
     blurb:
       "Booking flows that turn visitors into paid customers — deposits collected up front, capacity managed automatically, and reminders that recover the ones who almost booked.",
-    metrics: ["20 bookings, every deposit paid — week one"],
+    figures: [
+      { v: "20", l: "paid bookings, week one" },
+      { v: "100%", l: "deposits collected up front" },
+    ],
+    who: "Harbs Farm — first week after launch",
     tools: "Square, Stripe, Supabase",
     cta: { label: "See Harbs Farm’s system", href: "/work/harbs-farm" },
     icon: CalendarIcon,
@@ -92,22 +110,35 @@ const CUSTOM: Service = {
   title: "Web Apps & Ops Platforms",
   blurb:
     "When off-the-shelf software doesn't fit how you run, we build what does. Harbs Farm runs bookings, cut sheets, payments, and staff boards from one interface — and we're now wiring the scales and machines on the processing line into it, so admins control the entire operation from a single screen.",
-  metrics: ["One interface for the whole operation"],
+  figures: [{ v: "1", l: "interface for the whole operation" }],
+  who: "Harbs Farm — bookings, cut sheets, payments, staff boards",
   tools: "Next.js, React Native, Supabase",
   cta: { label: "Explore custom AI agents", href: "/agents" },
   icon: DeviceIcon,
 };
 
-function Metrics({ items }: { items: string[] }) {
+function Figures({ items, who }: { items: Figure[]; who: string }) {
   if (items.length === 0) return null;
   return (
-    <ul className="mt-5 flex list-none flex-col gap-1.5 p-0">
-      {items.map((m) => (
-        <li key={m} className="text-[0.95rem] font-semibold" style={{ color: ACCENT }}>
-          {m}
-        </li>
-      ))}
-    </ul>
+    <div className="mt-6 border-t border-ink/10 pt-4">
+      <p className="text-[0.78rem] text-ink/40">{who}</p>
+      <dl className="mt-3 flex flex-wrap gap-x-8 gap-y-4">
+        {items.map((f) => (
+          <div key={f.l}>
+            <dt className="sr-only">{f.l}</dt>
+            <dd>
+              <span
+                className="block text-[1.5rem] font-extrabold leading-none tracking-tight"
+                style={{ fontFamily: DISPLAY, color: ACCENT }}
+              >
+                {f.v}
+              </span>
+              <span className="mt-1 block max-w-[11rem] text-[0.8rem] leading-snug text-ink/55">{f.l}</span>
+            </dd>
+          </div>
+        ))}
+      </dl>
+    </div>
   );
 }
 
@@ -174,7 +205,8 @@ export default function Services() {
             start with one stage.
           </p>
           <p className="mt-3 text-[0.9rem] text-ink/45">
-            Built for solar, roofing, insurance & local operations.
+            Solar companies, meat processing & local services — with a DTC
+            storefront build on the way.
           </p>
         </div>
 
@@ -196,7 +228,7 @@ export default function Services() {
                 </li>
               ))}
             </ul>
-            <Metrics items={FEATURED.metrics} />
+            <Figures items={FEATURED.figures} who={FEATURED.who} />
             <div className="mt-auto pt-2">
               <CardFoot s={FEATURED} />
             </div>
@@ -207,7 +239,7 @@ export default function Services() {
             <Card key={s.title} contentClassName="p-7 sm:p-8">
               <CardHead s={s} />
               <p className="mt-3 text-[0.95rem] leading-[1.65] text-ink/60">{s.blurb}</p>
-              <Metrics items={s.metrics} />
+              <Figures items={s.figures} who={s.who} />
               <div className="mt-auto">
                 <CardFoot s={s} />
               </div>
@@ -224,7 +256,7 @@ export default function Services() {
                 </p>
               </div>
               <div className="sm:w-64 sm:shrink-0 sm:pt-1">
-                <Metrics items={CUSTOM.metrics} />
+                <Figures items={CUSTOM.figures} who={CUSTOM.who} />
                 <CardFoot s={CUSTOM} />
               </div>
             </div>

@@ -32,9 +32,12 @@ Components (`app/components/`):
 - **Services** (4-stage bento; per-card `Figures` = attributed outcome numbers; featured card
   tops with a fal.ai funnel illustration), **Projects** (2 spotlight case studies + portfolio
   strip + products: a WIDE canvassing card whose media column derives width from card height
-  at exactly 9:16, then two tiles), **Team** (co-founder cards, square portraits sized to fit
-  one viewport; crops aligned via per-member `imgTransform`/`imgOrigin` — Subaiyal's photo has
-  zero headroom above the face), **Cta** (embedded Retell voice agent that books via Cal.com),
+  at exactly 9:16, then two tiles), **Team** (2 co-founders + 2 AI agents — Jarvis (customer
+  success) and Tracy (SDR) — 4-up on lg; square portraits, crops aligned via per-member
+  `imgTransform`/`imgOrigin` — Subaiyal's photo has zero headroom above the face; agents get an
+  "AI agent" tag instead of LinkedIn. Agent portraits are fal.ai Nano Banana Pro renders from
+  `scripts/gen-team-agents.mjs` — Tracy is anchored via `/edit` to her reels reference in
+  `internal-automations/linkedin-content/assets/tracy-reference.png`), **Cta** (embedded Retell voice agent that books via Cal.com),
   **StickyCtaBar** (slides in after hero, hides near CTA).
 - **Card media/videos (`ProjectVideo`)**: CLICK-TO-PLAY with sound — no autoplay, no mute
   dance (the click is the browser-required gesture); center play button → corner pause chip; a

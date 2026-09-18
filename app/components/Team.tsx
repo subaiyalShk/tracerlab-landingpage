@@ -1,7 +1,10 @@
-// The team — two co-founders, one card each: portrait flush to the card top,
-// name/role/bio below, LinkedIn as a quiet text link. The two portraits were
-// shot in very different light, so they render monochrome (unified, like the
-// tech marquee) and lift to full color on hover/focus.
+// The team — two co-founders plus the two AI agents that work alongside them,
+// one card each: portrait flush to the card top, name/role/bio below, LinkedIn
+// as a quiet text link (agents get an "AI agent" tag instead). The founders'
+// portraits were shot in very different light, so everything renders
+// monochrome (unified, like the tech marquee) and lifts to full color on
+// hover/focus. Agent portraits are fal.ai renders — regenerate with
+// scripts/gen-team-agents.mjs (Tracy is anchored to her reels reference).
 import Image from "next/image";
 import Card from "./Card";
 
@@ -18,7 +21,8 @@ type Member = {
   // without exposing gaps. Pair with the origin the zoom should hang from.
   imgTransform?: string;
   imgOrigin?: string;
-  linkedin: string;
+  linkedin?: string;
+  agent?: boolean;
 };
 
 const TEAM: Member[] = [
@@ -42,11 +46,34 @@ const TEAM: Member[] = [
     imgOrigin: "center top",
     linkedin: "https://www.linkedin.com/in/subaiyalshk/",
   },
+  {
+    name: "Jarvis",
+    role: "Customer success — AI agent",
+    bio: "Jarvis runs client success: onboarding, check-ins, status updates, and the follow-through that keeps every engagement on track. Replies in minutes, never drops a thread, and loops a founder in the moment it matters.",
+    img: "/assets/team-jarvis.jpg",
+    objectPosition: "50% 20%",
+    agent: true,
+  },
+  {
+    name: "Tracy",
+    role: "SDR — AI agent",
+    bio: "Tracy is our sales development rep. She works the top of the funnel — outreach, follow-ups, and the qualifying conversations that turn a cold name into a booked call — and produces her own reels for our socials.",
+    img: "/assets/team-tracy.jpg",
+    objectPosition: "50% 20%",
+    agent: true,
+  },
 ];
 
 const LinkedInIcon = (
   <svg className="h-4 w-4" viewBox="0 0 24 24" fill="currentColor" aria-hidden>
     <path d="M20.45 20.45h-3.55v-5.57c0-1.33-.03-3.04-1.85-3.04-1.86 0-2.14 1.45-2.14 2.94v5.67H9.35V9h3.41v1.56h.05c.47-.9 1.63-1.85 3.36-1.85 3.6 0 4.28 2.37 4.28 5.45v6.29ZM5.34 7.43a2.06 2.06 0 1 1 0-4.12 2.06 2.06 0 0 1 0 4.12ZM7.12 20.45H3.56V9h3.56v11.45Z" />
+  </svg>
+);
+
+// A plain ink line glyph (a spark), matching the site's stroke=currentColor icons.
+const AgentIcon = (
+  <svg className="h-4 w-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" aria-hidden>
+    <path d="M12 3v3M12 18v3M3 12h3M18 12h3M12 8l1.2 2.8L16 12l-2.8 1.2L12 16l-1.2-2.8L8 12l2.8-1.2Z" />
   </svg>
 );
 
@@ -62,15 +89,16 @@ export default function Team() {
             className="mt-4 text-[clamp(2.1rem,4.6vw,3.3rem)] font-extrabold leading-[1.06] tracking-tight text-ink"
             style={{ fontFamily: DISPLAY }}
           >
-            Two people. The whole machine.
+            Two people, two agents. The whole machine.
           </h2>
           <p className="mt-5 max-w-[40rem] text-[1.05rem] leading-[1.7] text-ink/60">
-            Sales and software under one roof — the reason everything we ship
-            works end to end, from the first ad dollar to the booked job.
+            Sales and software under one roof — plus the AI agents we run on
+            ourselves first. The reason everything we ship works end to end,
+            from the first ad dollar to the booked job.
           </p>
         </div>
 
-        <div className="mt-10 grid max-w-[48rem] grid-cols-1 gap-4 sm:grid-cols-2 lg:gap-5">
+        <div className="mt-10 grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-4 lg:gap-5">
           {TEAM.map((m) => (
             <article key={m.name} className="group h-full">
               <Card bevel={12} className="h-full" contentClassName="h-full">
@@ -79,7 +107,7 @@ export default function Team() {
                     src={m.img}
                     alt={`Portrait of ${m.name}`}
                     fill
-                    sizes="(max-width: 640px) 100vw, 28rem"
+                    sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 20rem"
                     className="object-cover grayscale transition duration-500 group-hover:grayscale-0 group-focus-within:grayscale-0"
                     style={{
                       objectPosition: m.objectPosition,
@@ -94,15 +122,22 @@ export default function Team() {
                   </h3>
                   <p className="mt-1 text-[0.88rem] text-ink/50">{m.role}</p>
                   <p className="mt-2.5 text-[0.88rem] leading-[1.6] text-ink/60">{m.bio}</p>
-                  <a
-                    href={m.linkedin}
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    className="mt-auto inline-flex items-center gap-2 pt-5 text-[0.92rem] font-semibold text-ink/75 underline decoration-ink/25 underline-offset-4 transition-colors hover:text-ink hover:decoration-ink/60"
-                  >
-                    {LinkedInIcon}
-                    LinkedIn
-                  </a>
+                  {m.linkedin ? (
+                    <a
+                      href={m.linkedin}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="mt-auto inline-flex items-center gap-2 pt-5 text-[0.92rem] font-semibold text-ink/75 underline decoration-ink/25 underline-offset-4 transition-colors hover:text-ink hover:decoration-ink/60"
+                    >
+                      {LinkedInIcon}
+                      LinkedIn
+                    </a>
+                  ) : (
+                    <span className="mt-auto inline-flex items-center gap-2 pt-5 text-[0.92rem] font-semibold text-ink/75">
+                      {AgentIcon}
+                      AI agent
+                    </span>
+                  )}
                 </div>
               </Card>
             </article>

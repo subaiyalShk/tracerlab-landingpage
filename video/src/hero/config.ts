@@ -4,16 +4,27 @@ import { useVideoConfig } from "remotion";
 export const FPS = 30;
 export const DURATION = 900; // 30 s
 
-// Beat boundaries in frames (spec §1). Contiguous; last ends at DURATION.
+// Beat boundaries in frames. Contiguous; last ends at DURATION. The openers are
+// short and the Mechanism beat is the longest (7 s): the machine is the
+// explainer — four labelled stages the camera holds on, centered.
 export const BEATS = {
-  world: { from: 0, to: 120 },
-  people: { from: 120, to: 240 },
-  attention: { from: 240, to: 390 },
-  reveal: { from: 390, to: 540 },
-  mechanism: { from: 540, to: 660 },
+  world: { from: 0, to: 90 },
+  people: { from: 90, to: 180 },
+  attention: { from: 180, to: 330 },
+  reveal: { from: 330, to: 450 },
+  mechanism: { from: 450, to: 660 },
   output: { from: 660, to: 780 },
   flywheel: { from: 780, to: 900 },
 } as const;
+
+// The four chambers of the machine — the service-business stack, in the
+// order a lead flows through it (mirrors the site's Services stages).
+export const STAGES = [
+  { title: "Lead capture", sub: "Ads & forms → qualified leads" },
+  { title: "AI follow-up", sub: "Every lead nurtured in seconds" },
+  { title: "Booking & reminders", sub: "Set, confirmed, reminded" },
+  { title: "Payments & invoicing", sub: "Deposits, invoices, paid" },
+] as const;
 
 export const COLORS = {
   bg: "#000000",

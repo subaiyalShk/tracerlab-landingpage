@@ -61,7 +61,7 @@ test("the phone stays on screen while the camera starts to leave it (first 20 fr
   }
 });
 
-test("the camera lands on the floor, not the world: at the end of the reveal the map's top is above the frame", () => {
+test("the camera lands on the machine, not the world: at the end of the reveal the map's top is above the frame and the machine is centered", () => {
   for (const portrait of [false, true]) {
     const { h } = worldSize(portrait);
     const L = layoutFor(portrait);
@@ -69,25 +69,27 @@ test("the camera lands on the floor, not the world: at the end of the reveal the
     const mapTop = c.anchor.y * h + (L.map.y - c.target.y) * c.zoom;
     const machineMid = c.anchor.y * h + (L.machine.y + L.machine.h / 2 - c.target.y) * c.zoom;
     assert.ok(mapTop < 0, `portrait=${portrait} map top on screen at ${mapTop}`);
-    assert.ok(machineMid > h * 0.6 && machineMid < h * 0.9, `portrait=${portrait} machine at ${machineMid}`);
+    assert.ok(machineMid > h * 0.4 && machineMid < h * 0.6, `portrait=${portrait} machine at ${machineMid}`);
   }
 });
 
-test("the whole floor pipeline stays inside the viewport through the mechanism and output beats", () => {
+test("the machine is centered and fully on screen through the mechanism beat; the output block through the output beat", () => {
   for (const portrait of [false, true]) {
     const { w, h } = worldSize(portrait);
     const L = layoutFor(portrait);
     const k = cameraKeys(portrait);
-    const left = L.ports[0].x - 22; // half a port (PORT_SIZE 44)
-    const right = L.output.x + L.output.w;
-    const bottom = L.output.y + L.output.h;
-    for (let f = BEATS.mechanism.from; f <= BEATS.output.to; f += 10) {
+    const sx = (c: ReturnType<typeof cameraAt>, x: number) => c.anchor.x * w + (x - c.target.x) * c.zoom;
+    const sy = (c: ReturnType<typeof cameraAt>, y: number) => c.anchor.y * h + (y - c.target.y) * c.zoom;
+    for (let f = BEATS.mechanism.from; f <= BEATS.mechanism.to; f += 10) {
       const c = cameraAt(f, k);
-      const sx = (x: number) => c.anchor.x * w + (x - c.target.x) * c.zoom;
-      const sy = (y: number) => c.anchor.y * h + (y - c.target.y) * c.zoom;
-      assert.ok(sx(left) >= 0, `portrait=${portrait} f=${f} left=${sx(left)}`);
-      assert.ok(sx(right) <= w, `portrait=${portrait} f=${f} right=${sx(right)}`);
-      assert.ok(sy(bottom) <= h, `portrait=${portrait} f=${f} bottom=${sy(bottom)}`);
+      assert.ok(sx(c, L.machine.x) >= 0 && sx(c, L.machine.x + L.machine.w) <= w, `portrait=${portrait} f=${f} machine x off-screen`);
+      const mid = sy(c, L.machine.y + L.machine.h / 2);
+      assert.ok(mid > h * 0.4 && mid < h * 0.6, `portrait=${portrait} f=${f} machine not centered (y=${mid})`);
+    }
+    for (let f = BEATS.output.from + 30; f <= BEATS.output.to; f += 10) {
+      const c = cameraAt(f, k);
+      assert.ok(sx(c, L.output.x) >= 0 && sx(c, L.output.x + L.output.w) <= w, `portrait=${portrait} f=${f} output x off-screen`);
+      assert.ok(sy(c, L.output.y) >= 0 && sy(c, L.output.y + L.output.h) <= h, `portrait=${portrait} f=${f} output y off-screen`);
     }
   }
 });

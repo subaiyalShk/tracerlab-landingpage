@@ -4,28 +4,27 @@ import { useEffect, useRef } from "react";
 import { isPortrait, pickSource, readFilmEnv, shouldLoadFilm } from "./heroFilmPolicy";
 import { HERO_INTRO_DONE } from "./HeroCopy";
 
-// The hero film, played ONCE as the opening with the copy hidden (the "intro").
-// It does not loop: when it ends it hands the stage back to the CSS grid-floor
-// scene (the backdrop the copy was designed on), so nothing moves under the
-// headline and CTAs. No src/poster in the markup;
-// nothing is requested under reduced-motion / Save-Data (the grid floor is the
-// fallback state and the copy is visible from the first paint — the bootstrap
-// script in app/layout.tsx only sets <html data-intro> when the film will play).
+// The hero film: an intro that plays ONCE, full-screen, with the nav and copy
+// hidden — then hands the stage back to the CSS grid-floor scene the copy was
+// designed on. Two states after mount:
 //
-// Intro: the film attaches as soon as we're hydrated (it IS the opening, so it
-// is the LCP element by design) and the copy stays hidden until the first pass
-// completes — or until anything that means the visitor shouldn't wait: any
-// scroll/tap/click/key, a load error, or no `playing` within INTRO_TIMEOUT_MS.
-// Ending the intro clears data-intro (CSS fades the copy in) and dispatches
-// HERO_INTRO_DONE so HeroCopy re-mounts the copy and the headline types in.
+//   intro  — the film is attached and playing; <html data-intro="on"> (set
+//            pre-paint by the bootstrap script in app/layout.tsx) keeps the
+//            copy and nav hidden; #tl-hero[data-film="on"] shows the film.
+//   done   — the film is paused and faded out, the grid floor is back, the
+//            copy types in and the nav fades in.
 //
-// One file per {orientation} × {theme}; a theme toggle or rotation while it
-// plays fades the film out, swaps the file and fades back in on `playing`
-// (after it has ended, nothing restarts it). While playing, the section
-// carries data-film="on" and CSS fades the film in and the CSS grid scene
-// out. Transform/opacity only; the video is one compositor layer.
+// EVERY exit goes through finish(): the film ending, any real input
+// (scroll/tap/click/key — the visitor has moved on, so the film is killed,
+// not left playing underneath), a media error, or no playback within
+// INTRO_TIMEOUT_MS. There is no theme/orientation swapping and no off-screen
+// pause: a toggle click or a scroll is itself an exit.
+//
+// No src/poster in the markup; nothing is requested under reduced-motion /
+// Save-Data (then data-intro was never set and the copy is visible from the
+// first paint). The film is the LCP element by design.
 const INTRO_TIMEOUT_MS = 6000;
-const INTRO_END_S = 29.4; // the film's dip-to-black starts at 29.5 s: reveal as it goes dark
+const INTRO_END_S = 29.4; // the film's dip-to-black starts at 29.5 s: hand over as it goes dark
 const INPUT_EVENTS = ["scroll", "touchstart", "pointerdown", "keydown"] as const;
 
 export default function HeroFilm() {
@@ -37,104 +36,64 @@ export default function HeroFilm() {
     if (!v || !section) return;
     const html = document.documentElement;
 
-    // Idempotent: the intro ends once, whichever trigger fires first.
+    if (!shouldLoadFilm(readFilmEnv())) {
+      // Belt and braces: the bootstrap shouldn't have set data-intro either.
+      delete html.dataset.intro;
+      return; // no request, ever
+    }
+
+    let state: "intro" | "done" = "intro";
+    const finish = () => {
+      if (state === "done") return;
+      state = "done";
+      v.pause();
+      delete section.dataset.film; // film fades out, grid floor fades in
+      delete html.dataset.intro; // copy + nav fade in
+      window.dispatchEvent(new Event(HERO_INTRO_DONE)); // HeroCopy re-mounts → headline types in
+      INPUT_EVENTS.forEach((n) => window.removeEventListener(n, onInput));
+      v.removeEventListener("timeupdate", onTime);
+      v.removeEventListener("ended", finish);
+      v.removeEventListener("error", finish);
+      window.clearTimeout(timer);
+    };
     // `scroll` also fires for scroll restoration on reload — only a real
     // displacement counts as the visitor moving on.
     const onInput = (e: Event) => {
       if (e.type === "scroll" && window.scrollY < 4) return;
-      endIntro();
+      finish();
     };
     const onTime = () => {
-      if (v.currentTime >= INTRO_END_S) endIntro(); // the copy starts fading in as the film goes dark
-    };
-    const endIntro = () => {
-      if (html.dataset.intro === undefined) return;
-      delete html.dataset.intro;
-      INPUT_EVENTS.forEach((n) => window.removeEventListener(n, onInput));
-      v.removeEventListener("timeupdate", onTime);
-      v.removeEventListener("error", endIntro);
-      window.dispatchEvent(new Event(HERO_INTRO_DONE));
-    };
-
-    if (!shouldLoadFilm(readFilmEnv())) {
-      endIntro(); // belt and braces: the bootstrap shouldn't have set it either
-      return; // no request, ever
-    }
-
-    const setOn = (on: boolean) => {
-      if (on) section.dataset.film = "on";
-      else delete section.dataset.film;
-    };
-    // Picks the file for the CURRENT orientation + theme. A different file
-    // (theme toggle, rotation) drops data-film first so the old film fades
-    // out under the swap; `playing` on the new file fades it back in.
-    let finished = false;
-    const load = () => {
-      if (finished) return; // played once; the grid floor has the stage now
-      const src = pickSource(isPortrait(), readFilmEnv().theme);
-      if (v.getAttribute("src") !== src) {
-        setOn(false);
-        v.setAttribute("src", src);
-        v.load();
-      }
-      v.play().catch(() => {});
+      if (v.currentTime >= INTRO_END_S) finish();
     };
     let playing = false;
     const onPlaying = () => {
       playing = true;
-      setOn(true);
+      if (state === "intro") section.dataset.film = "on";
     };
-    v.addEventListener("playing", onPlaying);
-    // The end of the single pass: reveal the copy (if the loop-end trigger
-    // hasn't already) and fade the film out so the grid floor returns.
-    const onEnded = () => {
-      finished = true;
-      endIntro();
-      setOn(false);
-    };
-    v.addEventListener("ended", onEnded);
 
-    // Intro triggers.
-    INPUT_EVENTS.forEach((n) => window.addEventListener(n, onInput, { passive: true }));
+    v.addEventListener("playing", onPlaying);
     v.addEventListener("timeupdate", onTime);
-    v.addEventListener("error", endIntro);
-    const introTimer = window.setTimeout(() => {
-      if (!playing) endIntro(); // slow network: don't hold the copy hostage
+    v.addEventListener("ended", finish);
+    v.addEventListener("error", finish);
+    INPUT_EVENTS.forEach((n) => window.addEventListener(n, onInput, { passive: true }));
+    // (finish() reads `timer` only from event/timer callbacks, all after this line.)
+    const timer = window.setTimeout(() => {
+      if (!playing) finish(); // slow network: don't hold the page hostage
     }, INTRO_TIMEOUT_MS);
 
-    // Attach now: the film is the opening.
+    // Attach now: the film is the opening. One file per orientation × theme.
     v.preload = "auto";
-    load();
-
-    // Orientation or theme → swap file. Off-screen → pause.
-    const swap = () => load();
-    const mq = window.matchMedia("(orientation: portrait)");
-    mq.addEventListener("change", swap);
-    const mo = new MutationObserver((muts) => {
-      if (muts.some((m) => m.attributeName === "data-theme")) swap();
-    });
-    mo.observe(html, { attributes: true, attributeFilter: ["data-theme"] });
-
-    const io = new IntersectionObserver(
-      ([e]) => {
-        if (finished) return;
-        if (!e.isIntersecting) v.pause();
-        else v.play().catch(() => {});
-      },
-      { threshold: 0 },
-    );
-    io.observe(section);
+    v.setAttribute("src", pickSource(isPortrait(), readFilmEnv().theme));
+    v.load();
+    v.play().catch(() => {});
 
     return () => {
       v.removeEventListener("playing", onPlaying);
-      v.removeEventListener("ended", onEnded);
       v.removeEventListener("timeupdate", onTime);
-      v.removeEventListener("error", endIntro);
+      v.removeEventListener("ended", finish);
+      v.removeEventListener("error", finish);
       INPUT_EVENTS.forEach((n) => window.removeEventListener(n, onInput));
-      window.clearTimeout(introTimer);
-      mq.removeEventListener("change", swap);
-      mo.disconnect();
-      io.disconnect();
+      window.clearTimeout(timer);
     };
   }, []);
 

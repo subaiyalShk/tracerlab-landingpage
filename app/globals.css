@@ -674,6 +674,7 @@ html[data-theme="light"] .nt-film-scrim {
 html[data-intro="on"] #tl-hero .nt-copy {
   opacity: 0;
   pointer-events: none;
+  transition: none; /* hide instantly whenever this applies (dev injects CSS post-paint); the fade only runs on reveal */
 }
 html[data-intro="on"] #tl-hero[data-film="on"] .nt-film-scrim {
   opacity: 0.35;

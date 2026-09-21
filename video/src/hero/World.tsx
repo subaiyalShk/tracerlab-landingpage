@@ -12,11 +12,17 @@ const hash = (x: number, y: number) => {
   return s - Math.floor(s);
 };
 
+const ANTARCTICA_ROW = 67; // lat < -60° — Antarctica would sit on the machine floor
+const LAND_CELLS = decodeLand(landJson).filter((c) => c.j < ANTARCTICA_ROW);
+
 export const World: React.FC = () => {
   const f = useCurrentFrame();
   const { width, height } = useVideoConfig();
   const L = useLayout();
-  const dots = useMemo(() => landDots(decodeLand(landJson), L.map, landJson.cols, landJson.rows), [L.map]);
+  const dots = useMemo(
+    () => landDots(LAND_CELLS, L.map, landJson.cols, landJson.rows),
+    [L.map.x, L.map.y, L.map.w, L.map.h],
+  );
   const r = L.map.w / landJson.cols / 2 - 1.2; // dot radius from cell pitch
   const t = (f / DURATION) * CYCLES * Math.PI * 2;
   return (

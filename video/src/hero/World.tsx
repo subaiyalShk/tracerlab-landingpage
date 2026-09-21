@@ -12,19 +12,17 @@ const hash = (x: number, y: number) => {
   return s - Math.floor(s);
 };
 
-// Once the camera leaves the phone and rides the cables down to the machine,
-// the world steps back to a faint ghost so the floor pipeline is the focus
-// (the camera can't zoom past ~1.15 without cropping the pipeline, so the map
-// would otherwise still fill the frame). It returns for the flywheel, whose
-// arcs land in its dots — and is fully back well before the loop's seam.
-const GHOST = 0.12;
-const STEP_BACK = { from: BEATS.reveal.from + 40, to: BEATS.reveal.from + 110 } as const;
+// The world is the opener only: it fades out completely as the camera arrives
+// on the phone (so the Attention scene's screens and chips sit on clean
+// black), stays out through the cable ride and the machine, and returns for
+// the flywheel, whose arcs land in its dots — fully back before the seam.
+const STEP_BACK = { from: BEATS.attention.from + 5, to: BEATS.attention.from + 40 } as const;
 const RETURN = { from: BEATS.flywheel.from + 20, to: BEATS.flywheel.from + 80 } as const;
 const worldPresence = (f: number) => {
   const clamp = { extrapolateLeft: "clamp", extrapolateRight: "clamp" } as const;
   return f < BEATS.mechanism.to
-    ? interpolate(f, [STEP_BACK.from, STEP_BACK.to], [1, GHOST], clamp)
-    : interpolate(f, [RETURN.from, RETURN.to], [GHOST, 1], clamp);
+    ? interpolate(f, [STEP_BACK.from, STEP_BACK.to], [1, 0], clamp)
+    : interpolate(f, [RETURN.from, RETURN.to], [0, 1], clamp);
 };
 
 const ANTARCTICA_ROW = 67; // lat < -60° — Antarctica would sit on the machine floor

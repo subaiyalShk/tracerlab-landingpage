@@ -1,5 +1,5 @@
-import { useCurrentFrame } from "remotion";
-import { rgba, useLayout, type Pt, usePalette } from "./config";
+import { interpolate, useCurrentFrame } from "remotion";
+import { BEATS, rgba, useLayout, type Pt, usePalette } from "./config";
 
 // 14 silhouettes in a loose ring around the cluster center. Deterministic
 // (golden-angle spiral) so Reveal can reuse the exact positions for threads.
@@ -17,8 +17,15 @@ export const People: React.FC = () => {
   const f = useCurrentFrame();
   const L = useLayout();
   const pts = peoplePositions(L.cluster);
+  // Dim the crowd while the phone has the scene (the chip column reads over
+  // them), back to full for the cable ride, where they are the cable sources.
+  const clamp = { extrapolateLeft: "clamp", extrapolateRight: "clamp" } as const;
+  const presence =
+    f < BEATS.reveal.from
+      ? interpolate(f, [BEATS.attention.from + 5, BEATS.attention.from + 40], [1, 0.3], clamp)
+      : interpolate(f, [BEATS.reveal.from, BEATS.reveal.from + 30], [0.3, 1], clamp);
   return (
-    <svg style={{ position: "absolute", left: 0, top: 0, overflow: "visible" }} width={1} height={1}>
+    <svg style={{ position: "absolute", left: 0, top: 0, overflow: "visible", opacity: presence }} width={1} height={1}>
       {pts.map((p, k) => {
         const glow = 0.55 + 0.35 * Math.sin(f / 9 + k); // screens flicker independently
         return (

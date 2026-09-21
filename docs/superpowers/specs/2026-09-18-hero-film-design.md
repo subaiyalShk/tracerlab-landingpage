@@ -21,13 +21,14 @@ Decisions taken during brainstorming (2026-09-17/18):
 | "Money out" | Revenue in the machine's language: rising revenue line, "Booked" chips, `$` odometer — no cash imagery |
 | Mobile | Separate 9:16 composition (re-layout, same scenes) |
 | Sound | None. The hero is muted with no unmute; card reels below keep click-to-play sound |
+| Light mode (added 2026-09-21) | Same film in the page's light palette (`#eef0f4` bg, `#0b0d12` ink, white surfaces); loads in both themes; toggle swaps the file |
 
 ## Non-goals
 
 - No captions, narration, or readable numbers inside the film (it plays under text).
 - No live-action / AI-generated footage.
 - No changes to copy, CTAs, or the sections below the hero.
-- Light mode keeps today's hero (grid floor); the film is dark-theme only.
+- ~~Light mode keeps today's hero (grid floor); the film is dark-theme only.~~ Superseded 2026-09-21: the film ships in both themes (see Drift).
 
 ## 1. The film
 
@@ -157,3 +158,4 @@ Copy, CTAs, `TypedHeadline`, `TelemetryPanel`/`MachinePanel` (stay retired on di
 - Pink appears in the machine pulse (frames 625–680) AND on the three BOOKED chips (690→dip) — owner-approved; do not "fix" the chips.
 - The reveal pull-out did not need the 6-frame dip fallback; the camera key was re-pinned instead (see camera.test.ts).
 - Touch devices attach on first input (LCP safety, above).
+- **Light theme (2026-09-21):** scenes read colors through `usePalette()` (ThemeContext from the composition's `theme` prop); compositions `HeroLoopLight`/`HeroLoopMobileLight`; files `loop-16x9-light.mp4` (2.41 MB, crf 29) / `loop-9x16-light.mp4` (1.48 MB); first frame = page grey (luma ≈ 240). `shouldLoadFilm` no longer bails on light; `pickSource(portrait, theme)`; the theme observer swaps files instead of pausing, which also removes the old "load in light, toggle to dark, no film" gap. Light scrim under `html[data-theme="light"]`.

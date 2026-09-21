@@ -654,6 +654,12 @@ html[data-theme="light"] {
     radial-gradient(ellipse 48% 62% at 50% 46%, rgba(0, 0, 0, 0.72) 0%, rgba(0, 0, 0, 0.35) 55%, transparent 100%),
     linear-gradient(180deg, rgba(0, 0, 0, 0.55) 0%, transparent 18%, transparent 88%, #000 100%);
 }
+/* Light theme: the same scrim in the page's light grey (--tl-page #eef0f4). */
+html[data-theme="light"] .nt-film-scrim {
+  background:
+    radial-gradient(ellipse 48% 62% at 50% 46%, rgba(238, 240, 244, 0.78) 0%, rgba(238, 240, 244, 0.4) 55%, transparent 100%),
+    linear-gradient(180deg, rgba(238, 240, 244, 0.6) 0%, transparent 18%, transparent 88%, #eef0f4 100%);
+}
 #tl-hero[data-film="on"] .nt-film,
 #tl-hero[data-film="on"] .nt-film-scrim {
   opacity: 1;

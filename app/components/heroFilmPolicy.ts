@@ -1,11 +1,15 @@
 // Pure decisions for the hero film (spec §3). Kept free of React/DOM so the
 // bail-outs are unit-tested; HeroFilm.tsx reads the environment and calls these.
-export type FilmEnv = { reducedMotion: boolean; saveData: boolean; theme: "light" | "dark"; coarsePointer: boolean };
+export type FilmTheme = "light" | "dark";
+export type FilmEnv = { reducedMotion: boolean; saveData: boolean; theme: FilmTheme; coarsePointer: boolean };
 
-export const shouldLoadFilm = (e: FilmEnv) => !e.reducedMotion && !e.saveData && e.theme === "dark";
+// The film ships in both themes (light since 2026-09-21), so only motion and
+// data preferences can veto it.
+export const shouldLoadFilm = (e: FilmEnv) => !e.reducedMotion && !e.saveData;
 
-export const pickSource = (portrait: boolean): "/hero/loop-9x16.mp4" | "/hero/loop-16x9.mp4" =>
-  portrait ? "/hero/loop-9x16.mp4" : "/hero/loop-16x9.mp4";
+export type FilmSource = "/hero/loop-16x9.mp4" | "/hero/loop-9x16.mp4" | "/hero/loop-16x9-light.mp4" | "/hero/loop-9x16-light.mp4";
+export const pickSource = (portrait: boolean, theme: FilmTheme): FilmSource =>
+  `/hero/loop-${portrait ? "9x16" : "16x9"}${theme === "light" ? "-light" : ""}.mp4`;
 
 // When to attach the film. Chrome counts a <video>'s first frame as an LCP
 // candidate (v116+) and LCP is finalized at the first user input, so on touch

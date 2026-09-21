@@ -1,6 +1,6 @@
 import { test } from "node:test";
 import assert from "node:assert/strict";
-import { BEATS, COLORS, DURATION, FPS, layoutFor, palette, worldSize } from "./config";
+import { BEATS, COLORS, DURATION, FPS, funnelBottom, layoutFor, palette, worldSize } from "./config";
 
 test("film is 30s at 30fps", () => {
   assert.equal(FPS, 30);
@@ -18,20 +18,30 @@ test("beats are contiguous, ordered and end at DURATION", () => {
   assert.equal(prev, DURATION);
 });
 
-test("landscape layout keeps attention in the left third and the machine on the floor", () => {
-  const { w, h } = worldSize(false);
-  const L = layoutFor(false);
-  assert.ok(L.cluster.x < w / 3);
-  assert.ok(L.phone.x < w / 3);
-  assert.ok(L.machine.y > h * 0.8);
-  assert.ok(L.output.x > L.machine.x + L.machine.w);
+test("the phone sits in the legibility frame; the funnel is centered below the map in both orientations", () => {
+  for (const portrait of [false, true]) {
+    const { w } = worldSize(portrait);
+    const L = layoutFor(portrait);
+    const map = L.map;
+    assert.ok(L.phone.x < w / 2, `portrait=${portrait} phone not left-of-center`);
+    assert.equal(L.funnel.cx, w / 2);
+    assert.ok(L.funnel.top > map.y + map.h, `portrait=${portrait} funnel overlaps the map`);
+    for (let k = 1; k < 4; k++) assert.ok(L.funnel.widths[k] < L.funnel.widths[k - 1], "tiers must narrow");
+    assert.ok(L.funnel.widths[0] <= w - 80, `portrait=${portrait} mouth too wide for the frame`);
+    assert.ok(L.output.y > funnelBottom(L.funnel), "output sits under the spout");
+  }
 });
 
-test("portrait layout keeps attention in the top band and the machine on the floor", () => {
-  const { h } = worldSize(true);
-  const L = layoutFor(true);
-  assert.ok(L.cluster.y < h * 0.35);
-  assert.ok(L.machine.y > h * 0.82);
+test("five intake ports sit across the funnel's mouth, above it and inside its width", () => {
+  for (const portrait of [false, true]) {
+    const L = layoutFor(portrait);
+    assert.equal(L.ports.length, 5);
+    const half = L.funnel.widths[0] / 2;
+    for (const p of L.ports) {
+      assert.ok(p.y < L.funnel.top, "port above the mouth");
+      assert.ok(Math.abs(p.x - L.funnel.cx) < half - 22, "port inside the mouth's width");
+    }
+  }
 });
 
 test("palette: dark is the original COLORS; light uses the page's light tokens", () => {
@@ -45,17 +55,3 @@ test("palette: dark is the original COLORS; light uses the page's light tokens",
   assert.equal(L.amber, COLORS.amber);
 });
 
-test("five intake ports, never overlapping the machine, feeding it from the side (landscape) or the top (portrait)", () => {
-  for (const portrait of [false, true]) {
-    const L = layoutFor(portrait);
-    assert.equal(L.ports.length, 5);
-    assert.equal(L.portsFeed, portrait ? "top" : "side");
-    for (const p of L.ports) {
-      const inside = p.x + 22 > L.machine.x && p.x - 22 < L.machine.x + L.machine.w && p.y + 22 > L.machine.y && p.y - 22 < L.machine.y + L.machine.h;
-      assert.ok(!inside, `portrait=${portrait} port at ${p.x},${p.y} overlaps the machine`);
-    }
-    // the pipeline (first port's left edge → output's right edge) fits the frame with margin
-    const { w } = worldSize(portrait);
-    assert.ok(L.ports[0].x - 22 >= 60 && L.output.x + L.output.w <= w - 60, `portrait=${portrait} pipeline touches the frame edge`);
-  }
-});

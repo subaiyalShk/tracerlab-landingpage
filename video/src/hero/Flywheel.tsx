@@ -21,7 +21,7 @@ export const Flywheel: React.FC = () => {
     interpolate(f, [BEATS.flywheel.from, BEATS.flywheel.from + 25], [0, 1], clamp),
     interpolate(f, [BEATS.flywheel.to - 30, BEATS.flywheel.to - 15], [1, 0], clamp),
   );
-  const start = { x: L.output.x + L.output.w * 0.6, y: L.output.y };
+  const start = { x: L.output.x + L.output.w * 0.36, y: L.output.y + L.output.h }; // chart bottom, under the spout
   const arcs = Array.from({ length: ARCS }, (_, k) => {
     const end = { x: L.map.x + L.map.w * (0.18 + k * 0.12), y: L.map.y + L.map.h * (0.28 + (k % 2) * 0.12) };
     const ctrl = { x: (start.x + end.x) / 2, y: Math.min(start.y, end.y) - L.map.h * 0.35 };

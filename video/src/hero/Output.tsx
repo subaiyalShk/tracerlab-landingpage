@@ -1,5 +1,5 @@
 import { interpolate, useCurrentFrame } from "remotion";
-import { BEATS, rgba, useLayout, usePalette } from "./config";
+import { BEATS, funnelBottom, rgba, useLayout, usePalette } from "./config";
 import { bevelPath } from "./Reveal";
 import { display } from "../theme";
 
@@ -10,7 +10,7 @@ const CHIPS = [BEATS.output.from + 30, BEATS.output.from + 60, BEATS.output.from
 const ODOMETER_RATES = [0.0137, 0.0311, 0.0523, 0.0719, 0.0937, 0.1171, 0.1409];
 const DIGITS = ODOMETER_RATES.length;
 
-// Everything on the right of the machine. The revenue line grows across the
+// Everything under the funnel's spout. The revenue line grows across the
 // output beat; three "Booked" chips land; the $ odometer rolls continuously
 // and never settles (decorative motion, not a claim). Warm tint lives ONLY
 // here (spec: warmth on the output beat).
@@ -30,11 +30,12 @@ export const Output: React.FC = () => {
   }).filter((p, k) => k / 23 <= grow + 1e-9);
   const line = pts.map((p, k) => `${k ? "L" : "M"}${p.x} ${p.y}`).join(" ");
   const area = pts.length ? `${line} L${pts[pts.length - 1].x} ${y + h - 30} L${x} ${y + h - 30} Z` : "";
-  // Feed from the machine's exit into the chart origin.
-  const exitY = L.machine.y + L.machine.h / 2;
+  // Feed from the spout down into the chart origin.
+  const spoutX = L.funnel.cx;
+  const spoutY = funnelBottom(L.funnel) + 26;
   return (
     <svg style={{ position: "absolute", left: 0, top: 0, overflow: "visible", opacity: show }} width={1} height={1}>
-      <path d={`M${L.machine.x + L.machine.w} ${exitY} H${x - 20} V${y + h - 30} H${x}`} fill="none" stroke={rgba(P.blue, 0.45)} strokeWidth={1.4} />
+      <path d={`M${spoutX} ${spoutY} V${y + h - 30 - 16} H${x} V${y + h - 30}`} fill="none" stroke={rgba(P.blue, 0.45)} strokeWidth={1.4} />
       <defs>
         <linearGradient id="rev-area" x1="0" y1="0" x2="0" y2="1">
           <stop offset="0" stopColor={rgba(P.amber, 0.22)} />
@@ -60,7 +61,7 @@ export const Output: React.FC = () => {
         );
       })}
       {/* $ odometer: each column rolls at its own rate; positions are continuous mod 10 */}
-      <g transform={`translate(${x} ${y - 6})`}>
+      <g transform={`translate(${x + w * 0.74} ${y + h - 30 - 30 * (CHIPS.length + 1) - 8})`}>
         <text x={0} y={0} fontFamily={display} fontSize={18} fill={rgba(P.ink, 0.75)}>$</text>
         {Array.from({ length: DIGITS }, (_, k) => {
           const rate = ODOMETER_RATES[k];

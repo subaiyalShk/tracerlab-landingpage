@@ -1,7 +1,7 @@
 import { test } from "node:test";
 import assert from "node:assert/strict";
 import { cameraAt, cameraKeys, cameraTransform } from "./camera";
-import { BEATS, DURATION, layoutFor, worldSize } from "./config";
+import { BEATS, DURATION, funnelBottom, layoutFor, tierRect, worldSize } from "./config";
 
 const near = (a: number, b: number, eps = 1e-6) => Math.abs(a - b) < eps;
 
@@ -61,30 +61,31 @@ test("the phone stays on screen while the camera starts to leave it (first 20 fr
   }
 });
 
-test("the camera lands on the machine, not the world: at the end of the reveal the map's top is above the frame and the machine is centered", () => {
+test("the camera lands on the funnel, not the world: at the end of the reveal the map is above the frame and the funnel is centered", () => {
   for (const portrait of [false, true]) {
     const { h } = worldSize(portrait);
     const L = layoutFor(portrait);
     const c = cameraAt(BEATS.reveal.to, cameraKeys(portrait));
-    const mapTop = c.anchor.y * h + (L.map.y - c.target.y) * c.zoom;
-    const machineMid = c.anchor.y * h + (L.machine.y + L.machine.h / 2 - c.target.y) * c.zoom;
-    assert.ok(mapTop < 0, `portrait=${portrait} map top on screen at ${mapTop}`);
-    assert.ok(machineMid > h * 0.4 && machineMid < h * 0.6, `portrait=${portrait} machine at ${machineMid}`);
+    const sy = (y: number) => c.anchor.y * h + (y - c.target.y) * c.zoom;
+    assert.ok(sy(L.map.y + L.map.h) < h * 0.2, `portrait=${portrait} map still on screen`); // (it is faded out by then anyway)
+    const mid = sy((L.funnel.top + funnelBottom(L.funnel)) / 2);
+    assert.ok(mid > h * 0.4 && mid < h * 0.6, `portrait=${portrait} funnel at ${mid}`);
   }
 });
 
-test("the machine is centered and fully on screen through the mechanism beat; the output block through the output beat", () => {
+test("the whole funnel (ports to spout) is on screen through the mechanism beat; the output block through the output beat", () => {
   for (const portrait of [false, true]) {
     const { w, h } = worldSize(portrait);
     const L = layoutFor(portrait);
     const k = cameraKeys(portrait);
     const sx = (c: ReturnType<typeof cameraAt>, x: number) => c.anchor.x * w + (x - c.target.x) * c.zoom;
     const sy = (c: ReturnType<typeof cameraAt>, y: number) => c.anchor.y * h + (y - c.target.y) * c.zoom;
+    const mouth = tierRect(L.funnel, 0);
     for (let f = BEATS.mechanism.from; f <= BEATS.mechanism.to; f += 10) {
       const c = cameraAt(f, k);
-      assert.ok(sx(c, L.machine.x) >= 0 && sx(c, L.machine.x + L.machine.w) <= w, `portrait=${portrait} f=${f} machine x off-screen`);
-      const mid = sy(c, L.machine.y + L.machine.h / 2);
-      assert.ok(mid > h * 0.4 && mid < h * 0.6, `portrait=${portrait} f=${f} machine not centered (y=${mid})`);
+      assert.ok(sx(c, mouth.x) >= 0 && sx(c, mouth.x + mouth.w) <= w, `portrait=${portrait} f=${f} mouth cut`);
+      assert.ok(sy(c, L.ports[0].y - 22) >= 0, `portrait=${portrait} f=${f} ports above frame`);
+      assert.ok(sy(c, funnelBottom(L.funnel)) <= h, `portrait=${portrait} f=${f} spout below frame`);
     }
     for (let f = BEATS.output.from + 30; f <= BEATS.output.to; f += 10) {
       const c = cameraAt(f, k);

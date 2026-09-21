@@ -1,5 +1,5 @@
 import { useCurrentFrame, useVideoConfig } from "remotion";
-import { BEATS, DURATION, layoutFor, worldSize, type Pt } from "./config";
+import { BEATS, DURATION, funnelBottom, layoutFor, worldSize, type Pt } from "./config";
 
 export type Cam = { zoom: number; target: Pt; anchor: Pt };
 export type CameraKey = Cam & { frame: number };
@@ -24,27 +24,17 @@ export const cameraKeys = (portrait: boolean): CameraKey[] => {
   const L = layoutFor(portrait);
   const center = { x: w / 2, y: h / 2 };
   const mid = { x: 0.5, y: 0.5 };
-  // After the phone, the camera never returns to the wide world view until the
-  // loop closes: it rides the cables down from the phone, then settles on the
-  // MACHINE, centered and filling the width — the explainer shot the labelled
-  // stages play on. The output beat pans right to the machine's second half
-  // plus the revenue block; the flywheel is the only pull-out to the world.
-  // Target sits a little above the machine's center so the title + label row
-  // above it and the block itself read as one centered group.
-  const machineCenter = { x: L.machine.x + L.machine.w / 2, y: L.machine.y + L.machine.h / 2 + (portrait ? 50 : -40) };
-  const MACHINE_ZOOM = portrait ? 1.8 : 2.2; // 780 × 2.2 = 1716 of 1920; 560 × 1.8 = 1008 of 1080
-  const outputSpanL = L.machine.x + L.machine.w * 0.5;
-  const outputSpanR = L.output.x + L.output.w;
-  const OUTPUT_ZOOM = portrait ? 1.6 : 1.7;
-  const outputFocus = { x: (outputSpanL + outputSpanR) / 2, y: machineCenter.y - (portrait ? 40 : 20) };
-  // Reveal in two moves: first pull back on the pinned phone (it shrinks into
-  // one thread among many), THEN slide down the cables — panning at zoom 8
-  // would throw the phone off the top of the frame in a handful of frames.
-  const phoneShrink = { zoom: 3.5, target: { x: L.phone.x, y: L.phone.y }, anchor: L.anchorZoom };
-  // Mid-reveal: halfway down the cables, ports entering from the bottom.
-  const cableRide = portrait
-    ? { zoom: 2.2, target: { x: L.cluster.x, y: L.ports[0].y - 250 }, anchor: mid }
-    : { zoom: 2.6, target: { x: (L.ports[0].x + L.ports[3].x) / 2, y: L.ports[0].y - 160 }, anchor: { x: 0.35, y: 0.5 } };
+  const fn = L.funnel;
+  const funnelMidY = (fn.top + funnelBottom(fn)) / 2;
+  // Funnel framing: mouth + ports above + a little below the spout. Portrait
+  // has less width to spare, so it sits slightly closer.
+  const FUNNEL_ZOOM = portrait ? 1.15 : 1.3;
+  const funnelFocus = { x: fn.cx, y: funnelMidY - 20 };
+  const OUTPUT_ZOOM = portrait ? 1.5 : 1.7;
+  const outputFocus = { x: fn.cx, y: (funnelBottom(fn) + L.output.y + L.output.h) / 2 - 10 };
+  // Zoom-out over the phone cloud: the hero phone drifts from the legibility
+  // anchor to the frame's center while the cloud fills the frame.
+  const cloud = { zoom: portrait ? 2 : 2.4, target: { x: L.cluster.x, y: L.cluster.y }, anchor: mid };
   return [
     { frame: 0, zoom: 1, target: center, anchor: mid },
     // One slow dolly-in on the map while the opening stats play. The map has
@@ -53,10 +43,11 @@ export const cameraKeys = (portrait: boolean): CameraKey[] => {
     // the reveal, where the layers hand over pixel-for-pixel.
     { frame: MAP_OUT, zoom: 1.4, target: center, anchor: mid },
     { frame: BEATS.reveal.from, ...phonePose(portrait) },
-    { frame: BEATS.reveal.from + 30, ...phoneShrink },
-    { frame: BEATS.reveal.from + 75, ...cableRide },
-    { frame: BEATS.reveal.to, zoom: MACHINE_ZOOM, target: machineCenter, anchor: mid },
-    { frame: BEATS.mechanism.to, zoom: MACHINE_ZOOM, target: machineCenter, anchor: mid },
+    // Reveal: pull back to the phone cloud, then dive down the cables to the funnel.
+    { frame: BEATS.reveal.from + 70, ...cloud },
+    { frame: BEATS.reveal.to, zoom: FUNNEL_ZOOM, target: funnelFocus, anchor: mid },
+    { frame: BEATS.mechanism.to, zoom: FUNNEL_ZOOM, target: funnelFocus, anchor: mid },
+    // Output: down to the spout and the revenue under it.
     { frame: BEATS.output.from + 30, zoom: OUTPUT_ZOOM, target: outputFocus, anchor: mid },
     { frame: BEATS.output.to, zoom: OUTPUT_ZOOM, target: outputFocus, anchor: mid },
     // Flywheel: the only pull-out to the wide world — revenue → attention, and

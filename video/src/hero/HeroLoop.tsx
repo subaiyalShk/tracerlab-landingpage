@@ -1,6 +1,6 @@
 import { Stage } from "./Stage";
 import { World } from "./World";
-import { People } from "./People";
+import { Phones } from "./Phones";
 import { Phone } from "./Phone";
 import { Reveal } from "./Reveal";
 import { Machine } from "./Machine";
@@ -20,7 +20,7 @@ export const HeroLoop: React.FC<{ theme: Theme }> = ({ theme }) => (
       overlay={
         <>
           <PhoneLayer>
-            <People />
+            <Phones />
             <Phone />
           </PhoneLayer>
           <Stats />

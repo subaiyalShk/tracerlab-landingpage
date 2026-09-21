@@ -95,21 +95,24 @@ export const funnelBottom = (fn: Funnel) => fn.top + 4 * fn.tierH + 3 * fn.gap;
 // the camera pans down to them; the flywheel pulls back up to the map.
 const build = (portrait: boolean): Layout => {
   const { w, h } = worldSize(portrait);
-  const phone = portrait ? { x: 310, y: 340, w: 40, h: 84 } : { x: 430, y: 410, w: 40, h: 84 };
+  const phone = portrait ? { x: 540, y: 900, w: 40, h: 84 } : { x: 430, y: 410, w: 40, h: 84 };
+  // Portrait: the map fills the middle of the tall frame (wider than the frame,
+  // cropped) and the funnel sits BELOW the frame at zoom 1 so the flywheel's
+  // pull-out never shows funnel and map together.
   const funnel: Funnel = portrait
-    ? { cx: w / 2, top: 1250, tierH: 104, gap: 14, widths: [820, 640, 470, 320] }
+    ? { cx: w / 2, top: 2150, tierH: 104, gap: 14, widths: [820, 640, 470, 320] }
     : { cx: w / 2, top: 1250, tierH: 92, gap: 14, widths: [900, 700, 500, 330] };
   const mouth = funnel.widths[0];
   const ports = [0, 1, 2, 3, 4].map((k) => ({ x: funnel.cx + (k - 2) * (mouth / 5.6), y: funnel.top - 60 }));
   const bottom = funnelBottom(funnel);
   return {
-    map: portrait ? { x: 0, y: 60, w: 1080, h: 540 } : { x: 0, y: 60, w: 1920, h: 960 },
+    map: portrait ? { x: -150, y: 615, w: 1380, h: 690 } : { x: 0, y: 60, w: 1920, h: 960 },
     cluster: { x: phone.x, y: phone.y, r: portrait ? 260 : 320 },
     phone,
     funnel,
     ports,
     output: { x: funnel.cx - 180, y: bottom + 50, w: 360, h: 170 },
-    anchorZoom: portrait ? { x: 0.5, y: 0.24 } : { x: 0.2, y: 0.5 },
+    anchorZoom: portrait ? { x: 0.5, y: 0.31 } : { x: 0.2, y: 0.5 }, // portrait: phone + the chip column below it read as one centered group
   };
 };
 const LAYOUTS = { landscape: build(false), portrait: build(true) };

@@ -1,5 +1,5 @@
 import { interpolate, useCurrentFrame } from "remotion";
-import { BEATS, rgba, useLayout, usePalette, type Palette } from "./config";
+import { BEATS, rgba, useLayout, usePalette, usePortraitFilm, type Palette } from "./config";
 import { PLATFORMS } from "./marks";
 import { bevelPath } from "./Reveal";
 import { display } from "../theme";
@@ -115,9 +115,12 @@ export const Phone: React.FC = () => {
   const Next = SCREENS[Math.min(i + 1, SCREENS.length - 1)];
   const CurMark = PLATFORMS[i].Mark;
   const NextMark = PLATFORMS[Math.min(i + 1, PLATFORMS.length - 1)].Mark;
-  // Chip column beside the phone (level — outside the tilted group).
-  const chipX = x + w / 2 + 12;
-  const chipY0 = y - h / 2 + 10;
+  // Chip column: beside the phone in landscape; BELOW it, centered, in portrait
+  // (a phone-wide frame has no room to the right). Level — outside the tilt.
+  const portrait = usePortraitFilm();
+  const chipW = 30;
+  const chipX = portrait ? x - chipW / 2 : x + w / 2 + 12;
+  const chipY0 = portrait ? y + h / 2 + 14 : y - h / 2 + 10;
   return (
     <svg style={{ position: "absolute", left: 0, top: 0, overflow: "visible" }} width={1} height={1}>
       <g transform={`translate(${x} ${y}) rotate(-8) translate(${-w / 2} ${-h / 2})`}>
@@ -158,7 +161,7 @@ export const Phone: React.FC = () => {
         const kicker = interpolate(t, [4, 16], [0, 1], clamp);
         return (
           <g opacity={beatOut}>
-            <text x={chipX} y={chipY0 - 3} fontFamily={display} fontSize={2} letterSpacing={0.6} fill={rgba(P.ink, 0.55 * kicker)}>
+            <text x={portrait ? x : chipX} y={chipY0 - 3} textAnchor={portrait ? "middle" : "start"} fontFamily={display} fontSize={2} letterSpacing={0.6} fill={rgba(P.ink, 0.55 * kicker)}>
               WHERE ATTENTION LIVES
             </text>
             {PLATFORMS.map(({ name, surface, Mark }, k) => {
@@ -168,7 +171,7 @@ export const Phone: React.FC = () => {
               const cy = chipY0 + k * 9;
               return (
                 <g key={name} opacity={a} transform={`translate(${dx} 0)`}>
-                  <path d={bevelPath(chipX, cy, 30, 7, 1.6)} fill={rgba(P.ink, 0.05)} stroke={rgba(P.blue, 0.55)} strokeWidth={0.35} />
+                  <path d={bevelPath(chipX, cy, chipW, 7, 1.6)} fill={rgba(P.ink, 0.05)} stroke={rgba(P.blue, 0.55)} strokeWidth={0.35} />
                   <g transform={`translate(${chipX + 1.8} ${cy + 1.5})`}>
                     <Mark size={4} color={rgba(P.ink, 0.85)} />
                   </g>

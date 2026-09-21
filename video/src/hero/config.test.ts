@@ -23,7 +23,9 @@ test("the phone sits in the legibility frame; the funnel is centered below the m
     const { w } = worldSize(portrait);
     const L = layoutFor(portrait);
     const map = L.map;
-    assert.ok(L.phone.x < w / 2, `portrait=${portrait} phone not left-of-center`);
+    // landscape: phone in the left third (chips to its right); portrait: centered (chips below)
+    if (portrait) assert.equal(L.phone.x, w / 2);
+    else assert.ok(L.phone.x < w / 3, "phone not in the left third");
     assert.equal(L.funnel.cx, w / 2);
     assert.ok(L.funnel.top > map.y + map.h, `portrait=${portrait} funnel overlaps the map`);
     for (let k = 1; k < 4; k++) assert.ok(L.funnel.widths[k] < L.funnel.widths[k - 1], "tiers must narrow");

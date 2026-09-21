@@ -7,8 +7,8 @@ export type CameraKey = Cam & { frame: number };
 // Smoothstep-style ease in/out cubic — every camera move uses the same curve.
 const ease = (t: number) => (t < 0.5 ? 4 * t * t * t : 1 - Math.pow(-2 * t + 2, 3) / 2);
 
-// The whole film is ONE camera path. Keys sit on beat boundaries (spec §1);
-// the last key equals the first so the loop closes (tested).
+// The whole film is ONE camera path. Keys sit on beat boundaries; the last
+// key holds the revenue pose while the film fades out.
 // The map is gone (and the phone scene begins) shortly before the Attention
 // beat; the cut happens on black.
 export const MAP_OUT = BEATS.attention.from - 12;
@@ -30,8 +30,12 @@ export const cameraKeys = (portrait: boolean): CameraKey[] => {
   // has less width to spare, so it sits slightly closer.
   const FUNNEL_ZOOM = portrait ? 1.15 : 1.3;
   const funnelFocus = { x: fn.cx, y: funnelMidY - 20 };
-  const OUTPUT_ZOOM = portrait ? 1.5 : 1.7;
-  const outputFocus = { x: fn.cx, y: (funnelBottom(fn) + L.output.y + L.output.h) / 2 - 10 };
+  // Output: landscape frames spout + panel together; portrait (less width to
+  // spare, more height) goes tighter on the panel with the spout just above.
+  const OUTPUT_ZOOM = portrait ? 1.6 : 1.7;
+  const outputFocus = portrait
+    ? { x: fn.cx, y: L.output.y + L.output.h / 2 - 80 }
+    : { x: fn.cx, y: (funnelBottom(fn) + L.output.y + L.output.h) / 2 - 10 };
   // Zoom-out over the phone cloud: the hero phone drifts from the legibility
   // anchor to the frame's center while the cloud fills the frame.
   const cloud = { zoom: portrait ? 2 : 2.4, target: { x: L.cluster.x, y: L.cluster.y }, anchor: mid };
@@ -49,10 +53,8 @@ export const cameraKeys = (portrait: boolean): CameraKey[] => {
     { frame: BEATS.mechanism.to, zoom: FUNNEL_ZOOM, target: funnelFocus, anchor: mid },
     // Output: down to the spout and the revenue under it.
     { frame: BEATS.output.from + 30, zoom: OUTPUT_ZOOM, target: outputFocus, anchor: mid },
-    { frame: BEATS.output.to, zoom: OUTPUT_ZOOM, target: outputFocus, anchor: mid },
-    // Flywheel: the only pull-out to the wide world — revenue → attention, and
-    // frame 900 must equal frame 0.
-    { frame: DURATION, zoom: 1, target: center, anchor: mid },
+    // …and hold it while the film fades out. (The film plays once — no loop.)
+    { frame: DURATION, zoom: OUTPUT_ZOOM, target: outputFocus, anchor: mid },
   ];
 };
 

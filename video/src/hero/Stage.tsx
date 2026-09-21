@@ -1,10 +1,10 @@
 import { AbsoluteFill, interpolate, useCurrentFrame, useVideoConfig } from "remotion";
 import type { ReactNode } from "react";
 import { cameraTransform, useCamera } from "./camera";
-import { DURATION, usePalette } from "./config";
+import { BEATS, DURATION, usePalette } from "./config";
 
 const FADE_IN = 12; // frames — file opens from the page background so the first painted frame is flat (the site's LCP protection is the attach timing in HeroFilm, not entropy)
-const FADE_OUT = 15; // frames — loop seam dips through the page background (spec adjustment #1)
+const FADE_OUT = BEATS.outro.to - BEATS.outro.from; // the outro: fade to the page background on the revenue scene
 
 // Page-colored background (black in dark, page grey in light), fade in/out, and the ONE camera transform. Children are
 // laid out in world coordinates (== composition size at zoom 1).

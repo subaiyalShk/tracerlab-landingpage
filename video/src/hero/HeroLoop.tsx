@@ -5,7 +5,6 @@ import { Phone } from "./Phone";
 import { Reveal } from "./Reveal";
 import { Machine } from "./Machine";
 import { Output } from "./Output";
-import { Flywheel } from "./Flywheel";
 import { Stats } from "./Stats";
 import { PhoneLayer } from "./PhoneLayer";
 import { PlatformChips } from "./PlatformChips";
@@ -32,7 +31,6 @@ export const HeroLoop: React.FC<{ theme: Theme }> = ({ theme }) => (
       <Reveal />
       <Machine />
       <Output />
-      <Flywheel />
     </Stage>
   </ThemeContext.Provider>
 );

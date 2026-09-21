@@ -14,10 +14,10 @@ test("keys are ordered and span the whole film", () => {
   }
 });
 
-test("loop closes: camera at DURATION equals camera at 0", () => {
+test("the camera holds the revenue pose from the end of the output beat to the last frame", () => {
   for (const portrait of [false, true]) {
     const k = cameraKeys(portrait);
-    const a = cameraAt(0, k);
+    const a = cameraAt(BEATS.output.to, k);
     const b = cameraAt(DURATION, k);
     assert.ok(near(a.zoom, b.zoom));
     assert.deepEqual(a.target, b.target);

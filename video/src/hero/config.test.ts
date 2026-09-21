@@ -2,13 +2,13 @@ import { test } from "node:test";
 import assert from "node:assert/strict";
 import { BEATS, COLORS, DURATION, FPS, funnelBottom, layoutFor, palette, worldSize } from "./config";
 
-test("film is 30s at 30fps", () => {
+test("film is 29s at 30fps", () => {
   assert.equal(FPS, 30);
-  assert.equal(DURATION, 900);
+  assert.equal(DURATION, 870);
 });
 
 test("beats are contiguous, ordered and end at DURATION", () => {
-  const order = ["world", "people", "attention", "reveal", "mechanism", "output", "flywheel"] as const;
+  const order = ["world", "people", "attention", "reveal", "mechanism", "output", "outro"] as const;
   let prev = 0;
   for (const k of order) {
     assert.equal(BEATS[k].from, prev, `${k} starts where previous ended`);

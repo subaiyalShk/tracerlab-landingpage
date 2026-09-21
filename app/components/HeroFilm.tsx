@@ -24,7 +24,7 @@ import { HERO_INTRO_DONE } from "./HeroCopy";
 // Save-Data (then data-intro was never set and the copy is visible from the
 // first paint). The film is the LCP element by design.
 const INTRO_TIMEOUT_MS = 6000;
-const INTRO_END_S = 29.4; // the film's dip-to-black starts at 29.5 s: hand over as it goes dark
+const INTRO_END_S = 28.0; // the film fades out from 27.3 s (frame 820) and ends at 29 s: hand over as it goes dark
 const INPUT_EVENTS = ["scroll", "touchstart", "pointerdown", "keydown"] as const;
 
 export default function HeroFilm() {

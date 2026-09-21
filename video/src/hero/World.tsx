@@ -14,16 +14,9 @@ const hash = (x: number, y: number) => {
 
 // The world is the opener only: it fades out completely as the camera arrives
 // on the phone (so the Attention scene's screens and chips sit on clean
-// black), stays out through the cable ride and the machine, and returns for
-// the flywheel, whose arcs land in its dots — fully back before the seam.
+// black) and never returns — the film ends on the revenue scene.
 const STEP_BACK = { from: BEATS.attention.from - 34, to: BEATS.attention.from - 12 } as const; // == camera.MAP_OUT
-const RETURN = { from: BEATS.flywheel.from + 20, to: BEATS.flywheel.from + 80 } as const;
-const worldPresence = (f: number) => {
-  const clamp = { extrapolateLeft: "clamp", extrapolateRight: "clamp" } as const;
-  return f < BEATS.mechanism.to
-    ? interpolate(f, [STEP_BACK.from, STEP_BACK.to], [1, 0], clamp)
-    : interpolate(f, [RETURN.from, RETURN.to], [0, 1], clamp);
-};
+const worldPresence = (f: number) => interpolate(f, [STEP_BACK.from, STEP_BACK.to], [1, 0], { extrapolateLeft: "clamp", extrapolateRight: "clamp" });
 
 const ANTARCTICA_ROW = 67; // lat < -60° — Antarctica would sit on the machine floor
 const LAND_CELLS = decodeLand(landJson).filter((c) => c.j < ANTARCTICA_ROW);

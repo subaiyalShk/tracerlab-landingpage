@@ -2,19 +2,19 @@ import { createContext, useContext } from "react";
 import { useVideoConfig } from "remotion";
 
 export const FPS = 30;
-export const DURATION = 900; // 30 s
+export const DURATION = 870; // 29 s — the film plays once and fades out on the revenue scene
 
 // Beat boundaries in frames. Contiguous; last ends at DURATION. The openers are
 // short and the Mechanism beat is the longest (7 s): the machine is the
-// explainer — four labelled stages the camera holds on, centered.
+// explainer. The film ends on the revenue scene: the `outro` is its fade to black.
 export const BEATS = {
   world: { from: 0, to: 90 },
   people: { from: 90, to: 180 },
   attention: { from: 180, to: 330 },
   reveal: { from: 330, to: 450 },
   mechanism: { from: 450, to: 660 },
-  output: { from: 660, to: 780 },
-  flywheel: { from: 780, to: 900 },
+  output: { from: 660, to: 820 },
+  outro: { from: 820, to: 870 },
 } as const;
 
 // The four chambers of the machine — the service-business stack, in the
@@ -111,7 +111,7 @@ const build = (portrait: boolean): Layout => {
     phone,
     funnel,
     ports,
-    output: { x: funnel.cx - 180, y: bottom + 50, w: 360, h: 170 },
+    output: { x: funnel.cx - 280, y: bottom + 56, w: 560, h: 280 }, // the revenue panel under the spout
     anchorZoom: portrait ? { x: 0.5, y: 0.31 } : { x: 0.2, y: 0.5 }, // portrait: phone + the chip column below it read as one centered group
   };
 };

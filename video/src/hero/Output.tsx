@@ -4,7 +4,11 @@ import { bevelPath } from "./Reveal";
 import { display } from "../theme";
 
 const CHIPS = [BEATS.output.from + 30, BEATS.output.from + 60, BEATS.output.from + 90];
-const DIGITS = 7;
+// Rolling rates per column (rightmost fastest). Each is p/10000 with p coprime to
+// 10000, so no column lands on an exact digit within the 900-frame loop and the
+// columns never fall into a shared pattern — the counter is motion, never a figure.
+const ODOMETER_RATES = [0.0137, 0.0311, 0.0523, 0.0719, 0.0937, 0.1171, 0.1409];
+const DIGITS = ODOMETER_RATES.length;
 
 // Everything on the right of the machine. The revenue line grows across the
 // output beat; three "Booked" chips land; the $ odometer rolls continuously
@@ -58,7 +62,7 @@ export const Output: React.FC = () => {
       <g transform={`translate(${x} ${y - 6})`}>
         <text x={0} y={0} fontFamily={display} fontSize={18} fill={rgba(COLORS.ink, 0.75)}>$</text>
         {Array.from({ length: DIGITS }, (_, k) => {
-          const rate = 0.02 + k * 0.045; // rightmost rolls fastest
+          const rate = ODOMETER_RATES[k];
           const pos = ((f * rate) % 10 + 10) % 10;
           const cx = 16 + k * 13;
           return (

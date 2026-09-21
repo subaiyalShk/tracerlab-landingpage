@@ -42,7 +42,7 @@ Decisions taken during brainstorming (2026-09-17/18):
 ### Legibility rule (shapes every scene)
 On desktop the headline block covers nearly the whole vertical center, so the film's action
 lives in a **frame**:
-- Upper band + left/right thirds: map, people, phone beats.
+- Upper band + left third: map, people, phone beats.
 - Bottom band: **the machine is the floor** — a horizontal pipeline, intake left → machine
   center → output right, where the CSS grid floor sits today.
 - Center column: a soft radial scrim (a gradient `div`, never a CSS filter) sits between film
@@ -59,12 +59,12 @@ film has no visible edge and dissolves into the page.
 | t (s) | beat | scene |
 |---|---|---|
 | 0–4 | **World** | Dot-matrix world map (Robinson-ish projection, ~20k dots, pitch ≈ the hero's existing 24px dot grid) breathing in blue. Opens from black. |
-| 4–8 | **People** | Camera pushes into a cluster in the right third; dots resolve into silhouettes, each lit from below by a phone-glow rectangle. |
-| 8–13 | **Attention** | Push into one tilted phone (right third): a stylized *generic* feed scrolls — cards, hearts, a reel — with the Instagram mark in a corner; a thumb-flick swaps to a Facebook-marked feed. Stylized UI, never a clone. |
+| 4–8 | **People** | Camera pushes into a cluster in the **left** third (attention on the left, revenue on the right — the film reads left→right and the threads fall straight into the intake ports without crossing the center column); dots resolve into silhouettes, each lit from below by a phone-glow rectangle. |
+| 8–13 | **Attention** | Push into one tilted phone (left third): a stylized *generic* feed scrolls — cards, hearts, a reel — with the Instagram mark in a corner; a thumb-flick swaps to a Facebook-marked feed. Stylized UI, never a clone. |
 | 13–18 | **Reveal** | Pull back out: the phone shrinks into one of hundreds of glowing threads; threads become circuit traces converging down into the floor pipeline. Monochrome platform marks (Instagram, Facebook, Google, ChatGPT) sit on the traces as intake ports. The film's key shot. |
 | 18–22 | **Mechanism** | Hold on the machine: a chamfered bevel block, internal pulses moving through four unlabeled chambers (the four Services stages). One signal turns pink mid-machine — the only pink. |
 | 22–26 | **Output** | Right side: pulses exit and stack into a rising revenue line; "Booked" chips land; a `$` odometer rolls and **never settles on a figure** (decorative, not a claim — see copy rules in CLAUDE.md). |
-| 26–30 | **Flywheel** | Output pulses arc up and back into the map's dots; camera drifts out to the full world; seamless cut to frame 0. Revenue → ads → attention. |
+| 26–30 | **Flywheel** | Output pulses arc up and back into the map's dots; camera drifts out to the full world; the last 15 frames dip to black and frame 0 fades in from black over 12 frames (a 0.9 s breath — required because the file's first frame must be black for LCP *and* the file loops). Revenue → ads → attention. |
 
 ## 2. Production (Remotion)
 
@@ -78,8 +78,9 @@ Location: `video/src/hero/`.
 - `layout.ts` — landscape/portrait frame rules (which bands/thirds each beat may occupy).
 - `land.json` — packed lon/lat land mask generated once by `scripts/gen-land-mask.mjs` so the
   dot map is real geography, not a texture.
-- Platform marks: monochrome SVGs added under `public/assets/` (Instagram, Facebook, ChatGPT;
-  Google already exists). Same monochrome treatment as the TechBar marquee.
+- Platform marks: stylized monochrome inline SVG components in `video/src/hero/marks.tsx`
+  (Instagram, Facebook, Google, ChatGPT) — the site never displays them, only the film does.
+  Same monochrome treatment as the TechBar marquee.
 - Both compositions registered in `video/src/Root.tsx`.
 - Verification stills at each beat boundary (0/4/8/13/18/22/26/30 s) via `remotion still`,
   reviewed by the owner **before** any full render (matches the existing `boundary-*.png`

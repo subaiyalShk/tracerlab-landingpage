@@ -1,7 +1,7 @@
 import { test } from "node:test";
 import assert from "node:assert/strict";
 import { cameraAt, cameraKeys, cameraTransform } from "./camera";
-import { DURATION } from "./config";
+import { BEATS, DURATION, layoutFor, worldSize } from "./config";
 
 const near = (a: number, b: number, eps = 1e-6) => Math.abs(a - b) < eps;
 
@@ -44,4 +44,19 @@ test("the zoom target lands on the anchor point of the viewport", () => {
   const t = cameraTransform(cam, { w: 1920, h: 1080 });
   // translate = anchor*viewport - target*zoom
   assert.equal(t, `translate(${0.2 * 1920 - 430 * 8}px, ${0.5 * 1080 - 410 * 8}px) scale(8)`);
+});
+
+test("the cluster stays inside the viewport for the whole reveal pull-out", () => {
+  for (const portrait of [false, true]) {
+    const { w, h } = worldSize(portrait);
+    const L = layoutFor(portrait);
+    const k = cameraKeys(portrait);
+    for (let f = BEATS.reveal.from; f <= BEATS.reveal.to; f += 5) {
+      const c = cameraAt(f, k);
+      const sx = c.anchor.x * w + (L.cluster.x - c.target.x) * c.zoom;
+      const sy = c.anchor.y * h + (L.cluster.y - c.target.y) * c.zoom;
+      assert.ok(sx >= 0 && sx <= w, `portrait=${portrait} f=${f} sx=${sx}`);
+      assert.ok(sy >= 0 && sy <= h, `portrait=${portrait} f=${f} sy=${sy}`);
+    }
+  }
 });

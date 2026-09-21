@@ -20,7 +20,12 @@ export const cameraKeys = (portrait: boolean): CameraKey[] => {
     { frame: BEATS.world.to, zoom: 1.12, target: center, anchor: mid },
     { frame: BEATS.people.to, zoom: 3.2, target: { x: L.cluster.x, y: L.cluster.y }, anchor: L.anchorZoom },
     { frame: BEATS.attention.to, zoom: 8, target: { x: L.phone.x, y: L.phone.y }, anchor: L.anchorZoom },
-    { frame: BEATS.reveal.to, zoom: 1, target: center, anchor: mid },
+    // Pins the phone to its own screen position for the whole pull-out: target
+    // = phone, anchor = the phone's own viewport fraction ⇒ at zoom 1 this is
+    // the identity transform. Easing target/anchor toward the world center on
+    // the same curve as zoom (8→1) would otherwise swing the cluster off the
+    // left edge of frame mid-beat (measured screenX ≈ -522 at frame 470).
+    { frame: BEATS.reveal.to, zoom: 1, target: { x: L.phone.x, y: L.phone.y }, anchor: { x: L.phone.x / w, y: L.phone.y / h } },
     { frame: BEATS.mechanism.to, zoom: 1.06, target: machineFocus, anchor: mid },
     { frame: BEATS.output.to, zoom: 1.06, target: { x: machineFocus.x + 40, y: machineFocus.y }, anchor: mid },
     { frame: DURATION, zoom: 1, target: center, anchor: mid },

@@ -23,8 +23,11 @@ export const RemotionRoot = () => {
         width={1080}
         height={1920}
       />
-      <Composition id="HeroLoop" component={HeroLoop} durationInFrames={HERO_DURATION} fps={HERO_FPS} width={1920} height={1080} />
-      <Composition id="HeroLoopMobile" component={HeroLoop} durationInFrames={HERO_DURATION} fps={HERO_FPS} width={1080} height={1920} />
+      {/* Hero film: one component × {landscape, portrait} × {dark, light}. */}
+      <Composition id="HeroLoop" component={HeroLoop} defaultProps={{ theme: "dark" }} durationInFrames={HERO_DURATION} fps={HERO_FPS} width={1920} height={1080} />
+      <Composition id="HeroLoopMobile" component={HeroLoop} defaultProps={{ theme: "dark" }} durationInFrames={HERO_DURATION} fps={HERO_FPS} width={1080} height={1920} />
+      <Composition id="HeroLoopLight" component={HeroLoop} defaultProps={{ theme: "light" }} durationInFrames={HERO_DURATION} fps={HERO_FPS} width={1920} height={1080} />
+      <Composition id="HeroLoopMobileLight" component={HeroLoop} defaultProps={{ theme: "light" }} durationInFrames={HERO_DURATION} fps={HERO_FPS} width={1080} height={1920} />
     </>
   );
 };

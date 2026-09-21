@@ -1,3 +1,4 @@
+import { createContext, useContext } from "react";
 import { useVideoConfig } from "remotion";
 
 export const FPS = 30;
@@ -21,6 +22,25 @@ export const COLORS = {
   amber: "#f59e0b",
   ink: "#ffffff",
 } as const;
+
+// The film ships in both site themes. Brand blue/pink/amber are shared; bg,
+// ink and `surface` (phone body, silhouettes) flip. Light values are the
+// page's own tokens (globals.css html[data-theme="light"]: --tl-page /
+// --tl-ink / --tl-surface) so the film dissolves into the page in either theme.
+export type Theme = "dark" | "light";
+export type Palette = { bg: string; blue: string; pink: string; amber: string; ink: string; surface: string };
+
+const PALETTES: Record<Theme, Palette> = {
+  dark: { ...COLORS, surface: "#05060a" },
+  light: { bg: "#eef0f4", blue: COLORS.blue, pink: COLORS.pink, amber: COLORS.amber, ink: "#0b0d12", surface: "#ffffff" },
+};
+
+export const palette = (theme: Theme): Palette => PALETTES[theme];
+
+// HeroLoop provides the theme (from the composition's props); scenes read
+// their colors through usePalette() so no scene knows which theme it is in.
+export const ThemeContext = createContext<Theme>("dark");
+export const usePalette = (): Palette => palette(useContext(ThemeContext));
 
 export const rgba = (hex: string, a: number) => {
   const n = parseInt(hex.slice(1), 16);

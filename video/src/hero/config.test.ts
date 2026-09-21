@@ -1,6 +1,6 @@
 import { test } from "node:test";
 import assert from "node:assert/strict";
-import { BEATS, DURATION, FPS, layoutFor, worldSize } from "./config";
+import { BEATS, COLORS, DURATION, FPS, layoutFor, palette, worldSize } from "./config";
 
 test("film is 30s at 30fps", () => {
   assert.equal(FPS, 30);
@@ -32,4 +32,15 @@ test("portrait layout keeps attention in the top band and the machine on the flo
   const L = layoutFor(true);
   assert.ok(L.cluster.y < h * 0.35);
   assert.ok(L.machine.y > h * 0.82);
+});
+
+test("palette: dark is the original COLORS; light uses the page's light tokens", () => {
+  assert.deepEqual(palette("dark"), { ...COLORS, surface: "#05060a" });
+  const L = palette("light");
+  assert.equal(L.bg, "#eef0f4");
+  assert.equal(L.ink, "#0b0d12");
+  assert.equal(L.surface, "#ffffff");
+  assert.equal(L.blue, COLORS.blue);
+  assert.equal(L.pink, COLORS.pink);
+  assert.equal(L.amber, COLORS.amber);
 });

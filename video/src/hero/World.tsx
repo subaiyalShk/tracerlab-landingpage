@@ -1,6 +1,6 @@
 import { useCurrentFrame, useVideoConfig } from "remotion";
 import { useMemo } from "react";
-import { COLORS, DURATION, rgba, useLayout } from "./config";
+import { DURATION, rgba, useLayout, usePalette } from "./config";
 import { decodeLand, landDots } from "./land";
 import landJson from "./land.json";
 
@@ -16,6 +16,7 @@ const ANTARCTICA_ROW = 67; // lat < -60° — Antarctica would sit on the machin
 const LAND_CELLS = decodeLand(landJson).filter((c) => c.j < ANTARCTICA_ROW);
 
 export const World: React.FC = () => {
+  const P = usePalette();
   const f = useCurrentFrame();
   const { width, height } = useVideoConfig();
   const L = useLayout();
@@ -30,7 +31,7 @@ export const World: React.FC = () => {
       {dots.map((p, k) => {
         const ph = hash(p.x, p.y) * Math.PI * 2;
         const a = 0.22 + 0.18 * (0.5 + 0.5 * Math.sin(t + ph));
-        return <circle key={k} cx={p.x} cy={p.y} r={r} fill={rgba(COLORS.blue, a)} />;
+        return <circle key={k} cx={p.x} cy={p.y} r={r} fill={rgba(P.blue, a)} />;
       })}
     </svg>
   );

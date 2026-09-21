@@ -1,5 +1,5 @@
 import { interpolate, useCurrentFrame } from "remotion";
-import { BEATS, COLORS, rgba, useLayout } from "./config";
+import { BEATS, rgba, useLayout, usePalette } from "./config";
 import { bevelPath } from "./Reveal";
 import { display } from "../theme";
 
@@ -15,6 +15,7 @@ const DIGITS = ODOMETER_RATES.length;
 // and never settles (decorative motion, not a claim). Warm tint lives ONLY
 // here (spec: warmth on the output beat).
 export const Output: React.FC = () => {
+  const P = usePalette();
   const f = useCurrentFrame();
   const L = useLayout();
   const { x, y, w, h } = L.output;
@@ -33,16 +34,16 @@ export const Output: React.FC = () => {
   const exitY = L.machine.y + L.machine.h / 2;
   return (
     <svg style={{ position: "absolute", left: 0, top: 0, overflow: "visible", opacity: show }} width={1} height={1}>
-      <path d={`M${L.machine.x + L.machine.w} ${exitY} H${x - 20} V${y + h - 30} H${x}`} fill="none" stroke={rgba(COLORS.blue, 0.45)} strokeWidth={1.4} />
+      <path d={`M${L.machine.x + L.machine.w} ${exitY} H${x - 20} V${y + h - 30} H${x}`} fill="none" stroke={rgba(P.blue, 0.45)} strokeWidth={1.4} />
       <defs>
         <linearGradient id="rev-area" x1="0" y1="0" x2="0" y2="1">
-          <stop offset="0" stopColor={rgba(COLORS.amber, 0.22)} />
-          <stop offset="1" stopColor={rgba(COLORS.blue, 0)} />
+          <stop offset="0" stopColor={rgba(P.amber, 0.22)} />
+          <stop offset="1" stopColor={rgba(P.blue, 0)} />
         </linearGradient>
       </defs>
       {area && <path d={area} fill="url(#rev-area)" />}
-      <path d={line} fill="none" stroke={rgba(COLORS.blue, 0.95)} strokeWidth={2} strokeLinejoin="round" />
-      <line x1={x} y1={y + h - 30} x2={x + w * 0.72} y2={y + h - 30} stroke={rgba(COLORS.ink, 0.15)} strokeWidth={1} />
+      <path d={line} fill="none" stroke={rgba(P.blue, 0.95)} strokeWidth={2} strokeLinejoin="round" />
+      <line x1={x} y1={y + h - 30} x2={x + w * 0.72} y2={y + h - 30} stroke={rgba(P.ink, 0.15)} strokeWidth={1} />
       {/* Booked chips stacked at the right edge */}
       {CHIPS.map((at, k) => {
         const a = interpolate(f, [at, at + 12], [0, 1], clamp);
@@ -51,8 +52,8 @@ export const Output: React.FC = () => {
         const cy = y + h - 30 - 30 * (k + 1) + dy;
         return (
           <g key={k} opacity={a}>
-            <path d={bevelPath(cx, cy, 82, 22, 5)} fill={rgba(COLORS.pink, 0.12)} stroke={rgba(COLORS.pink, 0.8)} strokeWidth={1} />
-            <text x={cx + 41} y={cy + 15} textAnchor="middle" fontFamily={display} fontSize={11} letterSpacing={1.5} fill={rgba(COLORS.ink, 0.9)}>
+            <path d={bevelPath(cx, cy, 82, 22, 5)} fill={rgba(P.pink, 0.12)} stroke={rgba(P.pink, 0.8)} strokeWidth={1} />
+            <text x={cx + 41} y={cy + 15} textAnchor="middle" fontFamily={display} fontSize={11} letterSpacing={1.5} fill={rgba(P.ink, 0.9)}>
               BOOKED
             </text>
           </g>
@@ -60,7 +61,7 @@ export const Output: React.FC = () => {
       })}
       {/* $ odometer: each column rolls at its own rate; positions are continuous mod 10 */}
       <g transform={`translate(${x} ${y - 6})`}>
-        <text x={0} y={0} fontFamily={display} fontSize={18} fill={rgba(COLORS.ink, 0.75)}>$</text>
+        <text x={0} y={0} fontFamily={display} fontSize={18} fill={rgba(P.ink, 0.75)}>$</text>
         {Array.from({ length: DIGITS }, (_, k) => {
           const rate = ODOMETER_RATES[k];
           const pos = ((f * rate) % 10 + 10) % 10;
@@ -72,7 +73,7 @@ export const Output: React.FC = () => {
               </clipPath>
               <g clipPath={`url(#od${k})`}>
                 {Array.from({ length: 11 }, (_, d) => (
-                  <text key={d} x={cx} y={(d - pos) * 20} textAnchor="middle" fontFamily={display} fontSize={18} fill={rgba(COLORS.ink, 0.75)}>
+                  <text key={d} x={cx} y={(d - pos) * 20} textAnchor="middle" fontFamily={display} fontSize={18} fill={rgba(P.ink, 0.75)}>
                     {d % 10}
                   </text>
                 ))}

@@ -1,5 +1,5 @@
 import { useCurrentFrame } from "remotion";
-import { COLORS, rgba, useLayout, type Layout } from "./config";
+import { rgba, useLayout, type Layout, usePalette } from "./config";
 import { bevelPath } from "./Reveal";
 
 export const PINK_WINDOW = { from: 590, to: 680 } as const;
@@ -18,15 +18,16 @@ export const isPink = (f: number, k: number) => k === 2 && f >= PINK_WINDOW.from
 // The machine: one chamfered block on the floor, four unlabeled chambers
 // (the four Services stages), pulses flowing left → right.
 export const Machine: React.FC = () => {
+  const P = usePalette();
   const f = useCurrentFrame();
   const L = useLayout();
   const { x, y, w, h } = L.machine;
   const cw = w / 4;
   return (
     <svg style={{ position: "absolute", left: 0, top: 0, overflow: "visible" }} width={1} height={1}>
-      <path d={bevelPath(x, y, w, h, 12)} fill={rgba(COLORS.ink, 0.035)} stroke={rgba(COLORS.blue, 0.7)} strokeWidth={1.5} />
+      <path d={bevelPath(x, y, w, h, 12)} fill={rgba(P.ink, 0.035)} stroke={rgba(P.blue, 0.7)} strokeWidth={1.5} />
       {[1, 2, 3].map((k) => (
-        <line key={k} x1={x + cw * k} y1={y + 10} x2={x + cw * k} y2={y + h - 10} stroke={rgba(COLORS.blue, 0.3)} strokeWidth={1} />
+        <line key={k} x1={x + cw * k} y1={y + 10} x2={x + cw * k} y2={y + h - 10} stroke={rgba(P.blue, 0.3)} strokeWidth={1} />
       ))}
       {/* chamber internals: a breathing core per chamber, lit as a pulse passes */}
       {[0, 1, 2, 3].map((k) => {
@@ -35,15 +36,15 @@ export const Machine: React.FC = () => {
         const lit = Math.max(0, 1 - near / (cw * 0.6));
         return (
           <g key={k}>
-            <path d={bevelPath(cx - 28, y + h / 2 - 22, 56, 44, 6)} fill="none" stroke={rgba(COLORS.blue, 0.25 + 0.5 * lit)} strokeWidth={1} />
-            <circle cx={cx} cy={y + h / 2} r={6 + 4 * lit} fill={rgba(COLORS.blue, 0.15 + 0.6 * lit)} />
+            <path d={bevelPath(cx - 28, y + h / 2 - 22, 56, 44, 6)} fill="none" stroke={rgba(P.blue, 0.25 + 0.5 * lit)} strokeWidth={1} />
+            <circle cx={cx} cy={y + h / 2} r={6 + 4 * lit} fill={rgba(P.blue, 0.15 + 0.6 * lit)} />
           </g>
         );
       })}
       {/* the pulses */}
       {Array.from({ length: N_PULSES }, (_, k) => {
         const px = pulseX(f, k, L);
-        const c = isPink(f, k) ? COLORS.pink : COLORS.blue;
+        const c = isPink(f, k) ? P.pink : P.blue;
         return (
           <g key={k}>
             <rect x={px - 14} y={y + h / 2 - 1} width={14} height={2} fill={rgba(c, 0.35)} />

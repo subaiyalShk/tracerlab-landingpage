@@ -1,19 +1,16 @@
 import { interpolate, useCurrentFrame } from "remotion";
-import { BEATS, rgba, useLayout, usePalette, usePortraitFilm, type Palette } from "./config";
+import { BEATS, rgba, useLayout, usePalette, type Palette } from "./config";
 import { PLATFORMS } from "./marks";
-import { bevelPath } from "./Reveal";
-import { display } from "../theme";
 
 // The Attention beat: a tilted phone, 40×84 world px, drawn at world scale —
 // the camera's 8× zoom makes it fill the left third. It cycles through the
 // five platforms we pull attention from (PLATFORMS order), one screen per
 // SCREEN_FRAMES with a thumb-flick between them. Each screen is a stylized
 // generic UI in the film's own tokens — never a clone. As each platform
-// shows, a labelled chip lands beside the phone and STAYS, so by the end of
-// the beat all five sit in a column: the point is all of these, not one.
-const SCREEN_FRAMES = 30;
+// shows, a labelled chip lands beside it (PlatformChips — a separate, steady
+// layer) and STAYS: the point is all of these, not one.
+export const SCREEN_FRAMES = 30;
 const FLICK_FRAMES = 10;
-const CHIP_DELAY = 8; // frames after a screen arrives before its chip lands
 
 // Which screen is up at frame f, and how far (0..1) the flick to the next has gone.
 export const screenAt = (f: number) => {
@@ -115,12 +112,6 @@ export const Phone: React.FC = () => {
   const Next = SCREENS[Math.min(i + 1, SCREENS.length - 1)];
   const CurMark = PLATFORMS[i].Mark;
   const NextMark = PLATFORMS[Math.min(i + 1, PLATFORMS.length - 1)].Mark;
-  // Chip column: beside the phone in landscape; BELOW it, centered, in portrait
-  // (a phone-wide frame has no room to the right). Level — outside the tilt.
-  const portrait = usePortraitFilm();
-  const chipW = 30;
-  const chipX = portrait ? x - chipW / 2 : x + w / 2 + 12;
-  const chipY0 = portrait ? y + h / 2 + 14 : y - h / 2 + 10;
   return (
     <svg style={{ position: "absolute", left: 0, top: 0, overflow: "visible" }} width={1} height={1}>
       <g transform={`translate(${x} ${y}) rotate(-8) translate(${-w / 2} ${-h / 2})`}>
@@ -154,37 +145,6 @@ export const Phone: React.FC = () => {
         <ellipse cx={w / 2} cy={h / 2} rx={w} ry={h * 0.7} fill={rgba(P.blue, 0.06)} />
       </g>
 
-      {/* Kicker + the stacking platform chips. Each chip lands CHIP_DELAY frames after
-          its screen arrives and never leaves; the column fades with the beat's end. */}
-      {(() => {
-        const beatOut = interpolate(f, [BEATS.reveal.from + 5, BEATS.reveal.from + 30], [1, 0], clamp);
-        const kicker = interpolate(t, [4, 16], [0, 1], clamp);
-        return (
-          <g opacity={beatOut}>
-            <text x={portrait ? x : chipX} y={chipY0 - 3} textAnchor={portrait ? "middle" : "start"} fontFamily={display} fontSize={2} letterSpacing={0.6} fill={rgba(P.ink, 0.55 * kicker)}>
-              WHERE ATTENTION LIVES
-            </text>
-            {PLATFORMS.map(({ name, surface, Mark }, k) => {
-              const at = k * SCREEN_FRAMES + CHIP_DELAY;
-              const a = interpolate(t, [at, at + 10], [0, 1], clamp);
-              const dx = (1 - a) * 4;
-              const cy = chipY0 + k * 9;
-              return (
-                <g key={name} opacity={a} transform={`translate(${dx} 0)`}>
-                  <path d={bevelPath(chipX, cy, chipW, 7, 1.6)} fill={rgba(P.ink, 0.05)} stroke={rgba(P.blue, 0.55)} strokeWidth={0.35} />
-                  <g transform={`translate(${chipX + 1.8} ${cy + 1.5})`}>
-                    <Mark size={4} color={rgba(P.ink, 0.85)} />
-                  </g>
-                  <text x={chipX + 7.5} y={cy + 4.9} fontFamily={display} fontSize={2.6} fill={rgba(P.ink, 0.9)}>
-                    {name}
-                    <tspan fill={rgba(P.ink, 0.5)}> · {surface}</tspan>
-                  </text>
-                </g>
-              );
-            })}
-          </g>
-        );
-      })()}
     </svg>
   );
 };

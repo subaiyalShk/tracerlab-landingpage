@@ -24,15 +24,17 @@ if [ "${VERIFY_ONLY:-0}" != "1" ]; then
   enc() { # in out scale crf
     ffmpeg -y -i "$1" -an -vf "scale=$3,format=yuv420p" -c:v libx264 -preset slow -crf "$4" -g 90 -pix_fmt yuv420p -movflags +faststart "$2"
   }
-  # Light frames (pastel dots on grey) compress ~15% worse than dark, so the light
-  # pair takes crf 29 to stay inside the 2.5 MB budget (28 → 2.71 MB on 16x9).
+  # crf 26 dark / 27 light: the film's thin strokes and small chip text shimmer
+  # at 28–29 (seen on phones); the map is out for most of the run now, so the
+  # files stay well inside the 2.5 MB budget. Light frames (pastel dots on
+  # grey) still compress a little worse, hence +1.
   if [ "${ONLY:-all}" != "light" ]; then
-    enc out/hero-16x9-master.mp4 "$ROOT/public/hero/loop-16x9.mp4" 1280:720 28
-    enc out/hero-9x16-master.mp4 "$ROOT/public/hero/loop-9x16.mp4"  720:1280 28
+    enc out/hero-16x9-master.mp4 "$ROOT/public/hero/loop-16x9.mp4" 1280:720 26
+    enc out/hero-9x16-master.mp4 "$ROOT/public/hero/loop-9x16.mp4"  720:1280 26
   fi
   if [ "${ONLY:-all}" != "dark" ]; then
-    enc out/hero-16x9-light-master.mp4 "$ROOT/public/hero/loop-16x9-light.mp4" 1280:720 29
-    enc out/hero-9x16-light-master.mp4 "$ROOT/public/hero/loop-9x16-light.mp4"  720:1280 29
+    enc out/hero-16x9-light-master.mp4 "$ROOT/public/hero/loop-16x9-light.mp4" 1280:720 27
+    enc out/hero-9x16-light-master.mp4 "$ROOT/public/hero/loop-9x16-light.mp4"  720:1280 27
   fi
 fi
 

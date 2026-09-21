@@ -1,5 +1,7 @@
 import { Composition } from "remotion";
 import { ProblemVideo, PROBLEM_DURATION } from "./Problem";
+import { HeroLoop } from "./hero/HeroLoop";
+import { DURATION as HERO_DURATION, FPS as HERO_FPS } from "./hero/config";
 
 export const RemotionRoot = () => {
   return (
@@ -21,6 +23,8 @@ export const RemotionRoot = () => {
         width={1080}
         height={1920}
       />
+      <Composition id="HeroLoop" component={HeroLoop} durationInFrames={HERO_DURATION} fps={HERO_FPS} width={1920} height={1080} />
+      <Composition id="HeroLoopMobile" component={HeroLoop} durationInFrames={HERO_DURATION} fps={HERO_FPS} width={1080} height={1920} />
     </>
   );
 };

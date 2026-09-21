@@ -16,7 +16,7 @@ const hash = (x: number, y: number) => {
 // on the phone (so the Attention scene's screens and chips sit on clean
 // black), stays out through the cable ride and the machine, and returns for
 // the flywheel, whose arcs land in its dots — fully back before the seam.
-const STEP_BACK = { from: BEATS.attention.from + 5, to: BEATS.attention.from + 40 } as const;
+const STEP_BACK = { from: BEATS.attention.from - 34, to: BEATS.attention.from - 12 } as const; // == camera.MAP_OUT
 const RETURN = { from: BEATS.flywheel.from + 20, to: BEATS.flywheel.from + 80 } as const;
 const worldPresence = (f: number) => {
   const clamp = { extrapolateLeft: "clamp", extrapolateRight: "clamp" } as const;

@@ -9,6 +9,16 @@ const ease = (t: number) => (t < 0.5 ? 4 * t * t * t : 1 - Math.pow(-2 * t + 2, 
 
 // The whole film is ONE camera path. Keys sit on beat boundaries (spec §1);
 // the last key equals the first so the loop closes (tested).
+// The map is gone (and the phone scene begins) shortly before the Attention
+// beat; the cut happens on black.
+export const MAP_OUT = BEATS.attention.from - 12;
+
+// The Attention beat's pose: the phone at 8×, anchored on the legibility frame.
+export const phonePose = (portrait: boolean): Cam => {
+  const L = layoutFor(portrait);
+  return { zoom: 8, target: { x: L.phone.x, y: L.phone.y }, anchor: L.anchorZoom };
+};
+
 export const cameraKeys = (portrait: boolean): CameraKey[] => {
   const { w, h } = worldSize(portrait);
   const L = layoutFor(portrait);
@@ -37,12 +47,12 @@ export const cameraKeys = (portrait: boolean): CameraKey[] => {
     : { zoom: 2.6, target: { x: (L.ports[0].x + L.ports[3].x) / 2, y: L.ports[0].y - 160 }, anchor: { x: 0.35, y: 0.5 } };
   return [
     { frame: 0, zoom: 1, target: center, anchor: mid },
-    { frame: BEATS.world.to, zoom: 1.12, target: center, anchor: mid },
-    { frame: BEATS.people.to, zoom: 3.2, target: { x: L.cluster.x, y: L.cluster.y }, anchor: L.anchorZoom },
-    // Arrive on the phone early in the Attention beat and HOLD, so all five
-    // platform screens play at full size (the last key just repeats the pose).
-    { frame: BEATS.attention.from + 50, zoom: 8, target: { x: L.phone.x, y: L.phone.y }, anchor: L.anchorZoom },
-    { frame: BEATS.attention.to, zoom: 8, target: { x: L.phone.x, y: L.phone.y }, anchor: L.anchorZoom },
+    // One slow dolly-in on the map while the opening stats play. The map has
+    // faded out by MAP_OUT; the phone scene runs on its own fixed camera
+    // (PhoneLayer) so the main camera can move UNSEEN to the phone pose by
+    // the reveal, where the layers hand over pixel-for-pixel.
+    { frame: MAP_OUT, zoom: 1.4, target: center, anchor: mid },
+    { frame: BEATS.reveal.from, ...phonePose(portrait) },
     { frame: BEATS.reveal.from + 30, ...phoneShrink },
     { frame: BEATS.reveal.from + 75, ...cableRide },
     { frame: BEATS.reveal.to, zoom: MACHINE_ZOOM, target: machineCenter, anchor: mid },

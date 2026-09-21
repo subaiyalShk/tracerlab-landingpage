@@ -7,6 +7,7 @@ import { Machine } from "./Machine";
 import { Output } from "./Output";
 import { Flywheel } from "./Flywheel";
 import { Stats } from "./Stats";
+import { PhoneLayer } from "./PhoneLayer";
 import { ThemeContext, type Theme } from "./config";
 
 // One unbroken camera move over a world of vector scenes (spec §1). Order =
@@ -15,10 +16,18 @@ import { ThemeContext, type Theme } from "./config";
 // through ThemeContext → usePalette(); the scenes themselves are theme-blind.
 export const HeroLoop: React.FC<{ theme: Theme }> = ({ theme }) => (
   <ThemeContext.Provider value={theme}>
-    <Stage overlay={<Stats />}>
+    <Stage
+      overlay={
+        <>
+          <PhoneLayer>
+            <People />
+            <Phone />
+          </PhoneLayer>
+          <Stats />
+        </>
+      }
+    >
       <World />
-      <People />
-      <Phone />
       <Reveal />
       <Machine />
       <Output />

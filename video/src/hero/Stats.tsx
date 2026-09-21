@@ -29,7 +29,7 @@ export const Stats: React.FC = () => {
     interpolate(f, [BEATS.world.from + 6, BEATS.world.from + 60], [0, POPULATION], { easing: Easing.out(Easing.cubic), ...clamp }),
   );
   // Beat 2 — the habit.
-  const a2 = window(f, BEATS.people.from + 10, BEATS.attention.from - 4);
+  const a2 = window(f, BEATS.people.from + 10, BEATS.attention.from - 14); // gone with the map
 
   const rise = (a: number) => `translateY(${(1 - a) * 10}px)`;
   return (

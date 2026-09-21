@@ -4,6 +4,7 @@ import { People } from "./People";
 import { Phone } from "./Phone";
 import { Reveal } from "./Reveal";
 import { Machine } from "./Machine";
+import { Output } from "./Output";
 
 export const HeroLoop: React.FC = () => (
   <Stage>
@@ -12,5 +13,6 @@ export const HeroLoop: React.FC = () => (
     <Phone />
     <Reveal />
     <Machine />
+    <Output />
   </Stage>
 );

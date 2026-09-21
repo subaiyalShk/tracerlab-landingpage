@@ -13,6 +13,8 @@ Originally a legacy static HTML/CSS/JS site; now **fully migrated to React compo
 - **Deploy:** push to `main` → Vercel auto-deploys to production (www.tracerlabs.io).
   Branch `v2` = the old static site, kept as a rollback. Prod env vars live in Vercel’s
   Production scope and bind at **build time** (a new push is needed after changing them).
+- `npm test` — unit tests (tsx + node:test) for the hero film policy.
+- `cd video && npm test` for the film's pure logic.
 
 ## Page structure
 `app/(tracerlabs)/page.tsx` composes the page entirely from React:
@@ -27,6 +29,7 @@ Components (`app/components/`):
   (offsets = multiples of the 46px grid column) + breathing horizon. **Retired-but-kept side
   visuals:** `TelemetryPanel` (stat dashboard), `MachinePanel` (animated pipeline) — on disk,
   unmounted; restoring either is a two-line change in Hero.
+  **Hero film (2026-09-18):** `HeroFilm` mounts a silent full-bleed loop (`public/hero/loop-16x9.mp4` / `loop-9x16.mp4`, ≤2.5 MB, black first frame) under the copy, attached post-idle; bails out (no request) under reduced-motion / Save-Data / light theme, where the grid-floor scene remains the hero. `data-film="on"` on `#tl-hero` while playing. Load rules are pure + tested (`heroFilmPolicy.ts`, `npm test`). The film itself lives in `video/src/hero/` (Remotion `HeroLoop`/`HeroLoopMobile`: one keyframed camera over vector scenes; `npm test` there covers camera/land/layout); re-encode with `bash scripts/encode-hero.sh`. Spec: `docs/superpowers/specs/2026-09-18-hero-film-design.md`.
 - **TechBar** — monochrome tech-logo marquee. Swappable with **ProofWall** (outcome-figures
   strip, on disk unmounted) for the under-hero slot; user chose the marquee (2026-09-05).
 - **Services** (4-stage bento; per-card `Figures` = attributed outcome numbers; featured card

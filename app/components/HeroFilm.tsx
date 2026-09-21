@@ -4,8 +4,10 @@ import { useEffect, useRef } from "react";
 import { isPortrait, pickSource, readFilmEnv, shouldLoadFilm } from "./heroFilmPolicy";
 import { HERO_INTRO_DONE } from "./HeroCopy";
 
-// The hero film, played ONCE as the opening with the copy hidden (the "intro"),
-// then looping as a backdrop under the copy. No src/poster in the markup;
+// The hero film, played ONCE as the opening with the copy hidden (the "intro").
+// It does not loop: when it ends it hands the stage back to the CSS grid-floor
+// scene (the backdrop the copy was designed on), so nothing moves under the
+// headline and CTAs. No src/poster in the markup;
 // nothing is requested under reduced-motion / Save-Data (the grid floor is the
 // fallback state and the copy is visible from the first paint — the bootstrap
 // script in app/layout.tsx only sets <html data-intro> when the film will play).
@@ -17,10 +19,11 @@ import { HERO_INTRO_DONE } from "./HeroCopy";
 // Ending the intro clears data-intro (CSS fades the copy in) and dispatches
 // HERO_INTRO_DONE so HeroCopy re-mounts the copy and the headline types in.
 //
-// One file per {orientation} × {theme}; a theme toggle or rotation fades the
-// film out, swaps the file and fades back in on `playing`. While playing, the
-// section carries data-film="on" and CSS fades the film in and the CSS grid
-// scene out. Transform/opacity only; the video is one compositor layer.
+// One file per {orientation} × {theme}; a theme toggle or rotation while it
+// plays fades the film out, swaps the file and fades back in on `playing`
+// (after it has ended, nothing restarts it). While playing, the section
+// carries data-film="on" and CSS fades the film in and the CSS grid scene
+// out. Transform/opacity only; the video is one compositor layer.
 const INTRO_TIMEOUT_MS = 6000;
 const INTRO_END_S = 29.4; // the film's dip-to-black starts at 29.5 s: reveal as it goes dark
 const INPUT_EVENTS = ["scroll", "touchstart", "pointerdown", "keydown"] as const;
@@ -41,10 +44,8 @@ export default function HeroFilm() {
       if (e.type === "scroll" && window.scrollY < 4) return;
       endIntro();
     };
-    let lastTime = 0;
     const onTime = () => {
-      if (v.currentTime >= INTRO_END_S || v.currentTime < lastTime - 1) endIntro(); // end of pass, or the loop wrapped
-      lastTime = v.currentTime;
+      if (v.currentTime >= INTRO_END_S) endIntro(); // the copy starts fading in as the film goes dark
     };
     const endIntro = () => {
       if (html.dataset.intro === undefined) return;
@@ -67,7 +68,9 @@ export default function HeroFilm() {
     // Picks the file for the CURRENT orientation + theme. A different file
     // (theme toggle, rotation) drops data-film first so the old film fades
     // out under the swap; `playing` on the new file fades it back in.
+    let finished = false;
     const load = () => {
+      if (finished) return; // played once; the grid floor has the stage now
       const src = pickSource(isPortrait(), readFilmEnv().theme);
       if (v.getAttribute("src") !== src) {
         setOn(false);
@@ -82,6 +85,14 @@ export default function HeroFilm() {
       setOn(true);
     };
     v.addEventListener("playing", onPlaying);
+    // The end of the single pass: reveal the copy (if the loop-end trigger
+    // hasn't already) and fade the film out so the grid floor returns.
+    const onEnded = () => {
+      finished = true;
+      endIntro();
+      setOn(false);
+    };
+    v.addEventListener("ended", onEnded);
 
     // Intro triggers.
     INPUT_EVENTS.forEach((n) => window.addEventListener(n, onInput, { passive: true }));
@@ -106,6 +117,7 @@ export default function HeroFilm() {
 
     const io = new IntersectionObserver(
       ([e]) => {
+        if (finished) return;
         if (!e.isIntersecting) v.pause();
         else v.play().catch(() => {});
       },
@@ -115,6 +127,7 @@ export default function HeroFilm() {
 
     return () => {
       v.removeEventListener("playing", onPlaying);
+      v.removeEventListener("ended", onEnded);
       v.removeEventListener("timeupdate", onTime);
       v.removeEventListener("error", endIntro);
       INPUT_EVENTS.forEach((n) => window.removeEventListener(n, onInput));
@@ -127,7 +140,7 @@ export default function HeroFilm() {
 
   return (
     <>
-      <video ref={ref} aria-hidden muted playsInline loop preload="none" className="nt-film -z-10" />
+      <video ref={ref} aria-hidden muted playsInline preload="none" className="nt-film -z-10" />
       <div aria-hidden className="nt-film-scrim -z-10" />
     </>
   );

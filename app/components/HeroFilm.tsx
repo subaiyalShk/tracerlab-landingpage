@@ -25,6 +25,7 @@ export default function HeroFilm() {
       else delete section.dataset.film;
     };
     const load = () => {
+      if (readFilmEnv().theme !== "dark") return; // a toggle inside the idle window must not start the film in light mode
       const src = pickSource(isPortrait());
       if (v.getAttribute("src") !== src) {
         v.setAttribute("src", src);

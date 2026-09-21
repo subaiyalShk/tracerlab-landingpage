@@ -1,7 +1,7 @@
 # Hero film — "Attention in, money out"
 
 **Date:** 2026-09-18
-**Status:** approved design, pending implementation plan
+**Status:** approved design — shipped on feat/hero-film (PR #1), 2026-09-21; see "Drift" below
 
 ## Goal
 
@@ -114,10 +114,17 @@ poster/fallback state (no-JS, reduced motion, Save-Data, light theme, load failu
 6. Courtesy `IntersectionObserver`: pause when the hero is fully off-screen, resume when it
    returns (same pattern as `ProjectVideo`).
 
-### LCP safety
-The film opens from black, so its first frame falls under Chrome's low-entropy image
-exclusion and cannot become the LCP candidate; it is also attached post-idle, after the
-headline has painted. This is **verified**, not assumed (see §4).
+### LCP safety (revised 2026-09-21 after measurement)
+Chrome (v116+) counts a `<video>`'s first frame as an LCP candidate and its low-entropy
+exclusion does not save a black first frame (the check uses the whole file's bytes); the
+opacity 0→1 fade makes the element a candidate at fade start. LCP is finalized at the first
+user input, so: **touch devices attach the film only after the first scroll/tap** (measured:
+mobile LCP element = `<h1>`, 92 / 3.2 s on the preview vs prod 86 / 3.7 s). **Desktop keeps the
+post-idle attach** — Lighthouse lab reports the `<h1>` (99 / 0.7 s), but a desktop visitor who
+neither scrolls nor clicks before the fade-in (~1.5–3 s) will have the film recorded as LCP in
+CrUX. Accepted: that value still lands inside "good" (<2.5 s) on typical desktop connections,
+and a universal input gate would hide the film from non-scrolling desktop visitors. Revisit if
+CrUX desktop LCP degrades.
 
 ### Unchanged
 Copy, CTAs, `TypedHeadline`, `TelemetryPanel`/`MachinePanel` (stay retired on disk).
@@ -143,3 +150,10 @@ Copy, CTAs, `TypedHeadline`, `TelemetryPanel`/`MachinePanel` (stay retired on di
   dot count or step crf down to 26 before adding a WebM sibling.
 - The "Reveal" pull-out is the hardest camera move; if the continuous-zoom illusion breaks
   there, a 6-frame dip-to-black at 13 s is the accepted fallback.
+
+## Drift from this spec as shipped
+- `layout.ts` lives in `config.ts` (`layoutFor`/`useLayout`).
+- Dot map is a 160×80 grid (~3.9k land dots at 12 px world pitch), not "~20k dots at 24 px"; Antarctica excluded (it sat on the machine floor).
+- Pink appears in the machine pulse (frames 625–680) AND on the three BOOKED chips (690→dip) — owner-approved; do not "fix" the chips.
+- The reveal pull-out did not need the 6-frame dip fallback; the camera key was re-pinned instead (see camera.test.ts).
+- Touch devices attach on first input (LCP safety, above).

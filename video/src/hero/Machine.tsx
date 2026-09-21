@@ -10,8 +10,9 @@ const PERIOD = 150; // frames for one pulse to cross the machine (divides 900)
 export const pulseU = (f: number, k: number) => (((f / PERIOD + k / N_PULSES) % 1) + 1) % 1;
 export const pulseX = (f: number, k: number, L: Layout) => L.machine.x + pulseU(f, k) * L.machine.w;
 
-// Pulse 2 is the one that "books": it turns pink inside chamber 3 during
-// PINK_WINDOW and exits pink — the film's only pink.
+// Pulse 2 is the one that "books": it turns pink in the right half of the
+// machine during PINK_WINDOW and fades back to blue just before the exit —
+// the film's only pink besides the BOOKED chips.
 export const isPink = (f: number, k: number) => k === 2 && f >= PINK_WINDOW.from && f <= PINK_WINDOW.to && pulseU(f, k) > 0.5;
 
 // The machine: one chamfered block on the floor, four unlabeled chambers

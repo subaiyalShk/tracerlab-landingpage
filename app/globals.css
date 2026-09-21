@@ -624,6 +624,10 @@ html[data-theme="light"] {
 #tl-hero[data-film="on"] .nt-horizon {
   animation: none;
 }
+#tl-hero[data-film="on"] .nt-gridfloor::before,
+#tl-hero[data-film="on"] .nt-pulse {
+  animation-play-state: paused; /* invisible under the film — don't animate for nothing */
+}
 
 /* ── Hero film: silent full-bleed loop under the copy (spec 2026-09-18) ──
    Attached post-idle by HeroFilm.tsx; data-film="on" on #tl-hero while it

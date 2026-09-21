@@ -3,7 +3,7 @@ import type { ReactNode } from "react";
 import { cameraTransform, useCamera } from "./camera";
 import { COLORS, DURATION } from "./config";
 
-const FADE_IN = 12; // frames — file opens from black (LCP low-entropy exclusion)
+const FADE_IN = 12; // frames — file opens from black so the first painted frame is dark (the site's LCP protection is the attach timing in HeroFilm, not entropy)
 const FADE_OUT = 15; // frames — loop seam dips through black (spec adjustment #1)
 
 // Black background, fade in/out, and the ONE camera transform. Children are

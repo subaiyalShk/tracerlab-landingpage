@@ -60,3 +60,22 @@ test("the cluster stays inside the viewport for the whole reveal pull-out", () =
     }
   }
 });
+
+test("the whole floor pipeline stays inside the viewport through the mechanism and output beats", () => {
+  for (const portrait of [false, true]) {
+    const { w, h } = worldSize(portrait);
+    const L = layoutFor(portrait);
+    const k = cameraKeys(portrait);
+    const left = L.ports[0].x - 22; // half a port (PORT_SIZE 44)
+    const right = L.output.x + L.output.w;
+    const bottom = L.output.y + L.output.h;
+    for (let f = BEATS.mechanism.from; f <= BEATS.output.to; f += 10) {
+      const c = cameraAt(f, k);
+      const sx = (x: number) => c.anchor.x * w + (x - c.target.x) * c.zoom;
+      const sy = (y: number) => c.anchor.y * h + (y - c.target.y) * c.zoom;
+      assert.ok(sx(left) >= 0, `portrait=${portrait} f=${f} left=${sx(left)}`);
+      assert.ok(sx(right) <= w, `portrait=${portrait} f=${f} right=${sx(right)}`);
+      assert.ok(sy(bottom) <= h, `portrait=${portrait} f=${f} bottom=${sy(bottom)}`);
+    }
+  }
+});

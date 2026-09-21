@@ -14,7 +14,14 @@ export const cameraKeys = (portrait: boolean): CameraKey[] => {
   const L = layoutFor(portrait);
   const center = { x: w / 2, y: h / 2 };
   const mid = { x: 0.5, y: 0.5 };
-  const machineFocus = { x: L.machine.x + L.machine.w / 2, y: center.y + (portrait ? 120 : 60) };
+  // Mechanism/output beats frame the WHOLE floor pipeline (ports → machine → output),
+  // not the machine's center — in portrait the machine sits left of frame center and
+  // centering it pushed the output block off the right edge.
+  const floorFocus = {
+    x: (L.ports[0].x + L.output.x + L.output.w) / 2,
+    y: center.y + (portrait ? 120 : 60),
+  };
+  const drift = portrait ? 0 : 40; // output-beat drift right; portrait has no slack
   return [
     { frame: 0, zoom: 1, target: center, anchor: mid },
     { frame: BEATS.world.to, zoom: 1.12, target: center, anchor: mid },
@@ -26,8 +33,8 @@ export const cameraKeys = (portrait: boolean): CameraKey[] => {
     // the same curve as zoom (8→1) would otherwise swing the cluster off the
     // left edge of frame mid-beat (measured screenX ≈ -522 at frame 470).
     { frame: BEATS.reveal.to, zoom: 1, target: { x: L.phone.x, y: L.phone.y }, anchor: { x: L.phone.x / w, y: L.phone.y / h } },
-    { frame: BEATS.mechanism.to, zoom: 1.06, target: machineFocus, anchor: mid },
-    { frame: BEATS.output.to, zoom: 1.06, target: { x: machineFocus.x + 40, y: machineFocus.y }, anchor: mid },
+    { frame: BEATS.mechanism.to, zoom: 1.06, target: floorFocus, anchor: mid },
+    { frame: BEATS.output.to, zoom: 1.06, target: { x: floorFocus.x + drift, y: floorFocus.y }, anchor: mid },
     { frame: DURATION, zoom: 1, target: center, anchor: mid },
   ];
 };

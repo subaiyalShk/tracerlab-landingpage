@@ -664,6 +664,20 @@ html[data-theme="light"] .nt-film-scrim {
 #tl-hero[data-film="on"] .nt-film-scrim {
   opacity: 1;
 }
+/* Intro: <html data-intro="on"> is set pre-paint by the bootstrap script when the
+   film will play, and cleared by HeroFilm when the first pass completes (or on
+   any input / failure). The copy waits at opacity 0 and the scrim eases off so
+   the film has the whole frame; both come back together. */
+#tl-hero .nt-copy {
+  transition: opacity 0.9s ease;
+}
+html[data-intro="on"] #tl-hero .nt-copy {
+  opacity: 0;
+  pointer-events: none;
+}
+html[data-intro="on"] #tl-hero[data-film="on"] .nt-film-scrim {
+  opacity: 0.35;
+}
 #tl-hero .nt-gridfloor,
 #tl-hero .nt-horizon {
   transition: opacity 1.2s ease;

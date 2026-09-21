@@ -41,6 +41,12 @@ export default function RootLayout({
   css('/style.css', 'theme-stylesheet');
   var t; try { t = localStorage.getItem('theme'); } catch (e) {}
   document.documentElement.dataset.theme = t === 'light' ? 'light' : 'dark';
+  /* Hero intro: the film plays once with the copy hidden (HeroFilm reveals it on loop
+     completion / first input / failure). Decided here, pre-paint, so the headline never
+     flashes; mirrors heroFilmPolicy.shouldLoadFilm — no film ⇒ copy visible from the start. */
+  var rm = window.matchMedia && matchMedia('(prefers-reduced-motion: reduce)').matches;
+  var sd = navigator.connection && navigator.connection.saveData;
+  if (location.pathname === '/' && !rm && !sd) document.documentElement.dataset.intro = 'on';
 })();`}
         </Script>
 

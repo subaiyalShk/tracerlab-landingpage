@@ -1,14 +1,15 @@
 "use client";
 
 import { useEffect, useRef } from "react";
-import { isPortrait, pickSource, readFilmEnv, shouldLoadFilm } from "./heroFilmPolicy";
+import { attachTrigger, isPortrait, pickSource, readFilmEnv, shouldLoadFilm } from "./heroFilmPolicy";
 
 // The hero film: a silent full-bleed loop UNDER the copy (spec §3). No src
 // and no poster in the markup — nothing is requested until after idle, and
 // never under reduced-motion / Save-Data / light theme (the grid floor is
 // the fallback state). While playing, the section carries data-film="on"
 // and CSS fades the film in and the CSS grid scene out. Transform/opacity
-// only; the video is one compositor layer.
+// only; the video is one compositor layer. Touch devices attach on first
+// input (scroll/tap/key) instead of idle, so the headline stays the LCP element.
 export default function HeroFilm() {
   const ref = useRef<HTMLVideoElement>(null);
 
@@ -16,7 +17,8 @@ export default function HeroFilm() {
     const v = ref.current;
     const section = v?.closest<HTMLElement>("#tl-hero");
     if (!v || !section) return;
-    if (!shouldLoadFilm(readFilmEnv())) return; // no request, ever
+    const env = readFilmEnv();
+    if (!shouldLoadFilm(env)) return; // no request, ever
 
     const setOn = (on: boolean) => {
       if (on) section.dataset.film = "on";
@@ -33,11 +35,21 @@ export default function HeroFilm() {
     const onPlaying = () => setOn(true);
     v.addEventListener("playing", onPlaying);
 
-    // Attach after idle so the headline/fonts own first paint.
+    // Attach after idle so the headline/fonts own first paint — except on
+    // coarse-pointer (touch) devices, where Chrome can still finalize LCP on
+    // an idle-attached <video>'s first frame; there we wait for the first
+    // input instead (scroll/tap/key), after which LCP is already finalized.
     const win = window as Window & { requestIdleCallback?: (cb: () => void, o?: { timeout: number }) => number; cancelIdleCallback?: (id: number) => void };
     let idle: number | undefined;
     let timer: number | undefined;
-    if (win.requestIdleCallback) idle = win.requestIdleCallback(load, { timeout: 800 });
+    const INTERACTION_EVENTS = ["scroll", "touchstart", "pointerdown", "keydown"] as const;
+    const onFirstInput = () => {
+      INTERACTION_EVENTS.forEach((n) => window.removeEventListener(n, onFirstInput));
+      load();
+    };
+    if (attachTrigger(env) === "interaction") {
+      INTERACTION_EVENTS.forEach((n) => window.addEventListener(n, onFirstInput, { passive: true, once: true }));
+    } else if (win.requestIdleCallback) idle = win.requestIdleCallback(load, { timeout: 800 });
     else timer = window.setTimeout(load, 800);
 
     // Orientation → swap file. Theme → pause/resume. Off-screen → pause.
@@ -66,6 +78,7 @@ export default function HeroFilm() {
       v.removeEventListener("playing", onPlaying);
       if (idle !== undefined) win.cancelIdleCallback?.(idle);
       if (timer !== undefined) window.clearTimeout(timer);
+      INTERACTION_EVENTS.forEach((n) => window.removeEventListener(n, onFirstInput));
       mq.removeEventListener("change", onOrient);
       mo.disconnect();
       io.disconnect();

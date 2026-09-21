@@ -1,8 +1,8 @@
 import { test } from "node:test";
 import assert from "node:assert/strict";
-import { pickSource, shouldLoadFilm } from "./heroFilmPolicy";
+import { attachTrigger, pickSource, shouldLoadFilm } from "./heroFilmPolicy";
 
-const ok = { reducedMotion: false, saveData: false, theme: "dark" as const };
+const ok = { reducedMotion: false, saveData: false, theme: "dark" as const, coarsePointer: false };
 
 test("loads only in dark theme with motion allowed and no Save-Data", () => {
   assert.equal(shouldLoadFilm(ok), true);
@@ -14,4 +14,9 @@ test("loads only in dark theme with motion allowed and no Save-Data", () => {
 test("picks the portrait loop for portrait viewports", () => {
   assert.equal(pickSource(true), "/hero/loop-9x16.mp4");
   assert.equal(pickSource(false), "/hero/loop-16x9.mp4");
+});
+
+test("attaches on first interaction for coarse pointers, idle otherwise", () => {
+  assert.equal(attachTrigger({ ...ok, coarsePointer: true }), "interaction");
+  assert.equal(attachTrigger({ ...ok, coarsePointer: false }), "idle");
 });

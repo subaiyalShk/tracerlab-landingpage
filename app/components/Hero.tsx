@@ -2,8 +2,10 @@
 // staged on the grid-floor scene with nothing competing for attention. The
 // real client numbers live in the case studies below (/work/*); TelemetryPanel
 // and MachinePanel are kept on disk if a side visual is ever wanted back.
-// Quiet by design: no auroras/scanlines/particles, no scroll-reveal gating.
+// Backdrop = the hero film (HeroFilm, spec 2026-09-18); the grid-floor scene
+// is its fallback state. Still no scroll-reveal gating.
 import Button from "./Button";
+import HeroFilm from "./HeroFilm";
 import TypedHeadline from "./TypedHeadline";
 
 const DISPLAY = "var(--font-archivo), system-ui, sans-serif";
@@ -41,6 +43,7 @@ export default function Hero() {
         <span className="nt-pulse" style={{ left: 1012, ["--pulse-dur" as string]: "10s", ["--pulse-delay" as string]: "0s" }} />
         <span className="nt-pulse nt-pulse-pink" style={{ left: 1380, ["--pulse-dur" as string]: "17s", ["--pulse-delay" as string]: "7.5s" }} />
       </div>
+      <HeroFilm />
       <div className="mx-auto flex min-h-[calc(100dvh-4rem)] w-full max-w-[1280px] items-center justify-center px-6 py-10 sm:px-10 sm:py-12">
         <div className="flex min-w-0 max-w-[52rem] flex-col items-center text-center">
           <p className="animate-rise text-[0.98rem] text-ink/50">Tracerlabs — AI development studio</p>

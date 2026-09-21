@@ -621,6 +621,47 @@ html[data-theme="light"] {
      blur on two huge layers (hero + CTA) cost real compositing. */
   background: var(--nt-horizon);
 }
+#tl-hero[data-film="on"] .nt-horizon {
+  animation: none;
+}
+
+/* ── Hero film: silent full-bleed loop under the copy (spec 2026-09-18) ──
+   Attached post-idle by HeroFilm.tsx; data-film="on" on #tl-hero while it
+   plays. Fades are opacity-only; the video is a single compositor layer.
+   The scrim is a plain radial gradient (never a filter) that keeps the
+   center column quiet under the headline. */
+.nt-film {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  pointer-events: none;
+  opacity: 0;
+  transition: opacity 1.2s ease;
+}
+.nt-film-scrim {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  opacity: 0;
+  transition: opacity 1.2s ease;
+  background:
+    radial-gradient(ellipse 48% 62% at 50% 46%, rgba(0, 0, 0, 0.72) 0%, rgba(0, 0, 0, 0.35) 55%, transparent 100%),
+    linear-gradient(180deg, rgba(0, 0, 0, 0.55) 0%, transparent 18%, transparent 88%, #000 100%);
+}
+#tl-hero[data-film="on"] .nt-film,
+#tl-hero[data-film="on"] .nt-film-scrim {
+  opacity: 1;
+}
+#tl-hero .nt-gridfloor,
+#tl-hero .nt-horizon {
+  transition: opacity 1.2s ease;
+}
+#tl-hero[data-film="on"] .nt-gridfloor,
+#tl-hero[data-film="on"] .nt-horizon {
+  opacity: 0;
+}
 
 /* Film grain over the whole page (dark mode only) — the "expensive texture". */
 .nt-grain {

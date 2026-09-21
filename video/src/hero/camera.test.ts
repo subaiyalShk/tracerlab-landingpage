@@ -46,18 +46,30 @@ test("the zoom target lands on the anchor point of the viewport", () => {
   assert.equal(t, `translate(${0.2 * 1920 - 430 * 8}px, ${0.5 * 1080 - 410 * 8}px) scale(8)`);
 });
 
-test("the cluster stays inside the viewport for the whole reveal pull-out", () => {
+test("the phone stays on screen while the camera starts to leave it (first 20 frames of the reveal)", () => {
   for (const portrait of [false, true]) {
     const { w, h } = worldSize(portrait);
     const L = layoutFor(portrait);
     const k = cameraKeys(portrait);
-    for (let f = BEATS.reveal.from; f <= BEATS.reveal.to; f += 5) {
+    for (let f = BEATS.reveal.from; f <= BEATS.reveal.from + 20; f += 5) {
       const c = cameraAt(f, k);
-      const sx = c.anchor.x * w + (L.cluster.x - c.target.x) * c.zoom;
-      const sy = c.anchor.y * h + (L.cluster.y - c.target.y) * c.zoom;
+      const sx = c.anchor.x * w + (L.phone.x - c.target.x) * c.zoom;
+      const sy = c.anchor.y * h + (L.phone.y - c.target.y) * c.zoom;
       assert.ok(sx >= 0 && sx <= w, `portrait=${portrait} f=${f} sx=${sx}`);
       assert.ok(sy >= 0 && sy <= h, `portrait=${portrait} f=${f} sy=${sy}`);
     }
+  }
+});
+
+test("the camera lands on the floor, not the world: at the end of the reveal the map's top is above the frame", () => {
+  for (const portrait of [false, true]) {
+    const { h } = worldSize(portrait);
+    const L = layoutFor(portrait);
+    const c = cameraAt(BEATS.reveal.to, cameraKeys(portrait));
+    const mapTop = c.anchor.y * h + (L.map.y - c.target.y) * c.zoom;
+    const machineMid = c.anchor.y * h + (L.machine.y + L.machine.h / 2 - c.target.y) * c.zoom;
+    assert.ok(mapTop < 0, `portrait=${portrait} map top on screen at ${mapTop}`);
+    assert.ok(machineMid > h * 0.6 && machineMid < h * 0.9, `portrait=${portrait} machine at ${machineMid}`);
   }
 });
 

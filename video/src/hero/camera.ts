@@ -14,27 +14,42 @@ export const cameraKeys = (portrait: boolean): CameraKey[] => {
   const L = layoutFor(portrait);
   const center = { x: w / 2, y: h / 2 };
   const mid = { x: 0.5, y: 0.5 };
-  // Mechanism/output beats frame the WHOLE floor pipeline (ports → machine → output),
-  // not the machine's center — in portrait the machine sits left of frame center and
-  // centering it pushed the output block off the right edge.
+  // After the phone, the camera never returns to the wide world view until the
+  // loop closes: it rides the cables down from the phone (mid-reveal key) and
+  // lands on the floor pipeline (ports → machine → output), which spans the
+  // full world width, so FLOOR_ZOOM is the tightest framing that keeps both
+  // ends on screen (1602 world px × 1.15 ≈ 1842 of 1920 landscape). The
+  // pipeline's midpoint is the target (in portrait the machine sits left of
+  // frame center; centering the machine pushed the output off the right edge)
+  // and target.y is chosen so the machine sits in the lower-middle of the frame.
+  const FLOOR_ZOOM = 1.15;
+  const machineMidY = L.machine.y + L.machine.h / 2;
+  const PORT_HALF = 22; // Reveal.PORT_SIZE / 2 — the pipeline's left edge is the first port's edge
   const floorFocus = {
-    x: (L.ports[0].x + L.output.x + L.output.w) / 2,
-    y: center.y + (portrait ? 120 : 60),
+    x: (L.ports[0].x - PORT_HALF + L.output.x + L.output.w) / 2,
+    y: machineMidY - (portrait ? 470 : 340) / FLOOR_ZOOM,
   };
-  const drift = portrait ? 0 : 40; // output-beat drift right; portrait has no slack
+  // Reveal in two moves: first pull back on the pinned phone (it shrinks into
+  // one thread among many), THEN slide down the cables — panning at zoom 8
+  // would throw the phone off the top of the frame in a handful of frames.
+  const phoneShrink = { zoom: 3.5, target: { x: L.phone.x, y: L.phone.y }, anchor: L.anchorZoom };
+  // Mid-reveal: halfway down the cables, ports entering from the bottom.
+  const cableRide = portrait
+    ? { zoom: 2.2, target: { x: L.cluster.x, y: L.ports[0].y - 250 }, anchor: mid }
+    : { zoom: 2.6, target: { x: (L.ports[0].x + L.ports[3].x) / 2, y: L.ports[0].y - 160 }, anchor: { x: 0.35, y: 0.5 } };
+  const drift = portrait ? 0 : 30; // output-beat drift right (≤ the 39 px margin at FLOOR_ZOOM); portrait has no slack
   return [
     { frame: 0, zoom: 1, target: center, anchor: mid },
     { frame: BEATS.world.to, zoom: 1.12, target: center, anchor: mid },
     { frame: BEATS.people.to, zoom: 3.2, target: { x: L.cluster.x, y: L.cluster.y }, anchor: L.anchorZoom },
     { frame: BEATS.attention.to, zoom: 8, target: { x: L.phone.x, y: L.phone.y }, anchor: L.anchorZoom },
-    // Pins the phone to its own screen position for the whole pull-out: target
-    // = phone, anchor = the phone's own viewport fraction ⇒ at zoom 1 this is
-    // the identity transform. Easing target/anchor toward the world center on
-    // the same curve as zoom (8→1) would otherwise swing the cluster off the
-    // left edge of frame mid-beat (measured screenX ≈ -522 at frame 470).
-    { frame: BEATS.reveal.to, zoom: 1, target: { x: L.phone.x, y: L.phone.y }, anchor: { x: L.phone.x / w, y: L.phone.y / h } },
-    { frame: BEATS.mechanism.to, zoom: 1.06, target: floorFocus, anchor: mid },
-    { frame: BEATS.output.to, zoom: 1.06, target: { x: floorFocus.x + drift, y: floorFocus.y }, anchor: mid },
+    { frame: BEATS.reveal.from + 30, ...phoneShrink },
+    { frame: BEATS.reveal.from + 90, ...cableRide },
+    { frame: BEATS.reveal.to, zoom: FLOOR_ZOOM, target: floorFocus, anchor: mid },
+    { frame: BEATS.mechanism.to, zoom: FLOOR_ZOOM, target: floorFocus, anchor: mid },
+    { frame: BEATS.output.to, zoom: FLOOR_ZOOM, target: { x: floorFocus.x + drift, y: floorFocus.y }, anchor: mid },
+    // Flywheel: the only pull-out to the wide world — revenue → attention, and
+    // frame 900 must equal frame 0.
     { frame: DURATION, zoom: 1, target: center, anchor: mid },
   ];
 };

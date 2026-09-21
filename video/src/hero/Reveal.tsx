@@ -1,10 +1,9 @@
 import { interpolate, useCurrentFrame } from "remotion";
 import { BEATS, rgba, useLayout, type Pt, usePalette } from "./config";
 import { peoplePositions } from "./People";
-import { ChatGPTMark, FacebookMark, GoogleMark, InstagramMark } from "./marks";
+import { PLATFORMS } from "./marks";
 
 export const PORT_SIZE = 44;
-const MARKS = [InstagramMark, FacebookMark, GoogleMark, ChatGPTMark];
 
 // Cubic bezier from a person straight down into a port: vertical tangents so
 // the threads read as cables falling into the floor.
@@ -52,23 +51,24 @@ export const Reveal: React.FC = () => {
         const p = onCable(t.a, t.b, u);
         return <circle key={`p${k}`} cx={p.x} cy={p.y} r={1.6} fill={rgba(P.blue, 0.9)} />;
       })}
-      {/* intake ports with platform marks, and traces from each port into the machine */}
+      {/* intake ports with platform marks, and traces from each port into the machine:
+          landscape ports sit left of the machine and feed its left end; portrait ports sit
+          above its left half and drop straight down through its top edge. */}
       {L.ports.map((port, k) => {
-        const Mark = MARKS[k];
+        const { Mark } = PLATFORMS[k];
         const x = port.x - PORT_SIZE / 2;
         const y = port.y - PORT_SIZE / 2;
+        const trace =
+          L.portsFeed === "side"
+            ? `M${port.x + PORT_SIZE / 2} ${port.y} H${port.x + PORT_SIZE / 2 + 16} V${intakeY} H${L.machine.x}`
+            : `M${port.x} ${port.y + PORT_SIZE / 2} V${L.machine.y}`;
         return (
           <g key={`port${k}`}>
             <path d={bevelPath(x, y, PORT_SIZE, PORT_SIZE)} fill={rgba(P.ink, 0.03)} stroke={rgba(P.blue, 0.6)} strokeWidth={1.2} />
             <g transform={`translate(${x + 10} ${y + 10})`}>
               <Mark size={24} color={rgba(P.ink, 0.8)} />
             </g>
-            <path
-              d={`M${port.x + PORT_SIZE / 2} ${port.y} H${port.x + PORT_SIZE / 2 + 16} V${intakeY} H${L.machine.x}`}
-              fill="none"
-              stroke={rgba(P.blue, 0.45)}
-              strokeWidth={1.4}
-            />
+            <path d={trace} fill="none" stroke={rgba(P.blue, 0.45)} strokeWidth={1.4} />
           </g>
         );
       })}

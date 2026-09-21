@@ -44,3 +44,18 @@ test("palette: dark is the original COLORS; light uses the page's light tokens",
   assert.equal(L.pink, COLORS.pink);
   assert.equal(L.amber, COLORS.amber);
 });
+
+test("five intake ports, never overlapping the machine, feeding it from the side (landscape) or the top (portrait)", () => {
+  for (const portrait of [false, true]) {
+    const L = layoutFor(portrait);
+    assert.equal(L.ports.length, 5);
+    assert.equal(L.portsFeed, portrait ? "top" : "side");
+    for (const p of L.ports) {
+      const inside = p.x + 22 > L.machine.x && p.x - 22 < L.machine.x + L.machine.w && p.y + 22 > L.machine.y && p.y - 22 < L.machine.y + L.machine.h;
+      assert.ok(!inside, `portrait=${portrait} port at ${p.x},${p.y} overlaps the machine`);
+    }
+    // the pipeline (first port's left edge → output's right edge) fits the frame with margin
+    const { w } = worldSize(portrait);
+    assert.ok(L.ports[0].x - 22 >= 60 && L.output.x + L.output.w <= w - 60, `portrait=${portrait} pipeline touches the frame edge`);
+  }
+});

@@ -54,7 +54,8 @@ export type Layout = {
   map: Rect; // where the equirectangular dot map is drawn
   cluster: Pt & { r: number }; // people cluster center + radius
   phone: Pt & { w: number; h: number };
-  ports: Pt[]; // 4 intake ports, left → right
+  ports: Pt[]; // 5 intake ports, left → right (Instagram, TikTok, Facebook, Google, ChatGPT)
+  portsFeed: "side" | "top"; // traces enter the machine from its left end (landscape) or drop in through its top (portrait)
   machine: Rect;
   output: Rect;
   anchorZoom: Pt; // viewport-fraction where the zoom target lands (legibility frame)
@@ -69,14 +70,18 @@ export const layoutFor = (portrait: boolean): Layout =>
         map: { x: 0, y: 60, w: 1080, h: 540 },
         cluster: { x: 300, y: 330, r: 90 },
         phone: { x: 310, y: 340, w: 40, h: 84 },
+        // Portrait is too narrow for a single row: the ports sit ABOVE the machine's
+        // left half and their traces drop straight down through its top edge.
         ports: [
-          { x: 150, y: 1700 },
-          { x: 250, y: 1700 },
-          { x: 350, y: 1700 },
-          { x: 450, y: 1700 },
+          { x: 150, y: 1540 },
+          { x: 230, y: 1540 },
+          { x: 310, y: 1540 },
+          { x: 390, y: 1540 },
+          { x: 470, y: 1540 },
         ],
-        machine: { x: 90, y: 1650, w: 560, h: 110 },
-        output: { x: 700, y: 1580, w: 320, h: 220 },
+        portsFeed: "top",
+        machine: { x: 100, y: 1650, w: 560, h: 110 },
+        output: { x: 700, y: 1580, w: 300, h: 220 },
         anchorZoom: { x: 0.5, y: 0.24 },
       }
     : {
@@ -84,11 +89,13 @@ export const layoutFor = (portrait: boolean): Layout =>
         cluster: { x: 420, y: 400, r: 120 },
         phone: { x: 430, y: 410, w: 40, h: 84 },
         ports: [
-          { x: 240, y: 960 },
-          { x: 330, y: 960 },
-          { x: 420, y: 960 },
-          { x: 510, y: 960 },
+          { x: 200, y: 960 },
+          { x: 280, y: 960 },
+          { x: 360, y: 960 },
+          { x: 440, y: 960 },
+          { x: 520, y: 960 },
         ],
+        portsFeed: "side",
         machine: { x: 580, y: 905, w: 780, h: 110 },
         output: { x: 1420, y: 860, w: 400, h: 180 },
         anchorZoom: { x: 0.2, y: 0.5 },

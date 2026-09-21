@@ -28,3 +28,22 @@ export const ChatGPTMark: React.FC<P> = ({ size, color }) => (
     ))}
   </svg>
 );
+
+// Stylized musical-note glyph (stem + hook + head) — reads as TikTok without
+// reproducing the mark.
+export const TikTokMark: React.FC<P> = ({ size, color }) => (
+  <svg width={size} height={size} viewBox="0 0 24 24" fill="none" stroke={color} strokeWidth={2} strokeLinecap="round" strokeLinejoin="round">
+    <path d="M13 4v11.5" />
+    <path d="M13 4c.6 2.4 2.4 4 5 4.2" />
+    <circle cx={9.5} cy={16.5} r={3.5} />
+  </svg>
+);
+
+// Platform roster, in the order the phone shows them and the ports take them.
+export const PLATFORMS = [
+  { name: "Instagram", surface: "Reels", Mark: InstagramMark },
+  { name: "TikTok", surface: "For You", Mark: TikTokMark },
+  { name: "Facebook", surface: "Feed", Mark: FacebookMark },
+  { name: "Google", surface: "Search", Mark: GoogleMark },
+  { name: "ChatGPT", surface: "Ask", Mark: ChatGPTMark },
+] as const;

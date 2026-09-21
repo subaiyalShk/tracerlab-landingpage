@@ -16,13 +16,12 @@ export const cameraKeys = (portrait: boolean): CameraKey[] => {
   const mid = { x: 0.5, y: 0.5 };
   // After the phone, the camera never returns to the wide world view until the
   // loop closes: it rides the cables down from the phone (mid-reveal key) and
-  // lands on the floor pipeline (ports → machine → output), which spans the
-  // full world width, so FLOOR_ZOOM is the tightest framing that keeps both
-  // ends on screen (1602 world px × 1.15 ≈ 1842 of 1920 landscape). The
-  // pipeline's midpoint is the target (in portrait the machine sits left of
-  // frame center; centering the machine pushed the output off the right edge)
-  // and target.y is chosen so the machine sits in the lower-middle of the frame.
-  const FLOOR_ZOOM = 1.15;
+  // lands on the floor pipeline (ports → machine → output), which spans nearly
+  // the full world width, so FLOOR_ZOOM is the tightest framing that keeps both
+  // ends on screen with a margin for the output-beat drift (landscape: 1642
+  // world px × 1.12 ≈ 1839 of 1920). The pipeline's midpoint is the target and
+  // target.y puts the machine in the lower-middle of the frame.
+  const FLOOR_ZOOM = portrait ? 1.1 : 1.12;
   const machineMidY = L.machine.y + L.machine.h / 2;
   const PORT_HALF = 22; // Reveal.PORT_SIZE / 2 — the pipeline's left edge is the first port's edge
   const floorFocus = {
@@ -37,11 +36,14 @@ export const cameraKeys = (portrait: boolean): CameraKey[] => {
   const cableRide = portrait
     ? { zoom: 2.2, target: { x: L.cluster.x, y: L.ports[0].y - 250 }, anchor: mid }
     : { zoom: 2.6, target: { x: (L.ports[0].x + L.ports[3].x) / 2, y: L.ports[0].y - 160 }, anchor: { x: 0.35, y: 0.5 } };
-  const drift = portrait ? 0 : 30; // output-beat drift right (≤ the 39 px margin at FLOOR_ZOOM); portrait has no slack
+  const drift = portrait ? 0 : 24; // output-beat drift right (inside the ~40 px margin at FLOOR_ZOOM); portrait has no slack
   return [
     { frame: 0, zoom: 1, target: center, anchor: mid },
     { frame: BEATS.world.to, zoom: 1.12, target: center, anchor: mid },
     { frame: BEATS.people.to, zoom: 3.2, target: { x: L.cluster.x, y: L.cluster.y }, anchor: L.anchorZoom },
+    // Arrive on the phone early in the Attention beat and HOLD, so all five
+    // platform screens play at full size (the last key just repeats the pose).
+    { frame: BEATS.attention.from + 50, zoom: 8, target: { x: L.phone.x, y: L.phone.y }, anchor: L.anchorZoom },
     { frame: BEATS.attention.to, zoom: 8, target: { x: L.phone.x, y: L.phone.y }, anchor: L.anchorZoom },
     { frame: BEATS.reveal.from + 30, ...phoneShrink },
     { frame: BEATS.reveal.from + 90, ...cableRide },

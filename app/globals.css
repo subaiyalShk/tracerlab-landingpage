@@ -679,6 +679,16 @@ html[data-intro="on"] #tl-hero .nt-copy {
 html[data-intro="on"] #tl-hero[data-film="on"] .nt-film-scrim {
   opacity: 0.35;
 }
+/* The nav hides with the copy during the intro (the hero sits under it, so the
+   film fills the viewport) and fades back with it. */
+#tl-nav {
+  transition: opacity 0.9s ease;
+}
+html[data-intro="on"] #tl-nav {
+  opacity: 0;
+  pointer-events: none;
+  transition: none;
+}
 #tl-hero .nt-gridfloor,
 #tl-hero .nt-horizon {
   transition: opacity 1.2s ease;

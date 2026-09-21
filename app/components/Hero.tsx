@@ -13,7 +13,7 @@ const DISPLAY = "var(--font-archivo), system-ui, sans-serif";
 
 export default function Hero() {
   return (
-    <section id="tl-hero" className="font-body relative isolate w-full overflow-hidden bg-page text-ink">
+    <section id="tl-hero" className="font-body relative isolate -mt-16 w-full overflow-hidden bg-page text-ink">
       {/* ── Ambient light (one of two on the page — the other sits behind the CTA) */}
       <div
         aria-hidden
@@ -45,7 +45,9 @@ export default function Hero() {
         <span className="nt-pulse nt-pulse-pink" style={{ left: 1380, ["--pulse-dur" as string]: "17s", ["--pulse-delay" as string]: "7.5s" }} />
       </div>
       <HeroFilm />
-      <div className="mx-auto flex min-h-[calc(100dvh-4rem)] w-full max-w-[1280px] items-center justify-center px-6 py-10 sm:px-10 sm:py-12">
+      {/* The section starts UNDER the sticky nav (-mt-16 + pt-16 here) so the film
+          can own the whole viewport while the nav is hidden during the intro. */}
+      <div className="mx-auto flex min-h-[100dvh] w-full max-w-[1280px] items-center justify-center px-6 pb-10 pt-16 sm:px-10 sm:pb-12">
         <HeroCopy className="flex min-w-0 max-w-[52rem] flex-col items-center text-center">
           <p className="animate-rise text-[0.98rem] text-ink/50">Tracerlabs — AI development studio</p>
           <h1

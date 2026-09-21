@@ -1,4 +1,8 @@
-import { AbsoluteFill } from "remotion";
-import { COLORS } from "./config";
+import { Stage } from "./Stage";
+import { World } from "./World";
 
-export const HeroLoop: React.FC = () => <AbsoluteFill style={{ backgroundColor: COLORS.bg }} />;
+export const HeroLoop: React.FC = () => (
+  <Stage>
+    <World />
+  </Stage>
+);

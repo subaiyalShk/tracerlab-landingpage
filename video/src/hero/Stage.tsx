@@ -8,7 +8,9 @@ const FADE_OUT = 15; // frames — loop seam dips through the page background (s
 
 // Page-colored background (black in dark, page grey in light), fade in/out, and the ONE camera transform. Children are
 // laid out in world coordinates (== composition size at zoom 1).
-export const Stage: React.FC<{ children: ReactNode }> = ({ children }) => {
+// `overlay` renders in SCREEN space (outside the camera transform, inside the
+// fade) — for stats/captions that must not move with the camera.
+export const Stage: React.FC<{ children: ReactNode; overlay?: ReactNode }> = ({ children, overlay }) => {
   const P = usePalette();
   const f = useCurrentFrame();
   const { width, height } = useVideoConfig();
@@ -20,19 +22,21 @@ export const Stage: React.FC<{ children: ReactNode }> = ({ children }) => {
   );
   return (
     <AbsoluteFill style={{ backgroundColor: P.bg }}>
-      <div
-        style={{
-          position: "absolute",
-          left: 0,
-          top: 0,
-          width,
-          height,
-          opacity,
-          transformOrigin: "0 0",
-          transform: cameraTransform(cam, { w: width, h: height }),
-        }}
-      >
-        {children}
+      <div style={{ position: "absolute", left: 0, top: 0, width, height, opacity }}>
+        <div
+          style={{
+            position: "absolute",
+            left: 0,
+            top: 0,
+            width,
+            height,
+            transformOrigin: "0 0",
+            transform: cameraTransform(cam, { w: width, h: height }),
+          }}
+        >
+          {children}
+        </div>
+        {overlay}
       </div>
     </AbsoluteFill>
   );

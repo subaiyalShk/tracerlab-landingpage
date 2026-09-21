@@ -36,8 +36,11 @@ export const Machine: React.FC = () => {
   const labelsOut = interpolate(f, [BEATS.output.from + 10, BEATS.output.from + 30], [1, 0], clamp);
   const titleIn = interpolate(f, [BEATS.mechanism.from + 5, BEATS.mechanism.from + 25], [0, 1], clamp);
   const fs = portrait ? { title: 8.2, sub: 5.6, head: 7, chipH: 30, gap: 34, pad: 6 } : { title: 11, sub: 7, head: 8, chipH: 34, gap: 40, pad: 12 };
+  // The machine only exists once the cables have found it: it fades in as the
+  // camera rides down (with the Reveal's ports), never before.
+  const exists = interpolate(f, [BEATS.reveal.from + 45, BEATS.reveal.from + 90], [0, 1], clamp);
   return (
-    <svg style={{ position: "absolute", left: 0, top: 0, overflow: "visible" }} width={1} height={1}>
+    <svg style={{ position: "absolute", left: 0, top: 0, overflow: "visible", opacity: exists }} width={1} height={1}>
       {/* Title + label row: ABOVE the machine in landscape; BELOW it in portrait,
           where the intake ports and their traces occupy the space above. */}
       {(() => {

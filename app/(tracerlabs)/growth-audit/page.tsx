@@ -15,6 +15,10 @@ export const metadata: Metadata = {
   description:
     "We run your ads, then an AI agent texts every lead within minutes and books them on your calendar. Built and run by one team, tracked from ad dollar to booked job.",
   alternates: { canonical: "/growth-audit" },
+  // Paid-traffic funnel: no nav, one action, and a message tuned for ad clicks.
+  // Keeping it out of the index stops it competing with / for the same terms and
+  // stops organic visitors landing on a page with no way back into the site.
+  robots: { index: false, follow: false },
   openGraph: {
     type: "website",
     url: "https://tracerlabs.io/growth-audit",

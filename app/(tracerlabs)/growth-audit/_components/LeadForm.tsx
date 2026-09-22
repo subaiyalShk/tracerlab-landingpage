@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, type ReactNode } from "react";
+import { useEffect, useRef, useState, type ReactNode } from "react";
 import { useRouter } from "next/navigation";
 import Bevel, { GLASS_BG, GLASS_BORDER } from "../../../components/Bevel";
 import Button from "../../../components/Button";
@@ -77,10 +77,20 @@ function Field({ label, htmlFor, error, children }: { label: string; htmlFor: st
 
 export default function LeadForm() {
   const router = useRouter();
+  // Stamped when the form becomes interactive; the API rejects submissions filled
+  // in faster than a person could type (see _lib/guards.ts). Set in an effect
+  // rather than during render — Date.now() is impure, and "when the visitor could
+  // first type" is the moment we actually want to measure from.
+  const renderedAt = useRef(0);
+  useEffect(() => {
+    renderedAt.current = Date.now();
+  }, []);
   const [values, setValues] = useState<Values>({ name: "", phone: "", email: "", business_type: "", ad_spend: "" });
   const [errors, setErrors] = useState<Errors>({});
   const [status, setStatus] = useState<"idle" | "submitting" | "success" | "error">("idle");
   const [serverError, setServerError] = useState("");
+  // Honeypot: invisible to people, filled in by naive form-bots.
+  const [honeypot, setHoneypot] = useState("");
 
   function set(key: keyof Values, value: string) {
     setValues((v) => ({ ...v, [key]: value }));
@@ -114,7 +124,7 @@ export default function LeadForm() {
       const res = await fetch(LEAD_ENDPOINT, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ ...values, ...leadSource() }),
+        body: JSON.stringify({ ...values, ...leadSource(), company_website: honeypot, renderedAt: renderedAt.current || undefined }),
       });
       const json = await res.json().catch(() => ({}));
       if (!res.ok || !json.ok) throw new Error(json.error || "Something went wrong.");
@@ -156,6 +166,21 @@ export default function LeadForm() {
             </p>
 
             <form onSubmit={onSubmit} noValidate>
+              {/* Honeypot. Off-screen rather than display:none — some bots skip
+                  hidden inputs but happily fill positioned ones. Never focusable,
+                  never announced, excluded from autofill. */}
+              <div aria-hidden className="absolute left-[-9999px] top-auto h-px w-px overflow-hidden">
+                <label htmlFor="company_website">Company website (leave blank)</label>
+                <input
+                  id="company_website"
+                  name="company_website"
+                  type="text"
+                  tabIndex={-1}
+                  autoComplete="off"
+                  value={honeypot}
+                  onChange={(e) => setHoneypot(e.target.value)}
+                />
+              </div>
               <Field label="Full name" htmlFor="name" error={errors.name}>
                 <input
                   id="name"

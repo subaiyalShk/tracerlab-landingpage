@@ -1,5 +1,6 @@
 import { NextResponse } from "next/server";
 import { mint } from "../../(tracerlabs)/growth-audit/_lib/bookingToken";
+import { rateLimited, spamVerdict } from "../../(tracerlabs)/growth-audit/_lib/guards";
 
 // Growth Audit funnel lead intake (/growth-audit form).
 //
@@ -45,6 +46,14 @@ async function forwardToDealflow(lead: Record<string, string>): Promise<string |
   }
 }
 
+// Bots get the same success the visitor gets — they learn nothing about which
+// guard fired. The payload is logged so a real person caught by a guard can be
+// recovered by hand.
+function silentDrop(reason: string, body: LeadPayload) {
+  console.warn(`[growth-audit-lead] dropped (${reason}):`, JSON.stringify(body));
+  return NextResponse.json({ ok: true });
+}
+
 export async function POST(request: Request) {
   let body: LeadPayload;
   try {
@@ -52,6 +61,22 @@ export async function POST(request: Request) {
   } catch {
     return NextResponse.json({ ok: false, error: "Invalid request body." }, { status: 400 });
   }
+
+  const ip =
+    request.headers.get("x-forwarded-for")?.split(",")[0]?.trim() ||
+    request.headers.get("x-real-ip") ||
+    "unknown";
+
+  const verdict = spamVerdict(
+    {
+      name: typeof body.name === "string" ? body.name : undefined,
+      company_website: typeof body.company_website === "string" ? body.company_website : undefined,
+      renderedAt: typeof body.renderedAt === "number" ? body.renderedAt : undefined,
+    },
+    { now: Date.now() },
+  );
+  if (verdict) return silentDrop(verdict, body);
+  if (rateLimited(ip)) return silentDrop(`rate-limit ${ip}`, body);
 
   // Required-field + format validation (defense in depth; the form validates too).
   const missing = REQUIRED.filter((k) => {

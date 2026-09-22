@@ -1,4 +1,4 @@
-import { AbsoluteFill, interpolate, useCurrentFrame, useVideoConfig } from "remotion";
+import { AbsoluteFill, Easing, interpolate, useCurrentFrame, useVideoConfig } from "remotion";
 import { CameraMotionBlur } from "@remotion/motion-blur";
 import type { ReactNode } from "react";
 import { cameraTransform, useCamera } from "./camera";
@@ -46,7 +46,7 @@ export const Stage: React.FC<{ children: ReactNode; overlay?: ReactNode }> = ({ 
   const clamp = { extrapolateLeft: "clamp", extrapolateRight: "clamp" } as const;
   const opacity = Math.min(
     interpolate(f, [0, FADE_IN], [0, 1], clamp),
-    interpolate(f, [DURATION - FADE_OUT, DURATION - 1], [1, 0], clamp),
+    interpolate(f, [DURATION - FADE_OUT, DURATION - 4], [1, 0], { easing: Easing.inOut(Easing.quad), ...clamp }), // fully black for the last frames
   );
   const rig = <CameraRig>{children}</CameraRig>;
   return (

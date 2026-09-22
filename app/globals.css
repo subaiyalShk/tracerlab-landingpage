@@ -668,8 +668,10 @@ html[data-theme="light"] .nt-film-scrim {
    film will play, and cleared by HeroFilm when the first pass completes (or on
    any input / failure). The copy waits at opacity 0 and the scrim eases off so
    the film has the whole frame; both come back together. */
+/* Hand-over choreography (from black): the grid-floor scene fades in first
+   (1.2 s, below), the copy follows a beat later, the nav last. */
 #tl-hero .nt-copy {
-  transition: opacity 0.9s ease;
+  transition: opacity 0.9s ease 0.35s;
 }
 html[data-intro="on"] #tl-hero .nt-copy {
   opacity: 0;
@@ -682,7 +684,7 @@ html[data-intro="on"] #tl-hero[data-film="on"] .nt-film-scrim {
 /* The nav hides with the copy during the intro (the hero sits under it, so the
    film fills the viewport) and fades back with it. */
 #tl-nav {
-  transition: opacity 0.9s ease;
+  transition: opacity 0.9s ease 0.6s;
 }
 html[data-intro="on"] #tl-nav {
   opacity: 0;

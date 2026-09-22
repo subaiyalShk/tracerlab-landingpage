@@ -14,7 +14,8 @@ import { HERO_INTRO_DONE } from "./HeroCopy";
 //   done   — the film is paused and faded out, the grid floor is back, the
 //            copy types in and the nav fades in.
 //
-// EVERY exit goes through finish(): the film ending, any real input
+// EVERY exit goes through finish(): the film ending (it fades itself to the
+// page background first, so the hand-over starts from black), any real input
 // (scroll/tap/click/key — the visitor has moved on, so the film is killed,
 // not left playing underneath), a media error, or no playback within
 // INTRO_TIMEOUT_MS. There is no theme/orientation swapping and no off-screen
@@ -24,7 +25,6 @@ import { HERO_INTRO_DONE } from "./HeroCopy";
 // Save-Data (then data-intro was never set and the copy is visible from the
 // first paint). The film is the LCP element by design.
 const INTRO_TIMEOUT_MS = 6000;
-const INTRO_END_S = 28.0; // the film fades out from 27.3 s (frame 820) and ends at 29 s: hand over as it goes dark
 const INPUT_EVENTS = ["scroll", "touchstart", "pointerdown", "keydown"] as const;
 
 export default function HeroFilm() {
@@ -51,7 +51,6 @@ export default function HeroFilm() {
       delete html.dataset.intro; // copy + nav fade in
       window.dispatchEvent(new Event(HERO_INTRO_DONE)); // HeroCopy re-mounts → headline types in
       INPUT_EVENTS.forEach((n) => window.removeEventListener(n, onInput));
-      v.removeEventListener("timeupdate", onTime);
       v.removeEventListener("ended", finish);
       v.removeEventListener("error", finish);
       window.clearTimeout(timer);
@@ -62,9 +61,6 @@ export default function HeroFilm() {
       if (e.type === "scroll" && window.scrollY < 4) return;
       finish();
     };
-    const onTime = () => {
-      if (v.currentTime >= INTRO_END_S) finish();
-    };
     let playing = false;
     const onPlaying = () => {
       playing = true;
@@ -72,7 +68,6 @@ export default function HeroFilm() {
     };
 
     v.addEventListener("playing", onPlaying);
-    v.addEventListener("timeupdate", onTime);
     v.addEventListener("ended", finish);
     v.addEventListener("error", finish);
     INPUT_EVENTS.forEach((n) => window.addEventListener(n, onInput, { passive: true }));
@@ -89,7 +84,6 @@ export default function HeroFilm() {
 
     return () => {
       v.removeEventListener("playing", onPlaying);
-      v.removeEventListener("timeupdate", onTime);
       v.removeEventListener("ended", finish);
       v.removeEventListener("error", finish);
       INPUT_EVENTS.forEach((n) => window.removeEventListener(n, onInput));

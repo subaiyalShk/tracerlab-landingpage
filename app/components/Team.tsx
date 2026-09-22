@@ -5,6 +5,7 @@
 // monochrome (unified, like the tech marquee) and lifts to full color on
 // hover/focus. Agent portraits are fal.ai renders — regenerate with
 // scripts/gen-team-agents.mjs (Tracy is anchored to her reels reference).
+import type { CSSProperties } from "react";
 import Image from "next/image";
 import Card from "./Card";
 
@@ -79,10 +80,10 @@ const AgentIcon = (
 
 export default function Team() {
   return (
-    <section id="tl-team" style={{ containIntrinsicSize: "auto 1100px" }} className="cv-auto font-body relative isolate w-full overflow-hidden bg-page text-ink">
+    <section id="tl-team" style={{ containIntrinsicSize: "auto 1100px" }} className="cv-auto font-body relative isolate w-full overflow-clip bg-page text-ink">
       <div className="mx-auto w-full max-w-[1280px] px-6 sm:px-10"><div className="nt-hairline" /></div>
       <div className="cv-fade mx-auto w-full max-w-[1280px] px-6 py-20 sm:px-10 sm:py-28">
-        <div className="max-w-[44rem]">
+        <div className="nt-px max-w-[44rem]" style={{ "--px": "8px" } as CSSProperties}>
           <span aria-hidden className="nt-kicker" />
           <p className="text-[0.98rem] text-ink/50">The team</p>
           <h2
@@ -99,9 +100,10 @@ export default function Team() {
         </div>
 
         <div className="mt-10 grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-4 lg:gap-5">
-          {TEAM.map((m) => (
+          {TEAM.map((m, i) => (
             <article key={m.name} className="group h-full">
-              <Card bevel={12} className="h-full" contentClassName="h-full">
+              {/* alternate depths so the row reads as two layers, not a flat strip */}
+              <Card bevel={12} depth={i % 2 ? 24 : 12} className="h-full" contentClassName="h-full">
                 <div className="relative aspect-square w-full overflow-hidden bg-[#0b0b0f]">
                   <Image
                     src={m.img}

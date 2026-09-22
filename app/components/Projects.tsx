@@ -2,6 +2,7 @@
 // client case studies are SPOTLIGHT glass panels (product-window media chrome,
 // big telemetry figures, a real button), products & experiments stay quiet
 // editorial rows beneath. No scroll-reveal gating.
+import type { CSSProperties } from "react";
 import Image from "next/image";
 import ProjectVideo from "./ProjectVideo";
 import Button from "./Button";
@@ -250,11 +251,13 @@ function MediaChrome({
     <div
       className={`${
         frameless
-          ? "overflow-hidden bg-[#0b0b0f]"
-          : "overflow-hidden border border-ink/15 bg-[#0b0b0f] transition-shadow duration-300 hover:shadow-[var(--nt-underglow)]"
+          ? "overflow-clip bg-[#0b0b0f]"
+          : "overflow-clip border border-ink/15 bg-[#0b0b0f] transition-shadow duration-300 hover:shadow-[var(--nt-underglow)]"
       }${fill ? " flex flex-col" : ""} ${className}`}
     >
-      <div className={`relative w-full ${fill ? `${aspect} lg:aspect-auto lg:flex-1` : aspect}`}>
+      {/* nt-px-window: the reel/poster parallaxes behind the frame (overflow-clip,
+          not hidden — hidden would become the window's scroll container) */}
+      <div className={`nt-px-window relative w-full ${fill ? `${aspect} lg:aspect-auto lg:flex-1` : aspect}`}>
         <MediaBody media={media} />
       </div>
     </div>
@@ -265,7 +268,7 @@ function MediaChrome({
 function CaseCard({ cs, mediaRight }: { cs: CaseStudy; mediaRight: boolean }) {
   return (
     <article id={`work-${cs.id}`} className="scroll-mt-24">
-      <Card bevel={16} contentClassName="h-full">
+      <Card bevel={16} depth={14} contentClassName="h-full">
       {/* media bleeds flush to the card border (full column height); only the
           copy column carries the padding */}
       <div
@@ -328,7 +331,7 @@ function CaseCard({ cs, mediaRight }: { cs: CaseStudy; mediaRight: boolean }) {
 function ProductCardWide({ p }: { p: Product }) {
   return (
     <article id={`work-${p.id}`} className="scroll-mt-24">
-      <Card bevel={12} contentClassName="h-full">
+      <Card bevel={12} depth={14} contentClassName="h-full">
         <div className="grid h-full grid-cols-1 lg:grid-cols-[auto_1fr]">
           {/* the media column's WIDTH derives from the card's height at 9:16,
               so the portrait reel displays essentially uncropped */}
@@ -381,7 +384,7 @@ function ProductCard({
 }) {
   return (
     <article id={`work-${p.id}`} className="h-full scroll-mt-24">
-      <Card bevel={12} className="h-full" contentClassName="h-full">
+      <Card bevel={12} depth={24} className="h-full" contentClassName="h-full">
         <MediaChrome
           media={p.media}
           aspect={aspect}
@@ -421,24 +424,25 @@ function ProductCard({
 
 export default function Projects() {
   return (
-    <section id="tl-projects" style={{ containIntrinsicSize: "auto 3800px" }} className="cv-auto font-body relative isolate w-full overflow-hidden bg-page text-ink">
-      {/* ambient color field — gives the frosted spotlight panels something to blur */}
+    <section id="tl-projects" style={{ containIntrinsicSize: "auto 3800px" }} className="cv-auto font-body relative isolate w-full overflow-clip bg-page text-ink">
+      {/* ambient color field — gives the frosted spotlight panels something to
+          blur; parallaxed behind the cards */}
       <div
         aria-hidden
-        className="pointer-events-none absolute -left-[10%] top-[10%] -z-10 h-[44vw] w-[44vw] rounded-full"
-        style={{ background: "radial-gradient(circle closest-side, var(--nt-ambient-pink) 0%, transparent 100%)" }}
+        className="nt-px-bg pointer-events-none absolute -left-[10%] top-[10%] -z-10 h-[44vw] w-[44vw] rounded-full"
+        style={{ background: "radial-gradient(circle closest-side, var(--nt-ambient-pink) 0%, transparent 100%)", "--px": "-120px" } as CSSProperties}
       />
       <div
         aria-hidden
-        className="pointer-events-none absolute -right-[12%] top-[42%] -z-10 h-[46vw] w-[46vw] rounded-full"
-        style={{ background: "radial-gradient(circle closest-side, var(--nt-ambient-blue) 0%, transparent 100%)" }}
+        className="nt-px-bg pointer-events-none absolute -right-[12%] top-[42%] -z-10 h-[46vw] w-[46vw] rounded-full"
+        style={{ background: "radial-gradient(circle closest-side, var(--nt-ambient-blue) 0%, transparent 100%)", "--px": "-100px" } as CSSProperties}
       />
       {/* scroll anchor: legacy/service links point at #projects (section id is tl-projects) */}
       <div id="projects" aria-hidden />
       <div className="mx-auto w-full max-w-[1280px] px-6 sm:px-10"><div className="nt-hairline" /></div>
       <div className="cv-fade mx-auto w-full max-w-[1280px] px-6 py-20 sm:px-10 sm:py-28 lg:py-36">
-        {/* header */}
-        <div className="max-w-[44rem]">
+        {/* header — leads the cards by a hair */}
+        <div className="nt-px max-w-[44rem]" style={{ "--px": "8px" } as CSSProperties}>
           <span aria-hidden className="nt-kicker" />
           <p className="text-[0.98rem] text-ink/50">Recent work</p>
           <h2

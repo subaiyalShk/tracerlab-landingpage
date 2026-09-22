@@ -802,3 +802,50 @@ html[data-theme="light"] .nt-grain {
   transform: translateY(-3px);
   box-shadow: var(--nt-underglow);
 }
+
+/* ── Scroll parallax (CSS scroll-driven, zero JS) ──────────────────────────
+   Each `.nt-px` element travels from +--px to −--px along its own view()
+   timeline (enter bottom → leave top), so a bigger --px reads as nearer to
+   the viewer and a negative one as further back. Runs on the compositor —
+   no scroll listener, no React re-render — and is a no-op wherever
+   scroll-driven animations aren't supported (older Safari) or motion is
+   reduced. Cards animate the `translate` property so the :hover lift
+   (`transform`) still composes; backgrounds use `transform` because the
+   Cta glow is positioned with Tailwind's `translate` utilities.
+   ⚠️ view() measures against the nearest SCROLL CONTAINER, and
+   `overflow: hidden` counts as one — every clipping ancestor of a parallax
+   element (sections, Bevel's fill, media windows) must use `overflow: clip`
+   instead, or the timeline pins to the clip and nothing moves. */
+@supports (animation-timeline: view()) {
+  @media (prefers-reduced-motion: no-preference) {
+    .nt-px {
+      --px: 20px;
+      animation: ntPx linear both;
+      animation-timeline: view();
+    }
+    @keyframes ntPx {
+      from { translate: 0 var(--px); }
+      to { translate: 0 calc(var(--px) * -1); }
+    }
+    .nt-px-bg {
+      --px: -100px;
+      animation: ntPxBg linear both;
+      animation-timeline: view();
+    }
+    @keyframes ntPxBg {
+      from { transform: translateY(var(--px)); }
+      to { transform: translateY(calc(var(--px) * -1)); }
+    }
+    /* Window: the media inside a clipped frame is oversized and slides slower
+       than the frame, so it reads as sitting behind glass. */
+    .nt-px-window > :is(img, video) {
+      scale: 1.12;
+      animation: ntPxWindow linear both;
+      animation-timeline: view();
+    }
+    @keyframes ntPxWindow {
+      from { translate: 0 -5%; }
+      to { translate: 0 5%; }
+    }
+  }
+}

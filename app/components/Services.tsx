@@ -4,6 +4,7 @@
 // The cards are deliberately a PIPELINE, not a taxonomy: every engagement runs
 // the same arc (get leads → engage instantly → take payment → run on software).
 
+import type { CSSProperties } from "react";
 import Image from "next/image";
 import Card from "./Card";
 
@@ -177,22 +178,23 @@ function CardFoot({ s }: { s: Pick<Service, "tools" | "cta"> }) {
 
 export default function Services() {
   return (
-    <section id="tl-services" style={{ containIntrinsicSize: "auto 1700px" }} className="cv-auto font-body relative isolate w-full overflow-hidden bg-page text-ink">
-      {/* ambient color field — gives the frosted cards something to blur */}
+    <section id="tl-services" style={{ containIntrinsicSize: "auto 1700px" }} className="cv-auto font-body relative isolate w-full overflow-clip bg-page text-ink">
+      {/* ambient color field — gives the frosted cards something to blur;
+          parallaxed behind the cards (negative depth = further back) */}
       <div
         aria-hidden
-        className="pointer-events-none absolute -right-[10%] top-[16%] -z-10 h-[42vw] w-[42vw] rounded-full"
-        style={{ background: "radial-gradient(circle closest-side, var(--nt-ambient-blue) 0%, transparent 100%)" }}
+        className="nt-px-bg pointer-events-none absolute -right-[10%] top-[16%] -z-10 h-[42vw] w-[42vw] rounded-full"
+        style={{ background: "radial-gradient(circle closest-side, var(--nt-ambient-blue) 0%, transparent 100%)", "--px": "-110px" } as CSSProperties}
       />
       <div
         aria-hidden
-        className="pointer-events-none absolute -left-[12%] bottom-[6%] -z-10 h-[38vw] w-[38vw] rounded-full"
-        style={{ background: "radial-gradient(circle closest-side, var(--nt-ambient-pink) 0%, transparent 100%)" }}
+        className="nt-px-bg pointer-events-none absolute -left-[12%] bottom-[6%] -z-10 h-[38vw] w-[38vw] rounded-full"
+        style={{ background: "radial-gradient(circle closest-side, var(--nt-ambient-pink) 0%, transparent 100%)", "--px": "-90px" } as CSSProperties}
       />
       <div className="mx-auto w-full max-w-[1280px] px-6 sm:px-10"><div className="nt-hairline" /></div>
       <div className="cv-fade mx-auto w-full max-w-[1280px] px-6 py-20 sm:px-10 sm:py-28 lg:py-36">
-        {/* Header */}
-        <div className="max-w-[44rem]">
+        {/* Header — leads the grid by a hair */}
+        <div className="nt-px max-w-[44rem]" style={{ "--px": "8px" } as CSSProperties}>
           <span aria-hidden className="nt-kicker" />
           <p className="text-[0.98rem] text-ink/50">What we do</p>
           <h2
@@ -212,13 +214,14 @@ export default function Services() {
           </p>
         </div>
 
-        {/* Bento grid — flat hairline panels */}
+        {/* Bento grid — flat hairline panels at three parallax depths: the tall
+            featured card anchors, the stacked tiles float nearest, the bar between */}
         <div className="mt-12 grid grid-cols-1 gap-4 sm:grid-cols-2 lg:gap-5">
           {/* Featured — Lead Generation, stage 1 (spans both rows on the left at sm+).
               The tall column leaves surplus height, so a flush illustration
               (fal.ai, Night Telemetry palette) fills the card's top. */}
-          <Card className="sm:row-span-2" contentClassName="h-full">
-            <div className="relative aspect-[16/9] w-full overflow-hidden bg-[#0b0b0f]">
+          <Card depth={12} className="sm:row-span-2" contentClassName="h-full">
+            <div className="nt-px-window relative aspect-[16/9] w-full overflow-clip bg-[#0b0b0f]">
               <Image
                 src="/assets/leadgen-funnel.jpg"
                 alt=""
@@ -253,7 +256,7 @@ export default function Services() {
 
           {/* Two stacked tiles on the right at sm+ — stages 2 & 3 */}
           {SERVICES.map((s) => (
-            <Card key={s.title} contentClassName="p-7 sm:p-8">
+            <Card key={s.title} depth={26} contentClassName="p-7 sm:p-8">
               <CardHead s={s} />
               <p className="mt-3 text-[0.95rem] leading-[1.65] text-ink/60">{s.blurb}</p>
               <Figures items={s.figures} who={s.who} />
@@ -264,7 +267,7 @@ export default function Services() {
           ))}
 
           {/* Stage 4 — full-width bar across the bottom at sm+ */}
-          <Card className="sm:col-span-2" contentClassName="p-7 sm:p-8">
+          <Card depth={18} className="sm:col-span-2" contentClassName="p-7 sm:p-8">
             <div className="flex flex-col gap-6 sm:flex-row sm:items-start sm:gap-10">
               <div className="sm:flex-1">
                 <CardHead s={CUSTOM} />

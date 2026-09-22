@@ -80,6 +80,12 @@ The page died by a thousand compositing cuts. Do not reintroduce these:
 - **`content-visibility:auto`** on the 4 below-fold sections, masked by `.cv-fade` (a
   TRANSFORM-ONLY slide-up — an opacity keyframe can strand sections invisible when
   animations don't run, e.g. throttled tabs).
+- **Scroll parallax = CSS scroll-driven animations only** (`.nt-px` / `.nt-px-bg` /
+  `.nt-px-window` in globals.css, `animation-timeline: view()`; `Card depth={px}` opts a card
+  in). Zero JS, compositor-only, no-op on older Safari / reduced-motion. Never add a JS scroll
+  listener or Motion `useScroll` for this. ⚠️ `view()` binds to the nearest SCROLL CONTAINER and
+  `overflow: hidden` counts — the below-fold sections, Bevel's fill and the media windows use
+  `overflow-clip`; putting `overflow-hidden` back on any ancestor silently freezes the parallax.
 - **No session-replay scripts** (Hotjar/Contentsquare removed — they hook every scroll and
   were the dominant jank after the rendering fixes). Re-add only as a deliberate decision.
 - The headline is plain text in the server HTML (SEO / no-JS); its entrance is CSS-only

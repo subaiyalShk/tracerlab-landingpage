@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 # Render the four hero compositions (dark/light × landscape/portrait), encode to the
-# site's budget, and verify.
+# site's budget (with the score as AAC 96k), and verify.
 #   bash scripts/encode-hero.sh            # all four
 #   ONLY=light bash scripts/encode-hero.sh # render/encode just the light pair (verify all)
 # Dev affordance: VERIFY_ONLY=1 bash scripts/encode-hero.sh skips the render+encode section and
@@ -22,7 +22,7 @@ if [ "${VERIFY_ONLY:-0}" != "1" ]; then
 
   mkdir -p "$ROOT/public/hero"
   enc() { # in out scale crf
-    ffmpeg -y -i "$1" -an -vf "scale=$3,format=yuv420p" -c:v libx264 -preset slow -crf "$4" -g 90 -pix_fmt yuv420p -movflags +faststart "$2"
+    ffmpeg -y -i "$1" -vf "scale=$3,format=yuv420p" -c:v libx264 -preset slow -crf "$4" -g 90 -pix_fmt yuv420p -c:a aac -b:a 96k -ac 2 -movflags +faststart "$2"
   }
   # crf 26 dark / 27 light: the film's thin strokes and small chip text shimmer
   # at 28–29 (seen on phones); the map is out for most of the run now, so the
@@ -44,13 +44,11 @@ for f in public/hero/loop-16x9.mp4 public/hero/loop-9x16.mp4 public/hero/loop-16
   size=$(stat -f%z "$f")
   echo "$f: $size bytes"
   [ "$size" -le 2621440 ] || { echo "  ✗ over 2.5 MB"; fail=1; }
-  # no audio stream — capture ALL streams' codec_types once (not select_streams a: a valid
-  # video-only file always has >=1 stream, so a genuinely failed/empty probe is now
-  # distinguishable from the legitimate "no audio stream" case, which the old
-  # `select_streams a | grep -q audio` could not tell apart — both read as empty).
+  # exactly one video + one audio stream (the score; the site plays muted until the
+  # visitor opts in). An empty probe is distinguishable from a missing stream.
   streams=$(ffprobe -v error -show_entries stream=codec_type -of csv=p=0 "$f")
   [ -n "$streams" ] || { echo "  ✗ could not read streams"; fail=1; continue; }
-  echo "$streams" | grep -q audio && { echo "  ✗ has audio"; fail=1; }
+  [ "$(echo "$streams" | grep -c audio)" = "1" ] || { echo "  ✗ expected one audio stream"; fail=1; }
   # faststart: moov atom appears before mdat in the byte stream (equivalent to the trace-parse
   # check; hardened per task-11 resolution notes to avoid relying on `ffprobe -v trace` output
   # formatting).

@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useRef } from "react";
+import { useEffect, useRef, useState } from "react";
 import { isPortrait, pickSource, readFilmEnv, shouldLoadFilm } from "./heroFilmPolicy";
 import { HERO_INTRO_DONE } from "./HeroCopy";
 
@@ -24,11 +24,18 @@ import { HERO_INTRO_DONE } from "./HeroCopy";
 // No src/poster in the markup; nothing is requested under reduced-motion /
 // Save-Data (then data-intro was never set and the copy is visible from the
 // first paint). The film is the LCP element by design.
+//
+// Sound: the film carries a score, but autoplay must be muted, so a speaker
+// toggle (shown during the intro) lets the visitor opt in — that click is a
+// real user gesture, which is what unmuting requires. It is the one input
+// that does NOT end the intro.
 const INTRO_TIMEOUT_MS = 6000;
 const INPUT_EVENTS = ["scroll", "touchstart", "pointerdown", "keydown"] as const;
 
 export default function HeroFilm() {
   const ref = useRef<HTMLVideoElement>(null);
+  const [sound, setSound] = useState(false);
+  const [showToggle, setShowToggle] = useState(false);
 
   useEffect(() => {
     const v = ref.current;
@@ -49,6 +56,7 @@ export default function HeroFilm() {
     const finish = () => {
       if (state === "done") return;
       state = "done";
+      setShowToggle(false);
       v.pause();
       delete section.dataset.film; // film fades out, grid floor fades in
       delete html.dataset.intro; // copy + nav fade in
@@ -67,12 +75,16 @@ export default function HeroFilm() {
     // displacement counts as the visitor moving on.
     const onInput = (e: Event) => {
       if (e.type === "scroll" && window.scrollY < 4) return;
+      if ((e.target as Element | null)?.closest?.("[data-hero-sound]")) return; // the sound toggle is not "moving on"
       finish();
     };
     let playing = false;
     const onPlaying = () => {
       playing = true;
-      if (state === "intro") section.dataset.film = "on";
+      if (state === "intro") {
+        section.dataset.film = "on";
+        setShowToggle(true);
+      }
     };
 
     v.addEventListener("playing", onPlaying);
@@ -99,10 +111,40 @@ export default function HeroFilm() {
     };
   }, []);
 
+  const toggleSound = () => {
+    const v = ref.current;
+    if (!v) return;
+    v.muted = sound; // unmute on the click gesture; re-mute on the next
+    setSound(!sound);
+  };
+
   return (
     <>
       <video ref={ref} aria-hidden muted playsInline preload="none" className="nt-film -z-10" />
       <div aria-hidden className="nt-film-scrim -z-10" />
+      {showToggle && (
+        <button
+          type="button"
+          data-hero-sound
+          onClick={toggleSound}
+          aria-label={sound ? "Turn sound off" : "Turn sound on"}
+          aria-pressed={sound}
+          className="nt-sound bv-6 absolute bottom-6 right-6 z-20 flex h-10 items-center gap-2 px-3 font-body text-[0.8rem] text-ink/80 transition-colors hover:text-ink sm:bottom-8 sm:right-8"
+        >
+          <svg className="h-4 w-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round" aria-hidden>
+            <path d="M4 10v4h4l5 4V6L8 10H4Z" />
+            {sound ? (
+              <>
+                <path d="M16 9.5a3.5 3.5 0 0 1 0 5" />
+                <path d="M18.5 7a7 7 0 0 1 0 10" />
+              </>
+            ) : (
+              <path d="m16.5 9.5 4 5m0-5-4 5" />
+            )}
+          </svg>
+          <span>{sound ? "Sound on" : "Sound"}</span>
+        </button>
+      )}
     </>
   );
 }

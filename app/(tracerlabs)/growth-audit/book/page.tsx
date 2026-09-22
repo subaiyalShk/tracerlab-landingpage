@@ -6,7 +6,8 @@ import BookClient from "./BookClient";
 // Step 2 of the Growth Audit funnel: pick a time. Reached only by redirect from
 // the form, carrying an encrypted token — never indexed, never linked.
 export const metadata: Metadata = {
-  title: "Pick your Growth Audit time | Tracerlabs",
+  // The (tracerlabs) layout appends " | Tracerlabs" via its title template.
+  title: "Pick your Growth Audit time",
   robots: { index: false, follow: false },
 };
 

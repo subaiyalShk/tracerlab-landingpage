@@ -36,11 +36,14 @@ export default function HeroFilm() {
     if (!v || !section) return;
     const html = document.documentElement;
 
-    if (!shouldLoadFilm(readFilmEnv())) {
-      // Belt and braces: the bootstrap shouldn't have set data-intro either.
+    // No film if the page isn't at the top (deep link, restored scroll) or the
+    // policy vetoes it. Belt and braces: the bootstrap shouldn't have set
+    // data-intro in these cases either.
+    if (window.scrollY >= 4 || location.hash || !shouldLoadFilm(readFilmEnv())) {
       delete html.dataset.intro;
       return; // no request, ever
     }
+    window.scrollTo(0, 0);
 
     let state: "intro" | "done" = "intro";
     const finish = () => {

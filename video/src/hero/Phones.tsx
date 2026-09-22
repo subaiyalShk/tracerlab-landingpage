@@ -29,16 +29,28 @@ export const Phones: React.FC = () => {
   const { w, h } = L.phone;
   return (
     <svg style={{ position: "absolute", left: 0, top: 0, overflow: "visible", opacity: presence }} width={1} height={1}>
+      <defs>
+        <filter id="cloud-rim" x="-40%" y="-20%" width="180%" height="140%">
+          <feGaussianBlur stdDeviation={1.6} />
+        </filter>
+      </defs>
       {phonePositions(L.cluster).map((p, k) => {
         const glow = 0.5 + 0.3 * Math.sin(f / 11 + k);
+        const tint = 0.1 + 0.08 * (k % 3);
         return (
           <g key={k} transform={`translate(${p.x} ${p.y}) rotate(${p.tilt}) translate(${-w / 2} ${-h / 2})`}>
-            <rect x={0} y={0} width={w} height={h} rx={4} fill={P.surface} stroke={rgba(P.blue, 0.45)} strokeWidth={0.6} />
-            <rect x={2} y={4} width={w - 4} height={h - 8} rx={2} fill={rgba(P.blue, 0.08 + 0.1 * glow)} />
-            <rect x={6} y={10} width={w - 12} height={2} fill={rgba(P.ink, 0.25)} />
-            <rect x={6} y={15} width={w - 18} height={2} fill={rgba(P.ink, 0.15)} />
-            <rect x={6} y={22} width={w - 12} height={18} fill={rgba(P.blue, 0.14)} />
-            <ellipse cx={w / 2} cy={h / 2} rx={w * 0.9} ry={h * 0.6} fill={rgba(P.blue, 0.04 * glow)} />
+            <rect x={-0.4} y={-0.4} width={w + 0.8} height={h + 0.8} rx={6} fill={rgba(P.blue, 0.22 * glow)} filter="url(#cloud-rim)" />
+            <rect x={0} y={0} width={w} height={h} rx={5.6} fill={P.surface} stroke={rgba(P.blue, 0.5)} strokeWidth={0.45} />
+            <rect x={2} y={4} width={w - 4} height={h - 8} rx={3.6} fill={rgba(P.blue, tint)} />
+            <rect x={w / 2 - 4} y={5} width={8} height={2.2} rx={1.1} fill={P.bg} />
+            {/* a hint of a feed */}
+            <circle cx={6.5} cy={14} r={1.8} fill={rgba(P.ink, 0.3)} />
+            <rect x={9.5} y={12.8} width={12} height={1.1} rx={0.5} fill={rgba(P.ink, 0.35)} />
+            <rect x={9.5} y={15.2} width={8} height={1} rx={0.5} fill={rgba(P.ink, 0.2)} />
+            <rect x={4} y={19} width={w - 8} height={22} rx={1.6} fill={rgba(P.blue, 0.18 + 0.1 * glow)} />
+            <rect x={4} y={45} width={w - 8} height={1.1} rx={0.5} fill={rgba(P.ink, 0.25)} />
+            <rect x={4} y={48} width={w - 14} height={1.1} rx={0.5} fill={rgba(P.ink, 0.15)} />
+            <rect x={w / 2 - 6} y={h - 6.2} width={12} height={0.7} rx={0.35} fill={rgba(P.ink, 0.4)} />
           </g>
         );
       })}

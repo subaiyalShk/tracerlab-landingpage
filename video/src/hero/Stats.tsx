@@ -32,17 +32,41 @@ export const Stats: React.FC = () => {
   const a2 = window(f, BEATS.people.from + 10, BEATS.attention.from - 14); // gone with the map
 
   const rise = (a: number) => `translateY(${(1 - a) * 10}px)`;
+  const rule = (a: number) => ({ width: 64 * a, height: 1, background: rgba(P.blue, 0.7), margin: "0 auto" });
+  const block = (a: number, top: number): React.CSSProperties => ({
+    position: "absolute",
+    left: 0,
+    right: 0,
+    top,
+    opacity: a,
+    transform: rise(a),
+  });
   return (
     <div style={{ position: "absolute", inset: 0, pointerEvents: "none", fontFamily: display, textAlign: "center", color: P.ink }}>
-      <div style={{ position: "absolute", left: 0, right: 0, top: cy - fs.big, opacity: a1, transform: rise(a1) }}>
-        <div style={{ fontSize: fs.kicker, letterSpacing: 6, opacity: 0.55 }}>RIGHT NOW ON EARTH</div>
+      {/* soft backdrop so the figures sit on the map without fighting the dots */}
+      <div
+        style={{
+          position: "absolute",
+          left: "50%",
+          top: cy,
+          width: portrait ? width * 1.1 : width * 0.6,
+          height: portrait ? height * 0.34 : height * 0.5,
+          transform: "translate(-50%, -50%)",
+          background: `radial-gradient(ellipse at center, ${rgba(P.bg, 0.85)} 0%, ${rgba(P.bg, 0.55)} 45%, transparent 70%)`,
+          opacity: Math.max(a1, a2),
+        }}
+      />
+      <div style={block(a1, cy - fs.big)}>
+        <div style={{ fontSize: fs.kicker, letterSpacing: 6, opacity: 0.6 }}>RIGHT NOW ON EARTH</div>
+        <div style={{ ...rule(a1), marginTop: 10, marginBottom: 6 }} />
         <div style={{ fontSize: fs.big, fontWeight: 700, lineHeight: 1.1, letterSpacing: -2, fontVariantNumeric: "tabular-nums" }}>
           {count.toLocaleString("en-US")}
         </div>
         <div style={{ fontSize: fs.sub, opacity: 0.75 }}>people</div>
       </div>
-      <div style={{ position: "absolute", left: 0, right: 0, top: cy - fs.big, opacity: a2, transform: rise(a2) }}>
-        <div style={{ fontSize: fs.kicker, letterSpacing: 6, opacity: 0.55 }}>EVERY DAY, EACH OF THEM</div>
+      <div style={block(a2, cy - fs.big)}>
+        <div style={{ fontSize: fs.kicker, letterSpacing: 6, opacity: 0.6 }}>EVERY DAY, EACH OF THEM</div>
+        <div style={{ ...rule(a2), marginTop: 10, marginBottom: 6 }} />
         <div style={{ fontSize: fs.big, fontWeight: 700, lineHeight: 1.1, letterSpacing: -2 }}>
           {PHONE_HOURS.h}
           <span style={{ fontSize: fs.big * 0.5, opacity: 0.7 }}> h </span>

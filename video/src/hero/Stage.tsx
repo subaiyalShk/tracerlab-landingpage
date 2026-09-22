@@ -36,6 +36,16 @@ export const Stage: React.FC<{ children: ReactNode; overlay?: ReactNode }> = ({ 
         >
           {children}
         </div>
+        {/* cinematic vignette: darkens the frame's edges toward the page background */}
+        <div
+          style={{
+            position: "absolute",
+            inset: 0,
+            pointerEvents: "none",
+            background: `radial-gradient(ellipse 70% 62% at 50% 50%, transparent 55%, ${P.bg} 130%)`,
+            opacity: 0.85,
+          }}
+        />
         {overlay}
       </div>
     </AbsoluteFill>

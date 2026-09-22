@@ -42,33 +42,68 @@ export const Reveal: React.FC = () => {
     }));
   });
   const kicker = interpolate(f, [BEATS.reveal.to - 20, BEATS.reveal.to + 10], [0, 1], clamp);
+  const kickerY = L.ports[0].y - PORT_SIZE / 2 - 24;
+  // a port lights briefly whenever a pulse on one of its cables arrives (u ≈ 1)
+  const portLit = L.ports.map((_, pi) =>
+    Math.max(
+      0,
+      ...threads
+        .filter((_, k) => Math.floor(k / 2) % L.ports.length === pi)
+        .map((t) => {
+          const u = ((f / 90 + t.phase) % 1 + 1) % 1;
+          return u > 0.92 ? (u - 0.92) / 0.08 : 0;
+        }),
+    ),
+  );
   return (
     <svg style={{ position: "absolute", left: 0, top: 0, overflow: "visible", opacity: show }} width={1} height={1}>
+      <defs>
+        <linearGradient id="cable" x1="0" y1="0" x2="0" y2="1">
+          <stop offset="0" stopColor={rgba(P.blue, 0.12)} />
+          <stop offset="1" stopColor={rgba(P.blue, 0.42)} />
+        </linearGradient>
+        <filter id="port-glow" x="-50%" y="-50%" width="200%" height="200%">
+          <feGaussianBlur stdDeviation={6} />
+        </filter>
+      </defs>
       {threads.map((t, k) => (
-        <path key={k} d={cable(t.a, t.b)} fill="none" stroke={rgba(P.blue, 0.22)} strokeWidth={0.7} />
+        <path key={k} d={cable(t.a, t.b)} fill="none" stroke="url(#cable)" strokeWidth={0.8} />
       ))}
-      {/* pulses riding the cables into the ports (period 90 frames — divides 900) */}
+      {/* pulses with tails riding the cables into the ports (period 90 frames) */}
       {threads.map((t, k) => {
         const u = ((f / 90 + t.phase) % 1 + 1) % 1;
         const p = onCable(t.a, t.b, u);
-        return <circle key={`p${k}`} cx={p.x} cy={p.y} r={1.6} fill={rgba(P.blue, 0.9)} />;
+        const q = onCable(t.a, t.b, Math.max(0, u - 0.05));
+        return (
+          <g key={`p${k}`}>
+            <line x1={q.x} y1={q.y} x2={p.x} y2={p.y} stroke={rgba(P.blue, 0.45)} strokeWidth={1.4} strokeLinecap="round" />
+            <circle cx={p.x} cy={p.y} r={1.7} fill={rgba(P.blue, 1)} />
+          </g>
+        );
       })}
-      {/* THE MACHINE kicker sits above the ports */}
-      <text x={L.funnel.cx} y={L.ports[0].y - PORT_SIZE / 2 - 22} textAnchor="middle" fontFamily={display} fontSize={11} letterSpacing={3.5} fill={rgba(P.ink, 0.55 * kicker)}>
-        THE MACHINE
-      </text>
+      {/* THE MACHINE kicker with rules, above the ports */}
+      <g opacity={kicker}>
+        <line x1={L.funnel.cx - 150} y1={kickerY - 4} x2={L.funnel.cx - 62} y2={kickerY - 4} stroke={rgba(P.blue, 0.5)} strokeWidth={1} />
+        <line x1={L.funnel.cx + 62} y1={kickerY - 4} x2={L.funnel.cx + 150} y2={kickerY - 4} stroke={rgba(P.blue, 0.5)} strokeWidth={1} />
+        <text x={L.funnel.cx} y={kickerY} textAnchor="middle" fontFamily={display} fontSize={11} letterSpacing={3.5} fill={rgba(P.ink, 0.65)}>
+          THE MACHINE
+        </text>
+      </g>
       {/* intake ports with platform marks, each feeding straight down into the mouth */}
       {L.ports.map((port, k) => {
         const { Mark } = PLATFORMS[k];
         const x = port.x - PORT_SIZE / 2;
         const y = port.y - PORT_SIZE / 2;
+        const lit = portLit[k];
         return (
           <g key={`port${k}`}>
-            <path d={bevelPath(x, y, PORT_SIZE, PORT_SIZE)} fill={rgba(P.ink, 0.03)} stroke={rgba(P.blue, 0.6)} strokeWidth={1.2} />
+            {lit > 0 && <circle cx={port.x} cy={port.y} r={PORT_SIZE * 0.7} fill={rgba(P.blue, 0.35 * lit)} filter="url(#port-glow)" />}
+            <path d={bevelPath(x, y, PORT_SIZE, PORT_SIZE)} fill={rgba(P.ink, 0.04 + 0.05 * lit)} stroke={rgba(P.blue, 0.55 + 0.45 * lit)} strokeWidth={1.2} />
+            <path d={bevelPath(x + 3, y + 3, PORT_SIZE - 6, PORT_SIZE - 6, 5)} fill="none" stroke={rgba(P.ink, 0.06)} strokeWidth={1} />
             <g transform={`translate(${x + 10} ${y + 10})`}>
-              <Mark size={24} color={rgba(P.ink, 0.8)} />
+              <Mark size={24} color={rgba(P.ink, 0.8 + 0.2 * lit)} />
             </g>
-            <path d={`M${port.x} ${port.y + PORT_SIZE / 2} V${L.funnel.top}`} fill="none" stroke={rgba(P.blue, 0.45)} strokeWidth={1.4} />
+            <path d={`M${port.x} ${port.y + PORT_SIZE / 2} V${L.funnel.top}`} fill="none" stroke={rgba(P.blue, 0.45 + 0.4 * lit)} strokeWidth={1.4} />
           </g>
         );
       })}

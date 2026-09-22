@@ -53,6 +53,29 @@ Components (`app/components/`):
   exports `GLASS_BORDER`/`GLASS_BG` dark-frosted tokens), **Eyebrow** (section eyebrow),
   **Card** (THE site card — bevel + glass + hover glow).
 
+## Growth Audit funnel (`/growth-audit`) — paid traffic
+Two steps, both live. **Step 1** `LeadForm` → `/api/growth-audit-lead` → dealflow
+`/api/leads/intake` (header `x-intake-secret`) creates business → contact → lead and emails
+both super_users as tracy@tracerlabs.io. **Step 2** the response carries an **AES-256-GCM
+encrypted** token (`growth-audit/_lib/bookingToken.ts` — encrypted, not signed, because it
+rides in a URL) and the form redirects to `/growth-audit/book?t=…`, a day-rail + time-grid
+picker rendered in the visitor's own timezone. Confirming calls the proxies
+`/api/growth-audit/{slots,book}`, which forward to dealflow `/api/calendar/{slots,book}` —
+**all Google credentials stay in dealflow**, and the booking proxy takes the person's identity
+from the token, never the request body.
+- **Google Calendar is the only source of availability** (no bookings table): if Sufyan blocks
+  time in his own calendar the funnel stops offering it. Rules live in dealflow's
+  `src/lib/slots.ts` (`DEFAULT_SLOT_CONFIG`): 30-min slots, Mon–Fri 09:00–17:00
+  `America/Chicago`, 15-min buffer, 2 h notice, 14-day window. That file is pure and unit-tested.
+- The delegation is scoped to `calendar.readonly` + `calendar.events` — **not** full
+  `/auth/calendar`. Check it with `node --env-file=.env.local scripts/probe-calendar.mjs` in
+  dealflow. The Calendar API must stay enabled in GCP project `dealflow-487605`.
+- Prod env: `BOOKING_TOKEN_SECRET` (here), `BOOKING_CALENDAR_ID` + `LEAD_INTAKE_SECRET` (dealflow).
+- Spec/plan: `docs/superpowers/specs|plans/2026-09-22-growth-audit-booking*.md`.
+- ⚠️ Still open: no spam protection on the public form, the page is indexable and in the
+  sitemap, privacy/terms link to `/`, and the Meta/GA pixel is still a `REPLACE` marker (fire
+  the conversion on **booking confirmed**, not form submit).
+
 ## Copy rules (user-set, 2026-09-05)
 - **Never state exact client counts** — vague plurals only ("solar companies", "our solar
   portfolio"). Clients stay anonymized except Harbs Farm (already public on its case study).

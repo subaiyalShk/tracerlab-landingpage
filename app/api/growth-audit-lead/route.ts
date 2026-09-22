@@ -2,19 +2,45 @@ import { NextResponse } from "next/server";
 
 // Growth Audit funnel lead intake (/growth-audit form).
 //
-// ⚠️ STUB — same shape as /api/solar-lead: validates the payload and logs the lead,
-// then returns success so the form works end-to-end. Wire the real destination here
-// when ready — pick ONE (or more):
-//   • Resend  → email the lead to jarvis@tracerlabs.io
-//   • dealflow → forward to the existing intake/CRM webhook
-//   • the AI texting agent → kick off the "we'll text you in minutes" follow-up
-// None of these are called yet, so no keys are required to run the form.
+// Validates the payload, then forwards it to dealflow's server-to-server intake
+// (POST /api/leads/intake, shared secret) which creates the business → contact →
+// lead in the CRM and emails the team. The lead is always logged here first, so if
+// dealflow is unreachable nothing is lost and the visitor still sees "You're in."
+//
+// Vercel Production env: DEALFLOW_INTAKE_URL (e.g. https://dealflow.tracerlabs.io/api/leads/intake),
+// DEALFLOW_INTAKE_SECRET (must match dealflow's LEAD_INTAKE_SECRET). Both bind at build time.
 
 type LeadPayload = Record<string, unknown>;
 
 const REQUIRED = ["name", "phone", "email", "business_type", "ad_spend"] as const;
 const SOURCE_KEYS = ["utm_source", "utm_medium", "utm_campaign", "utm_content", "fbclid", "gclid"] as const;
 const EMAIL_RE = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+const LEAD_SOURCE = "Growth Audit funnel";
+
+async function forwardToDealflow(lead: Record<string, string>) {
+  const url = process.env.DEALFLOW_INTAKE_URL;
+  const secret = process.env.DEALFLOW_INTAKE_SECRET;
+  if (!url || !secret) {
+    console.warn("[growth-audit-lead] DEALFLOW_INTAKE_URL/SECRET not set — lead logged only");
+    return false;
+  }
+  try {
+    const res = await fetch(url, {
+      method: "POST",
+      headers: { "Content-Type": "application/json", "x-intake-secret": secret },
+      body: JSON.stringify({ ...lead, source: LEAD_SOURCE }),
+      signal: AbortSignal.timeout(8000),
+    });
+    if (!res.ok) {
+      console.error("[growth-audit-lead] dealflow rejected lead:", res.status, await res.text().catch(() => ""));
+      return false;
+    }
+    return true;
+  } catch (err) {
+    console.error("[growth-audit-lead] dealflow unreachable:", err);
+    return false;
+  }
+}
 
 export async function POST(request: Request) {
   let body: LeadPayload;
@@ -46,14 +72,13 @@ export async function POST(request: Request) {
   const pick = (keys: readonly string[]) =>
     Object.fromEntries(keys.filter((k) => typeof body[k] === "string").map((k) => [k, (body[k] as string).trim()]));
 
-  const lead = {
-    ...pick(REQUIRED),
-    source: { channel: "growth-audit-funnel", ...pick(SOURCE_KEYS) },
-    submittedAt: new Date().toISOString(),
-  };
+  const lead = { ...pick(REQUIRED), ...pick(SOURCE_KEYS) } as Record<string, string>;
 
-  // TODO: replace this log with the real destination (Resend / dealflow / texting agent).
-  console.log("[growth-audit-lead] new lead", JSON.stringify(lead));
+  // Log first: this is the fallback record if the CRM hand-off fails.
+  console.log("[growth-audit-lead] new lead", JSON.stringify({ ...lead, submittedAt: new Date().toISOString() }));
+
+  const crm = await forwardToDealflow(lead);
+  if (!crm) console.error("[growth-audit-lead] NOT in dealflow — recover from this log:", lead.email);
 
   return NextResponse.json({ ok: true });
 }

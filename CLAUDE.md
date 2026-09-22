@@ -13,6 +13,8 @@ Originally a legacy static HTML/CSS/JS site; now **fully migrated to React compo
 - **Deploy:** push to `main` → Vercel auto-deploys to production (www.tracerlabs.io).
   Branch `v2` = the old static site, kept as a rollback. Prod env vars live in Vercel’s
   Production scope and bind at **build time** (a new push is needed after changing them).
+- `npm test` — unit tests (tsx + node:test) for the hero film policy.
+- `cd video && npm test` for the film's pure logic.
 
 ## Page structure
 `app/(tracerlabs)/page.tsx` composes the page entirely from React:
@@ -21,12 +23,13 @@ There is **no more injected legacy markup** — `app/_landing/markup.ts` (MARKUP
 retired/unused.
 
 Components (`app/components/`):
-- **Hero** — copy-only, centered: typewriter headline (`TypedHeadline` — rAF *time-based*, never
-  `setInterval`, which Chrome throttles in background tabs; transparent full-text ghost prevents
-  layout shift and keeps SEO text) over the grid-floor scene with `.nt-pulse` signal streaks
+- **Hero** — copy-only, centered: the headline and every copy line fade/rise in on a CSS
+  stagger (`animate-rise`; the typewriter `TypedHeadline` was retired 2026-09-21 — the full
+  headline is plain server HTML) over the grid-floor scene with `.nt-pulse` signal streaks
   (offsets = multiples of the 46px grid column) + breathing horizon. **Retired-but-kept side
   visuals:** `TelemetryPanel` (stat dashboard), `MachinePanel` (animated pipeline) — on disk,
   unmounted; restoring either is a two-line change in Hero.
+  **Hero film (2026-09-18):** `HeroFilm` mounts a silent full-bleed loop under the copy — one file per orientation × theme (`public/hero/loop-{16x9,9x16}[-light].mp4`, ≤2.5 MB each, first frame = flat page background), attached post-idle (touch devices: after the first scroll/tap, so the `<h1>` stays the LCP element); a theme toggle or rotation fades out, swaps the file and fades back in on `playing`. Bails out (no request) only under reduced-motion / Save-Data, where the grid-floor scene remains the hero. `data-film="on"` on `#tl-hero` while playing. Load rules are pure + tested (`heroFilmPolicy.ts`, `npm test`). The film itself lives in `video/src/hero/` (Remotion `HeroLoop`/`HeroLoopMobile` + `…Light` variants — one keyframed camera over theme-blind vector scenes that read colors via `usePalette()`; `npm test` there covers camera/land/layout); re-encode with `bash scripts/encode-hero.sh` (`ONLY=light|dark` for one pair, `VERIFY_ONLY=1` to just probe; the light pair uses crf 29 to fit the budget). Spec: `docs/superpowers/specs/2026-09-18-hero-film-design.md`.
 - **TechBar** — monochrome tech-logo marquee. Swappable with **ProofWall** (outcome-figures
   strip, on disk unmounted) for the under-hero slot; user chose the marquee (2026-09-05).
 - **Services** (4-stage bento; per-card `Figures` = attributed outcome numbers; featured card
@@ -77,10 +80,16 @@ The page died by a thousand compositing cuts. Do not reintroduce these:
 - **`content-visibility:auto`** on the 4 below-fold sections, masked by `.cv-fade` (a
   TRANSFORM-ONLY slide-up — an opacity keyframe can strand sections invisible when
   animations don't run, e.g. throttled tabs).
+- **Scroll parallax = CSS scroll-driven animations only** (`.nt-px` / `.nt-px-bg` /
+  `.nt-px-window` in globals.css, `animation-timeline: view()`; `Card depth={px}` opts a card
+  in). Zero JS, compositor-only, no-op on older Safari / reduced-motion. Never add a JS scroll
+  listener or Motion `useScroll` for this. ⚠️ `view()` binds to the nearest SCROLL CONTAINER and
+  `overflow: hidden` counts — the below-fold sections, Bevel's fill and the media windows use
+  `overflow-clip`; putting `overflow-hidden` back on any ancestor silently freezes the parallax.
 - **No session-replay scripts** (Hotjar/Contentsquare removed — they hook every scroll and
   were the dominant jank after the rendering fixes). Re-add only as a deliberate decision.
-- TypedHeadline renders the FULL headline visible in server HTML (LCP); the ghost goes
-  transparent only after the first typed character. Don't "simplify" that away.
+- The headline is plain text in the server HTML (SEO / no-JS); its entrance is CSS-only
+  (`animate-rise`), so never gate it behind hydration or JS state.
 
 ## Design system — "sharp technical dark"
 - **Geometry:** chamfered corners everywhere via `clip-path` — `.bv-6`/`.bv-9` utilities (globals)

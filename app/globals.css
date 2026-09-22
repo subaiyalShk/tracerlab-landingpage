@@ -621,6 +621,98 @@ html[data-theme="light"] {
      blur on two huge layers (hero + CTA) cost real compositing. */
   background: var(--nt-horizon);
 }
+#tl-hero[data-film="on"] .nt-horizon {
+  animation: none;
+}
+#tl-hero[data-film="on"] .nt-gridfloor::before,
+#tl-hero[data-film="on"] .nt-pulse {
+  animation-play-state: paused; /* invisible under the film — don't animate for nothing */
+}
+
+/* ── Hero film: silent full-bleed loop under the copy (spec 2026-09-18) ──
+   Attached post-idle by HeroFilm.tsx; data-film="on" on #tl-hero while it
+   plays. Fades are opacity-only; the video is a single compositor layer.
+   The scrim is a plain radial gradient (never a filter) that keeps the
+   center column quiet under the headline. */
+.nt-film {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  pointer-events: none;
+  opacity: 0;
+  transition: opacity 1.2s ease;
+}
+.nt-film-scrim {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  opacity: 0;
+  transition: opacity 1.2s ease;
+  background:
+    radial-gradient(ellipse 48% 62% at 50% 46%, rgba(0, 0, 0, 0.72) 0%, rgba(0, 0, 0, 0.35) 55%, transparent 100%),
+    linear-gradient(180deg, rgba(0, 0, 0, 0.55) 0%, transparent 18%, transparent 88%, #000 100%);
+}
+/* Light theme: the same scrim in the page's light grey (--tl-page #eef0f4). */
+html[data-theme="light"] .nt-film-scrim {
+  background:
+    radial-gradient(ellipse 48% 62% at 50% 46%, rgba(238, 240, 244, 0.78) 0%, rgba(238, 240, 244, 0.4) 55%, transparent 100%),
+    linear-gradient(180deg, rgba(238, 240, 244, 0.6) 0%, transparent 18%, transparent 88%, #eef0f4 100%);
+}
+#tl-hero[data-film="on"] .nt-film,
+#tl-hero[data-film="on"] .nt-film-scrim {
+  opacity: 1;
+}
+/* Intro: <html data-intro="on"> is set pre-paint by the bootstrap script when the
+   film will play, and cleared by HeroFilm when the first pass completes (or on
+   any input / failure). The copy waits at opacity 0 and the scrim eases off so
+   the film has the whole frame; both come back together. */
+/* Hand-over choreography (from black): the grid-floor scene fades in first
+   (1.2 s, below), the copy follows a beat later, the nav last. */
+#tl-hero .nt-copy {
+  transition: opacity 0.9s ease 0.35s;
+}
+html[data-intro="on"] #tl-hero .nt-copy {
+  opacity: 0;
+  pointer-events: none;
+  transition: none; /* hide instantly whenever this applies (dev injects CSS post-paint); the fade only runs on reveal */
+}
+html[data-intro="on"] #tl-hero[data-film="on"] .nt-film-scrim {
+  opacity: 0.35;
+}
+/* Sound toggle: a quiet glass chip in the corner, only while the intro plays. */
+.nt-sound {
+  background: rgba(0, 0, 0, 0.5);
+  box-shadow: inset 0 0 0 1px rgba(255, 255, 255, 0.16);
+  opacity: 0;
+  animation: ntSoundIn 0.6s ease 0.4s forwards;
+}
+html[data-theme="light"] .nt-sound {
+  background: rgba(238, 240, 244, 0.7);
+  box-shadow: inset 0 0 0 1px rgba(11, 13, 18, 0.14);
+}
+@keyframes ntSoundIn {
+  to { opacity: 1; }
+}
+/* The nav hides with the copy during the intro (the hero sits under it, so the
+   film fills the viewport) and fades back with it. */
+#tl-nav {
+  transition: opacity 0.9s ease 0.6s;
+}
+html[data-intro="on"] #tl-nav {
+  opacity: 0;
+  pointer-events: none;
+  transition: none;
+}
+#tl-hero .nt-gridfloor,
+#tl-hero .nt-horizon {
+  transition: opacity 1.2s ease;
+}
+#tl-hero[data-film="on"] .nt-gridfloor,
+#tl-hero[data-film="on"] .nt-horizon {
+  opacity: 0;
+}
 
 /* Film grain over the whole page (dark mode only) — the "expensive texture". */
 .nt-grain {
@@ -679,19 +771,6 @@ html[data-theme="light"] .nt-grain {
   100% { background-position: -80% 0; }
 }
 
-/* Blinking terminal cursor (reuses the typing-dot blink keyframes). */
-.nt-cursor {
-  display: inline-block;
-  width: 0.1em;
-  height: 0.82em;
-  margin-left: 0.1em;
-  background: #056afc;
-  box-shadow: 0 0 14px rgba(5, 106, 252, 0.8);
-  animation: blink 1.2s steps(1) infinite;
-}
-
-
-
 /* Section kicker — a short gradient dash above section labels. */
 .nt-kicker {
   display: block;
@@ -709,7 +788,6 @@ html[data-theme="light"] .nt-grain {
 
 @media (prefers-reduced-motion: reduce) {
   .nt-sheen { animation: none; background-position: 120% 0; }
-  .nt-cursor { animation: none; }
 }
 
 /* Card frame (Card.tsx wrapper): hover lift + shadows. Shadows are BOX-SHADOW
@@ -723,4 +801,51 @@ html[data-theme="light"] .nt-grain {
 .nt-cardframe:hover {
   transform: translateY(-3px);
   box-shadow: var(--nt-underglow);
+}
+
+/* ── Scroll parallax (CSS scroll-driven, zero JS) ──────────────────────────
+   Each `.nt-px` element travels from +--px to −--px along its own view()
+   timeline (enter bottom → leave top), so a bigger --px reads as nearer to
+   the viewer and a negative one as further back. Runs on the compositor —
+   no scroll listener, no React re-render — and is a no-op wherever
+   scroll-driven animations aren't supported (older Safari) or motion is
+   reduced. Cards animate the `translate` property so the :hover lift
+   (`transform`) still composes; backgrounds use `transform` because the
+   Cta glow is positioned with Tailwind's `translate` utilities.
+   ⚠️ view() measures against the nearest SCROLL CONTAINER, and
+   `overflow: hidden` counts as one — every clipping ancestor of a parallax
+   element (sections, Bevel's fill, media windows) must use `overflow: clip`
+   instead, or the timeline pins to the clip and nothing moves. */
+@supports (animation-timeline: view()) {
+  @media (prefers-reduced-motion: no-preference) {
+    .nt-px {
+      --px: 20px;
+      animation: ntPx linear both;
+      animation-timeline: view();
+    }
+    @keyframes ntPx {
+      from { translate: 0 var(--px); }
+      to { translate: 0 calc(var(--px) * -1); }
+    }
+    .nt-px-bg {
+      --px: -100px;
+      animation: ntPxBg linear both;
+      animation-timeline: view();
+    }
+    @keyframes ntPxBg {
+      from { transform: translateY(var(--px)); }
+      to { transform: translateY(calc(var(--px) * -1)); }
+    }
+    /* Window: the media inside a clipped frame is oversized and slides slower
+       than the frame, so it reads as sitting behind glass. */
+    .nt-px-window > :is(img, video) {
+      scale: 1.12;
+      animation: ntPxWindow linear both;
+      animation-timeline: view();
+    }
+    @keyframes ntPxWindow {
+      from { translate: 0 -5%; }
+      to { translate: 0 5%; }
+    }
+  }
 }

@@ -1,16 +1,19 @@
-// Homepage hero — copy only, centered: the typewriter headline IS the hero,
-// staged on the grid-floor scene with nothing competing for attention. The
+// Homepage hero — copy only, centered: the headline IS the hero, staged on
+// the grid-floor scene with nothing competing for attention. Every line
+// fades/rises in on a stagger (animate-rise) — no typewriter. The
 // real client numbers live in the case studies below (/work/*); TelemetryPanel
 // and MachinePanel are kept on disk if a side visual is ever wanted back.
-// Quiet by design: no auroras/scanlines/particles, no scroll-reveal gating.
+// Backdrop = the hero film (HeroFilm, spec 2026-09-18); the grid-floor scene
+// is its fallback state. Still no scroll-reveal gating.
 import Button from "./Button";
-import TypedHeadline from "./TypedHeadline";
+import HeroFilm from "./HeroFilm";
+import HeroCopy from "./HeroCopy";
 
 const DISPLAY = "var(--font-archivo), system-ui, sans-serif";
 
 export default function Hero() {
   return (
-    <section id="tl-hero" className="font-body relative isolate w-full overflow-hidden bg-page text-ink">
+    <section id="tl-hero" className="font-body relative isolate -mt-16 w-full overflow-hidden bg-page text-ink">
       {/* ── Ambient light (one of two on the page — the other sits behind the CTA) */}
       <div
         aria-hidden
@@ -41,14 +44,17 @@ export default function Hero() {
         <span className="nt-pulse" style={{ left: 1012, ["--pulse-dur" as string]: "10s", ["--pulse-delay" as string]: "0s" }} />
         <span className="nt-pulse nt-pulse-pink" style={{ left: 1380, ["--pulse-dur" as string]: "17s", ["--pulse-delay" as string]: "7.5s" }} />
       </div>
-      <div className="mx-auto flex min-h-[calc(100dvh-4rem)] w-full max-w-[1280px] items-center justify-center px-6 py-10 sm:px-10 sm:py-12">
-        <div className="flex min-w-0 max-w-[52rem] flex-col items-center text-center">
+      <HeroFilm />
+      {/* The section starts UNDER the sticky nav (-mt-16 + pt-16 here) so the film
+          can own the whole viewport while the nav is hidden during the intro. */}
+      <div className="mx-auto flex min-h-[100dvh] w-full max-w-[1280px] items-center justify-center px-6 pb-10 pt-16 sm:px-10 sm:pb-12">
+        <HeroCopy className="flex min-w-0 max-w-[52rem] flex-col items-center text-center">
           <p className="animate-rise text-[0.98rem] text-ink/50">Tracerlabs — AI development studio</p>
           <h1
             className="animate-rise mt-5 text-[clamp(2rem,min(4.8vw,7vh),3.9rem)] font-normal uppercase leading-[1.1] tracking-tight"
             style={{ fontFamily: "var(--font-duborics), var(--font-archivo), sans-serif", animationDelay: "0.08s" }}
           >
-            <TypedHeadline text="We build the machine that grows your business." />
+            <span className="nt-sheen">We build the machine that grows your business.</span>
           </h1>
           <p className="animate-rise mt-6 max-w-[38rem] text-[1.1rem] leading-[1.65] text-ink/60" style={{ animationDelay: "0.18s" }}>
             Ads in, booked jobs out. Funnels, AI follow-up, booking systems,
@@ -71,7 +77,7 @@ export default function Hero() {
             on systems we built. Every number in the case studies below is
             live production data.
           </p>
-        </div>
+        </HeroCopy>
       </div>
     </section>
   );

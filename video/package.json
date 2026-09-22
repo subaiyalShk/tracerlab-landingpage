@@ -6,11 +6,17 @@
   "scripts": {
     "studio": "remotion studio",
     "render": "remotion render Problem out/problem.mp4",
-    "render:mobile": "remotion render ProblemMobile out/problem-mobile.mp4"
+    "render:mobile": "remotion render ProblemMobile out/problem-mobile.mp4",
+    "test": "tsx --test src/hero/*.test.ts",
+    "still:hero": "remotion still HeroLoop",
+    "render:hero": "remotion render HeroLoop out/hero-16x9.mp4 --codec h264",
+    "render:hero:mobile": "remotion render HeroLoopMobile out/hero-9x16.mp4 --codec h264"
   },
   "dependencies": {
     "@remotion/cli": "4.0.380",
     "@remotion/google-fonts": "4.0.380",
+    "@remotion/motion-blur": "^4.0.380",
+    "@remotion/noise": "^4.0.380",
     "@remotion/transitions": "^4.0.380",
     "react": "19.0.0",
     "react-dom": "19.0.0",
@@ -18,6 +24,7 @@
   },
   "devDependencies": {
     "@types/react": "19.0.0",
+    "tsx": "^4.23.0",
     "typescript": "5.7.2"
   }
 }

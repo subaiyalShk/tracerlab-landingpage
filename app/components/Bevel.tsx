@@ -37,8 +37,10 @@ export default function Bevel({
   // lives as a cheap box-shadow on .nt-cardframe (the unclipped wrapper).
   return (
     <div className={`relative ${className}`} style={{ clipPath: c, backgroundColor: border, ...style }}>
+      {/* overflow-clip (not hidden): a hidden overflow is a scroll container and
+          would capture the view() timelines of parallax media inside cards */}
       <div
-        className={`absolute inset-px overflow-hidden ${innerClassName}`}
+        className={`absolute inset-px overflow-clip ${innerClassName}`}
         style={{ clipPath: c, background: bg }}
       />
       <div className="relative z-10 h-full">{children}</div>

@@ -4,6 +4,7 @@
 // "voice field"; the three steps hang on a gradient thread. A visible
 // "Book a call directly" button covers visitors who won't take a voice call.
 // Server component: reads env to decide whether voice is provisioned.
+import type { CSSProperties } from "react";
 import VoiceWidget from "./VoiceWidget";
 import Button from "./Button";
 import Card from "./Card";
@@ -21,12 +22,14 @@ export default function Cta() {
   const calcomUrl = process.env.NEXT_PUBLIC_CAL_BOOKING_LINK || "https://cal.com/team/tracerlabs/discovery-call";
 
   return (
-    <section id="tl-cta" style={{ containIntrinsicSize: "auto 1400px" }} className="cv-auto font-body relative isolate w-full overflow-hidden bg-page text-ink">
-      {/* ambient glow behind the orb — the page's second (and last) ambient light */}
+    <section id="tl-cta" style={{ containIntrinsicSize: "auto 1400px" }} className="cv-auto font-body relative isolate w-full overflow-clip bg-page text-ink">
+      {/* ambient glow behind the orb — the page's second (and last) ambient
+          light; parallaxed (nt-px-bg animates transform, so the centering
+          translate utilities keep working) */}
       <div
         aria-hidden
-        className="pointer-events-none absolute left-1/2 top-1/3 -z-10 h-[46vw] w-[58vw] -translate-x-1/2 -translate-y-1/2 rounded-full"
-        style={{ background: "radial-gradient(circle closest-side, var(--nt-ambient-pink) 0%, var(--nt-ambient-blue) 55%, transparent 100%)" }}
+        className="nt-px-bg pointer-events-none absolute left-1/2 top-1/3 -z-10 h-[46vw] w-[58vw] -translate-x-1/2 -translate-y-1/2 rounded-full"
+        style={{ background: "radial-gradient(circle closest-side, var(--nt-ambient-pink) 0%, var(--nt-ambient-blue) 55%, transparent 100%)", "--px": "-80px" } as CSSProperties}
       />
       {/* the scene returns — closing bookend to the hero's grid floor */}
       <div aria-hidden className="nt-horizon -z-10" />
@@ -80,9 +83,9 @@ export default function Cta() {
         <div className="relative mt-5 w-full">
           <div aria-hidden className="nt-hairline absolute left-0 right-0 top-[2.6rem] hidden sm:block" />
           <ol className="grid w-full list-none grid-cols-1 gap-4 p-0 text-left sm:grid-cols-3">
-            {STEPS.map((s) => (
+            {STEPS.map((s, i) => (
               <li key={s.n}>
-                <Card bevel={10} className="h-full" contentClassName="p-5 pt-6">
+                <Card bevel={10} depth={i === 1 ? 18 : 10} className="h-full" contentClassName="p-5 pt-6">
                 <span
                   aria-hidden
                   className="nt-ghost-num"

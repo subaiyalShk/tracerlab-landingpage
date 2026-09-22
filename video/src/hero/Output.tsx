@@ -3,46 +3,74 @@ import { BEATS, funnelBottom, rgba, useLayout, usePalette } from "./config";
 import { bevelPath } from "./Reveal";
 import { display } from "../theme";
 
-// The revenue scene, directly under the funnel's spout: pulses fall from the
-// spout into a chamfered panel and become a rising line (warm area fill,
-// glowing tip); three outcome chips land along the bottom — Booked (the pink),
-// Confirmed, Paid. No figures: the shape and the chips carry "money" (the
-// site's copy rule: every published number must be defensible).
-const OUTCOMES = [
-  { label: "Booked", pink: true },
-  { label: "Confirmed", pink: false },
-  { label: "Paid", pink: false },
+// The finale, directly under the funnel's spout: an operations DASHBOARD —
+// the kind we build — coming alive as the pulses drop in. Four KPI tiles
+// (value counting up, delta, sparkline), the revenue curve, and the pipeline
+// column (Booked → Confirmed → Paid, pink on Booked). It is a product mock,
+// tagged SAMPLE DATA: the site's copy rule is that every published number
+// must be defensible, and these illustrate the dashboard, not a result.
+const KPIS = [
+  { label: "Leads", to: 128, delta: "↑ 18%", spark: [3, 4, 4, 5, 6, 7, 9, 10] },
+  { label: "Booked", to: 41, delta: "↑ 24%", spark: [2, 2, 3, 3, 4, 5, 6, 7] },
+  { label: "Show rate", to: 91, unit: "%", delta: "↑ 6 pts", spark: [5, 5, 6, 6, 7, 7, 8, 8] },
+  { label: "Paid", to: 37, delta: "↑ 31%", spark: [1, 2, 2, 3, 4, 4, 6, 7] },
 ] as const;
-const CHIP_AT = (k: number) => BEATS.output.from + 50 + k * 28;
-const PAD = 26;
+const PIPELINE = [
+  { label: "Booked", fill: 1, pink: true },
+  { label: "Confirmed", fill: 0.82, pink: false },
+  { label: "Paid", fill: 0.7, pink: false },
+] as const;
+const PAD = 22;
+const clamp = { extrapolateLeft: "clamp", extrapolateRight: "clamp" } as const;
+const t0 = BEATS.output.from;
+
+const sparkPath = (v: readonly number[], x: number, y: number, w: number, h: number, prog: number) => {
+  const max = Math.max(...v);
+  const n = Math.max(2, Math.ceil(v.length * prog));
+  return v
+    .slice(0, n)
+    .map((val, k) => `${k ? "L" : "M"}${x + (k / (v.length - 1)) * w} ${y + h - (val / max) * h}`)
+    .join(" ");
+};
 
 export const Output: React.FC = () => {
   const P = usePalette();
   const f = useCurrentFrame();
   const L = useLayout();
   const { x, y, w, h } = L.output;
-  const clamp = { extrapolateLeft: "clamp", extrapolateRight: "clamp" } as const;
-  const show = interpolate(f, [BEATS.output.from, BEATS.output.from + 20], [0, 1], clamp);
-  const grow = interpolate(f, [BEATS.output.from + 18, BEATS.output.from + 110], [0, 1], { easing: Easing.out(Easing.cubic), ...clamp });
+  const show = interpolate(f, [t0, t0 + 20], [0, 1], clamp);
+  const prog = interpolate(f, [t0 + 18, t0 + 110], [0, 1], { easing: Easing.out(Easing.cubic), ...clamp });
 
-  // chart area inside the panel: baseline above the chip row
+  // header + tiles + body split
+  const headerY = y + 24;
+  const tileY = y + 44;
+  const tileH = 74;
+  const gap = 10;
+  const tileW = (w - PAD * 2 - gap * 3) / 4;
+  const bodyY = tileY + tileH + 16;
+  const bodyH = y + h - bodyY - PAD;
+  const chartW = (w - PAD * 2) * 0.6;
   const cx0 = x + PAD;
-  const cx1 = x + w - PAD;
-  const base = y + h - 62;
-  const topY = y + 44;
+  const cx1 = cx0 + chartW;
+  const base = bodyY + bodyH - 6;
+  const topY = bodyY + 14;
+  const pipeX = cx1 + 22;
+  const pipeW = x + w - PAD - pipeX;
+
+  // revenue curve
   const N = 40;
   const pts = Array.from({ length: N + 1 }, (_, k) => {
     const u = k / N;
-    const rise = Math.pow(u, 1.6); // slow start, steep finish
+    const rise = Math.pow(u, 1.6);
     const wobble = Math.sin(u * 19) * 0.02 + Math.sin(u * 7.3) * 0.03;
     const v = Math.min(1, Math.max(0, rise + wobble * (1 - u)));
-    return { u, x: cx0 + u * (cx1 - cx0), y: base - v * (base - topY) };
-  }).filter((p) => p.u <= grow + 1e-9);
+    return { u, x: cx0 + u * chartW, y: base - v * (base - topY) };
+  }).filter((p) => p.u <= prog + 1e-9);
   const line = pts.map((p, k) => `${k ? "L" : "M"}${p.x} ${p.y}`).join(" ");
   const tip = pts[pts.length - 1];
   const area = tip ? `${line} L${tip.x} ${base} L${cx0} ${base} Z` : "";
 
-  // pulses from the spout into the panel's top edge (period divides the beat)
+  // pulses from the spout into the panel's top edge
   const spoutX = L.funnel.cx;
   const spoutY = funnelBottom(L.funnel) + 26;
   const drop = (k: number) => (((f / 45 + k / 3) % 1) + 1) % 1;
@@ -60,41 +88,76 @@ export const Output: React.FC = () => {
       {[0, 1, 2].map((k) => (
         <circle key={k} cx={spoutX} cy={spoutY + drop(k) * (y - spoutY)} r={2.6} fill={rgba(P.blue, 0.95)} />
       ))}
+
       {/* the panel */}
       <path d={bevelPath(x, y, w, h, 12)} fill={rgba(P.ink, 0.035)} stroke={rgba(P.blue, 0.6)} strokeWidth={1.4} />
-      <text x={x + PAD} y={y + 26} fontFamily={display} fontSize={10} letterSpacing={3} fill={rgba(P.ink, 0.55)}>
+      <text x={x + PAD} y={headerY} fontFamily={display} fontSize={10} letterSpacing={3} fill={rgba(P.ink, 0.55)}>
+        OPERATIONS
+      </text>
+      <text x={x + PAD + 92} y={headerY} fontFamily={display} fontSize={9} fill={rgba(P.ink, 0.35)}>
+        This week ▾
+      </text>
+      <text x={x + w - PAD} y={headerY} textAnchor="end" fontFamily={display} fontSize={8} letterSpacing={2} fill={rgba(P.ink, 0.35)}>
+        SAMPLE DATA
+      </text>
+
+      {/* KPI tiles */}
+      {KPIS.map((k, i) => {
+        const tx = x + PAD + i * (tileW + gap);
+        const a = interpolate(f, [t0 + 10 + i * 8, t0 + 22 + i * 8], [0, 1], clamp);
+        const val = Math.round(interpolate(f, [t0 + 14 + i * 8, t0 + 80 + i * 8], [0, k.to], { easing: Easing.out(Easing.cubic), ...clamp }));
+        const unit = "unit" in k ? k.unit : "";
+        return (
+          <g key={k.label} opacity={a} transform={`translate(0 ${(1 - a) * 6})`}>
+            <path d={bevelPath(tx, tileY, tileW, tileH, 6)} fill={rgba(P.ink, 0.04)} stroke={rgba(P.blue, 0.3)} strokeWidth={1} />
+            <text x={tx + 10} y={tileY + 16} fontFamily={display} fontSize={8} letterSpacing={1.2} fill={rgba(P.ink, 0.5)}>
+              {k.label.toUpperCase()}
+            </text>
+            <text x={tx + 10} y={tileY + 42} fontFamily={display} fontSize={24} fontWeight={700} fill={rgba(P.ink, 0.95)}>
+              {val}
+              {unit}
+            </text>
+            <text x={tx + 10} y={tileY + 62} fontFamily={display} fontSize={9} fill={rgba(P.blue, 0.95)}>
+              {k.delta}
+            </text>
+            <path d={sparkPath(k.spark, tx + tileW - 46, tileY + 40, 36, 20, prog)} fill="none" stroke={rgba(P.blue, 0.8)} strokeWidth={1.4} strokeLinejoin="round" />
+          </g>
+        );
+      })}
+
+      {/* revenue curve */}
+      <text x={cx0} y={bodyY + 2} fontFamily={display} fontSize={8} letterSpacing={2} fill={rgba(P.ink, 0.45)}>
         REVENUE
       </text>
-      <text x={x + w - PAD} y={y + 26} textAnchor="end" fontFamily={display} fontSize={10} letterSpacing={1} fill={rgba(P.blue, 0.9)}>
-        ↗ growing
-      </text>
-      {/* grid + baseline */}
-      {[0.25, 0.5, 0.75].map((g) => (
+      {[0.33, 0.66].map((g) => (
         <line key={g} x1={cx0} y1={base - g * (base - topY)} x2={cx1} y2={base - g * (base - topY)} stroke={rgba(P.ink, 0.06)} strokeWidth={1} />
       ))}
       <line x1={cx0} y1={base} x2={cx1} y2={base} stroke={rgba(P.ink, 0.18)} strokeWidth={1} />
-      {/* the line */}
       {area && <path d={area} fill="url(#rev-area)" />}
       <path d={line} fill="none" stroke={rgba(P.blue, 0.95)} strokeWidth={2.2} strokeLinejoin="round" strokeLinecap="round" />
       {tip && (
         <g>
-          <circle cx={tip.x} cy={tip.y} r={10} fill={rgba(P.blue, 0.18)} />
-          <circle cx={tip.x} cy={tip.y} r={4} fill={rgba(P.blue, 1)} />
+          <circle cx={tip.x} cy={tip.y} r={9} fill={rgba(P.blue, 0.18)} />
+          <circle cx={tip.x} cy={tip.y} r={3.5} fill={rgba(P.blue, 1)} />
         </g>
       )}
-      {/* outcome chips along the bottom */}
-      {OUTCOMES.map((o, k) => {
-        const a = interpolate(f, [CHIP_AT(k), CHIP_AT(k) + 12], [0, 1], clamp);
-        const cw = (w - PAD * 2 - 16) / 3;
-        const cxk = x + PAD + k * (cw + 8);
-        const cy = y + h - 44 + (1 - a) * 6;
-        const c = o.pink ? P.pink : P.blue;
+
+      {/* pipeline column */}
+      <text x={pipeX} y={bodyY + 2} fontFamily={display} fontSize={8} letterSpacing={2} fill={rgba(P.ink, 0.45)}>
+        PIPELINE
+      </text>
+      {PIPELINE.map((p, i) => {
+        const rowY = bodyY + 18 + i * ((bodyH - 18) / 3);
+        const a = interpolate(f, [t0 + 50 + i * 22, t0 + 62 + i * 22], [0, 1], clamp);
+        const fill = interpolate(f, [t0 + 56 + i * 22, t0 + 110 + i * 22], [0, p.fill], { easing: Easing.out(Easing.cubic), ...clamp });
+        const c = p.pink ? P.pink : P.blue;
         return (
-          <g key={o.label} opacity={a}>
-            <path d={bevelPath(cxk, cy, cw, 26, 5)} fill={rgba(c, 0.1)} stroke={rgba(c, 0.8)} strokeWidth={1} />
-            <text x={cxk + cw / 2} y={cy + 17} textAnchor="middle" fontFamily={display} fontSize={11} letterSpacing={1.5} fill={rgba(P.ink, 0.92)}>
-              {o.label.toUpperCase()}
+          <g key={p.label} opacity={a}>
+            <text x={pipeX} y={rowY + 8} fontFamily={display} fontSize={9} letterSpacing={1.2} fill={rgba(P.ink, 0.85)}>
+              {p.label.toUpperCase()}
             </text>
+            <rect x={pipeX} y={rowY + 14} width={pipeW} height={6} fill={rgba(P.ink, 0.08)} />
+            <rect x={pipeX} y={rowY + 14} width={pipeW * fill} height={6} fill={rgba(c, 0.9)} />
           </g>
         );
       })}

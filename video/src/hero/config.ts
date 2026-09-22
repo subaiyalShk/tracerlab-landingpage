@@ -111,7 +111,7 @@ const build = (portrait: boolean): Layout => {
     phone,
     funnel,
     ports,
-    output: { x: funnel.cx - 280, y: bottom + 56, w: 560, h: 280 }, // the revenue panel under the spout
+    output: { x: funnel.cx - 280, y: bottom + 56, w: 560, h: 330 }, // the dashboard panel under the spout
     anchorZoom: portrait ? { x: 0.5, y: 0.31 } : { x: 0.2, y: 0.5 }, // portrait: phone + the chip column below it read as one centered group
   };
 };

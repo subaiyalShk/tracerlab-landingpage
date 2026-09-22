@@ -1,5 +1,6 @@
-// Homepage hero — copy only, centered: the typewriter headline IS the hero,
-// staged on the grid-floor scene with nothing competing for attention. The
+// Homepage hero — copy only, centered: the headline IS the hero, staged on
+// the grid-floor scene with nothing competing for attention. Every line
+// fades/rises in on a stagger (animate-rise) — no typewriter. The
 // real client numbers live in the case studies below (/work/*); TelemetryPanel
 // and MachinePanel are kept on disk if a side visual is ever wanted back.
 // Backdrop = the hero film (HeroFilm, spec 2026-09-18); the grid-floor scene
@@ -7,7 +8,6 @@
 import Button from "./Button";
 import HeroFilm from "./HeroFilm";
 import HeroCopy from "./HeroCopy";
-import TypedHeadline from "./TypedHeadline";
 
 const DISPLAY = "var(--font-archivo), system-ui, sans-serif";
 
@@ -54,7 +54,7 @@ export default function Hero() {
             className="animate-rise mt-5 text-[clamp(2rem,min(4.8vw,7vh),3.9rem)] font-normal uppercase leading-[1.1] tracking-tight"
             style={{ fontFamily: "var(--font-duborics), var(--font-archivo), sans-serif", animationDelay: "0.08s" }}
           >
-            <TypedHeadline text="We build the machine that grows your business." />
+            <span className="nt-sheen">We build the machine that grows your business.</span>
           </h1>
           <p className="animate-rise mt-6 max-w-[38rem] text-[1.1rem] leading-[1.65] text-ink/60" style={{ animationDelay: "0.18s" }}>
             Ads in, booked jobs out. Funnels, AI follow-up, booking systems,

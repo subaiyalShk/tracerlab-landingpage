@@ -771,19 +771,6 @@ html[data-theme="light"] .nt-grain {
   100% { background-position: -80% 0; }
 }
 
-/* Blinking terminal cursor (reuses the typing-dot blink keyframes). */
-.nt-cursor {
-  display: inline-block;
-  width: 0.1em;
-  height: 0.82em;
-  margin-left: 0.1em;
-  background: #056afc;
-  box-shadow: 0 0 14px rgba(5, 106, 252, 0.8);
-  animation: blink 1.2s steps(1) infinite;
-}
-
-
-
 /* Section kicker — a short gradient dash above section labels. */
 .nt-kicker {
   display: block;
@@ -801,7 +788,6 @@ html[data-theme="light"] .nt-grain {
 
 @media (prefers-reduced-motion: reduce) {
   .nt-sheen { animation: none; background-position: 120% 0; }
-  .nt-cursor { animation: none; }
 }
 
 /* Card frame (Card.tsx wrapper): hover lift + shadows. Shadows are BOX-SHADOW

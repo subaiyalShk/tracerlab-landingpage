@@ -23,9 +23,9 @@ There is **no more injected legacy markup** — `app/_landing/markup.ts` (MARKUP
 retired/unused.
 
 Components (`app/components/`):
-- **Hero** — copy-only, centered: typewriter headline (`TypedHeadline` — rAF *time-based*, never
-  `setInterval`, which Chrome throttles in background tabs; transparent full-text ghost prevents
-  layout shift and keeps SEO text) over the grid-floor scene with `.nt-pulse` signal streaks
+- **Hero** — copy-only, centered: the headline and every copy line fade/rise in on a CSS
+  stagger (`animate-rise`; the typewriter `TypedHeadline` was retired 2026-09-21 — the full
+  headline is plain server HTML) over the grid-floor scene with `.nt-pulse` signal streaks
   (offsets = multiples of the 46px grid column) + breathing horizon. **Retired-but-kept side
   visuals:** `TelemetryPanel` (stat dashboard), `MachinePanel` (animated pipeline) — on disk,
   unmounted; restoring either is a two-line change in Hero.
@@ -82,8 +82,8 @@ The page died by a thousand compositing cuts. Do not reintroduce these:
   animations don't run, e.g. throttled tabs).
 - **No session-replay scripts** (Hotjar/Contentsquare removed — they hook every scroll and
   were the dominant jank after the rendering fixes). Re-add only as a deliberate decision.
-- TypedHeadline renders the FULL headline visible in server HTML (LCP); the ghost goes
-  transparent only after the first typed character. Don't "simplify" that away.
+- The headline is plain text in the server HTML (SEO / no-JS); its entrance is CSS-only
+  (`animate-rise`), so never gate it behind hydration or JS state.
 
 ## Design system — "sharp technical dark"
 - **Geometry:** chamfered corners everywhere via `clip-path` — `.bv-6`/`.bv-9` utilities (globals)

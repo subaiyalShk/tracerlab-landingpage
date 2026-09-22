@@ -51,7 +51,11 @@ export async function POST(request: Request) {
     });
     const json = await res.json().catch(() => ({}));
     if (res.status === 409) {
-      return NextResponse.json({ ok: false, error: "That time was just taken — pick another." }, { status: 409 });
+      // Two shapes of 409: the slot filled up, or the time was never on offer
+      // (only reachable by a crafted request). Pass the upstream reason through
+      // — both are safe to show and the distinction helps when debugging.
+      const reason = typeof json.error === "string" && json.error ? json.error : "That time was just taken";
+      return NextResponse.json({ ok: false, error: `${reason} — pick another.` }, { status: 409 });
     }
     if (!res.ok || !json.success) {
       console.error("[growth-audit/book] dealflow said", res.status, json);

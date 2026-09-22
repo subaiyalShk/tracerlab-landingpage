@@ -43,28 +43,17 @@ export const Reveal: React.FC = () => {
   });
   const kicker = interpolate(f, [BEATS.reveal.to - 20, BEATS.reveal.to + 10], [0, 1], clamp);
   const kickerY = L.ports[0].y - PORT_SIZE / 2 - 24;
-  // a port lights briefly whenever a pulse on one of its cables arrives (u ≈ 1)
-  const portLit = L.ports.map((_, pi) =>
-    Math.max(
-      0,
-      ...threads
-        .filter((_, k) => Math.floor(k / 2) % L.ports.length === pi)
-        .map((t) => {
-          const u = ((f / 90 + t.phase) % 1 + 1) % 1;
-          return u > 0.92 ? (u - 0.92) / 0.08 : 0;
-        }),
-    ),
-  );
   return (
     <svg style={{ position: "absolute", left: 0, top: 0, overflow: "visible", opacity: show }} width={1} height={1}>
       <defs>
+        <linearGradient id="glass" x1="0" y1="0" x2="0" y2="1">
+          <stop offset="0" stopColor={rgba(P.blue, 0.18)} />
+          <stop offset="1" stopColor={rgba(P.blue, 0.05)} />
+        </linearGradient>
         <linearGradient id="cable" x1="0" y1="0" x2="0" y2="1">
           <stop offset="0" stopColor={rgba(P.blue, 0.12)} />
           <stop offset="1" stopColor={rgba(P.blue, 0.42)} />
         </linearGradient>
-        <filter id="port-glow" x="-50%" y="-50%" width="200%" height="200%">
-          <feGaussianBlur stdDeviation={6} />
-        </filter>
       </defs>
       {threads.map((t, k) => (
         <path key={k} d={cable(t.a, t.b)} fill="none" stroke="url(#cable)" strokeWidth={0.8} />
@@ -94,16 +83,14 @@ export const Reveal: React.FC = () => {
         const { Mark } = PLATFORMS[k];
         const x = port.x - PORT_SIZE / 2;
         const y = port.y - PORT_SIZE / 2;
-        const lit = portLit[k];
         return (
           <g key={`port${k}`}>
-            {lit > 0 && <circle cx={port.x} cy={port.y} r={PORT_SIZE * 0.7} fill={rgba(P.blue, 0.35 * lit)} filter="url(#port-glow)" />}
-            <path d={bevelPath(x, y, PORT_SIZE, PORT_SIZE)} fill={rgba(P.ink, 0.04 + 0.05 * lit)} stroke={rgba(P.blue, 0.55 + 0.45 * lit)} strokeWidth={1.2} />
-            <path d={bevelPath(x + 3, y + 3, PORT_SIZE - 6, PORT_SIZE - 6, 5)} fill="none" stroke={rgba(P.ink, 0.06)} strokeWidth={1} />
+            <path d={bevelPath(x, y, PORT_SIZE, PORT_SIZE)} fill="url(#glass)" stroke={rgba(P.blue, 0.6)} strokeWidth={1.2} />
+            <line x1={x + 8} y1={y + 1.3} x2={x + PORT_SIZE - 8} y2={y + 1.3} stroke={rgba(P.ink, 0.18)} strokeWidth={1} />
             <g transform={`translate(${x + 10} ${y + 10})`}>
-              <Mark size={24} color={rgba(P.ink, 0.8 + 0.2 * lit)} />
+              <Mark size={24} color={rgba(P.ink, 0.85)} />
             </g>
-            <path d={`M${port.x} ${port.y + PORT_SIZE / 2} V${L.funnel.top}`} fill="none" stroke={rgba(P.blue, 0.45 + 0.4 * lit)} strokeWidth={1.4} />
+            <path d={`M${port.x} ${port.y + PORT_SIZE / 2} V${L.funnel.top}`} fill="none" stroke={rgba(P.blue, 0.5)} strokeWidth={1.4} />
           </g>
         );
       })}

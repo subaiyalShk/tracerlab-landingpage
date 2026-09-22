@@ -94,9 +94,6 @@ export const Output: React.FC = () => {
         <pattern id="dash-grid" width={16} height={16} patternUnits="userSpaceOnUse">
           <path d="M16 0H0V16" fill="none" stroke={rgba(P.ink, 0.035)} strokeWidth={1} />
         </pattern>
-        <filter id="tile-glow" x="-20%" y="-40%" width="140%" height="180%">
-          <feGaussianBlur stdDeviation={8} />
-        </filter>
       </defs>
       <path d={bevelPath(x, y, w, h, 12)} fill={rgba(P.ink, 0.035)} stroke={rgba(P.blue, 0.6)} strokeWidth={1.4} />
       <path d={bevelPath(x, y, w, h, 12)} fill="url(#dash-grid)" />
@@ -106,7 +103,7 @@ export const Output: React.FC = () => {
       <text x={x + PAD + 92} y={headerY} fontFamily={display} fontSize={9} fill={rgba(P.ink, 0.35)}>
         This week ▾
       </text>
-      <circle cx={x + w - PAD - 30} cy={headerY - 3} r={2.4} fill={rgba(P.blue, 0.5 + 0.5 * Math.abs(Math.sin(f / 12)))} />
+      <circle cx={x + w - PAD - 30} cy={headerY - 3} r={2.4} fill={rgba(P.blue, 0.65 + 0.35 * Math.sin(f / 30))} />
       <text x={x + w - PAD} y={headerY} textAnchor="end" fontFamily={display} fontSize={8} letterSpacing={2} fill={rgba(P.ink, 0.45)}>
         LIVE
       </text>
@@ -117,11 +114,10 @@ export const Output: React.FC = () => {
         const a = interpolate(f, [t0 + 10 + i * 8, t0 + 22 + i * 8], [0, 1], clamp);
         const val = Math.round(interpolate(f, [t0 + 14 + i * 8, t0 + 80 + i * 8], [0, k.to], { easing: Easing.out(Easing.cubic), ...clamp }));
         const unit = "unit" in k ? k.unit : "";
-        const counting = f > t0 + 14 + i * 8 && f < t0 + 84 + i * 8 ? 1 : 0;
         return (
           <g key={k.label} opacity={a} transform={`translate(0 ${(1 - a) * 6})`}>
-            {counting === 1 && <path d={bevelPath(tx, tileY, tileW, tileH, 6)} fill={rgba(P.blue, 0.25)} filter="url(#tile-glow)" />}
-            <path d={bevelPath(tx, tileY, tileW, tileH, 6)} fill={rgba(P.ink, 0.04 + 0.03 * counting)} stroke={rgba(P.blue, 0.3 + 0.4 * counting)} strokeWidth={1} />
+            <path d={bevelPath(tx, tileY, tileW, tileH, 6)} fill={rgba(P.ink, 0.045)} stroke={rgba(P.blue, 0.4)} strokeWidth={1} />
+            <line x1={tx + 8} y1={tileY + 1.2} x2={tx + tileW - 8} y2={tileY + 1.2} stroke={rgba(P.ink, 0.14)} strokeWidth={1} />
             <text x={tx + 10} y={tileY + 16} fontFamily={display} fontSize={8} letterSpacing={1.2} fill={rgba(P.ink, 0.5)}>
               {k.label.toUpperCase()}
             </text>

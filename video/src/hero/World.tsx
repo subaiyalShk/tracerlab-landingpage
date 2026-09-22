@@ -47,8 +47,8 @@ export const World: React.FC = () => {
         const breathe = 0.5 + 0.5 * Math.sin(t + ph);
         const scan = Math.max(0, 1 - Math.abs(p.x - scanX) / band);
         const hub = k % HUB_EVERY === 0;
-        const hubPulse = hub ? 0.5 + 0.5 * Math.sin(f / 9 + ph) : 0;
-        const a = Math.min(1, 0.2 + 0.16 * breathe + 0.5 * scan + 0.45 * hubPulse);
+        const hubPulse = hub ? 0.5 + 0.5 * Math.sin(f / 28 + ph) : 0;
+        const a = Math.min(1, 0.2 + 0.16 * breathe + 0.5 * scan + 0.3 * hubPulse);
         return (
           <g key={k}>
             {hub && <circle cx={p.x} cy={p.y} r={r * (2.2 + 1.2 * hubPulse)} fill={rgba(P.blue, 0.12 * hubPulse)} />}

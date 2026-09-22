@@ -20,6 +20,7 @@ type Props = {
   external?: boolean;
   onClick?: () => void;
   type?: "button" | "submit";
+  disabled?: boolean;
   className?: string;
   "aria-label"?: string;
 };
@@ -32,6 +33,7 @@ export default function Button({
   external,
   onClick,
   type = "button",
+  disabled,
   className = "",
   ...rest
 }: Props) {
@@ -70,7 +72,7 @@ export default function Button({
     );
   }
   return (
-    <button type={type} onClick={onClick} style={style} className={cls} {...rest}>
+    <button type={type} onClick={onClick} disabled={disabled} style={style} className={cls} {...rest}>
       {content}
     </button>
   );

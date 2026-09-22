@@ -52,6 +52,11 @@ export default function HeroFilm() {
       v.pause();
       delete section.dataset.film; // film fades out, grid floor fades in
       delete html.dataset.intro; // copy + nav fade in
+      try {
+        history.scrollRestoration = "auto"; // the bootstrap disabled it for the intro; normal service resumes
+      } catch {
+        /* ignore */
+      }
       window.dispatchEvent(new Event(HERO_INTRO_DONE)); // HeroCopy re-mounts → headline types in
       INPUT_EVENTS.forEach((n) => window.removeEventListener(n, onInput));
       v.removeEventListener("ended", finish);

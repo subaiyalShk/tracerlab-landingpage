@@ -4,6 +4,7 @@ import { PLATFORMS } from "./marks";
 import { bevelPath } from "./Reveal";
 import { SCREEN_FRAMES, screenAt } from "./Phone";
 import { display } from "../theme";
+import { pop, popTransform } from "./springs";
 
 const CHIP_DELAY = 8; // frames after a screen arrives before its chip lands
 const CHIP_W = 36;
@@ -40,14 +41,13 @@ export const PlatformChips: React.FC = () => {
 
         {PLATFORMS.map(({ name, surface, Mark }, k) => {
           const at = k * SCREEN_FRAMES + CHIP_DELAY;
-          const a = interpolate(t, [at, at + 10], [0, 1], clamp);
-          const dx = (1 - a) * (portrait ? 0 : 5);
-          const dy = (1 - a) * (portrait ? 4 : 0);
+          const sp = pop(t, at);
+          const a = Math.min(1, sp * 1.6);
           const cy = chipY0 + k * (CHIP_H + GAP);
           const lit = k === active && f < BEATS.reveal.from ? 1 : 0;
           const stroke = rgba(P.blue, 0.35 + 0.6 * lit);
           return (
-            <g key={name} opacity={a} transform={`translate(${dx} ${dy})`}>
+            <g key={name} opacity={a} transform={popTransform(sp, chipX + CHIP_W / 2, cy + CHIP_H / 2, portrait ? 4 : 0)}>
               <path d={bevelPath(chipX, cy, CHIP_W, CHIP_H, 1.8)} fill={rgba(P.ink, 0.04 + 0.03 * lit)} stroke={stroke} strokeWidth={0.32} />
               {/* accent bar */}
               <rect x={chipX + 0.9} y={cy + 1.6} width={0.55} height={CHIP_H - 3.2} rx={0.27} fill={rgba(lit ? P.blue : P.ink, lit ? 1 : 0.3)} />

@@ -2,6 +2,7 @@ import { Easing, interpolate, useCurrentFrame } from "remotion";
 import { BEATS, funnelBottom, rgba, useLayout, usePalette } from "./config";
 import { bevelPath } from "./Reveal";
 import { display } from "../theme";
+import { SOFT, pop, popTransform } from "./springs";
 
 // The finale, directly under the funnel's spout: an operations DASHBOARD —
 // the kind we build — coming alive as the pulses drop in. Four KPI tiles
@@ -38,7 +39,8 @@ export const Output: React.FC = () => {
   const f = useCurrentFrame();
   const L = useLayout();
   const { x, y, w, h } = L.output;
-  const show = interpolate(f, [t0, t0 + 20], [0, 1], clamp);
+  const panelS = pop(f, t0 + 2, SOFT);
+  const show = Math.min(1, panelS * 1.6);
   const prog = interpolate(f, [t0 + 18, t0 + 110], [0, 1], { easing: Easing.out(Easing.cubic), ...clamp });
 
   // header + tiles + body split
@@ -77,6 +79,7 @@ export const Output: React.FC = () => {
 
   return (
     <svg style={{ position: "absolute", left: 0, top: 0, overflow: "visible", opacity: show }} width={1} height={1}>
+      <g transform={popTransform(panelS, x + w / 2, y + h / 2, 16)}>
       <defs>
         <linearGradient id="rev-area" x1="0" y1="0" x2="0" y2="1">
           <stop offset="0" stopColor={rgba(P.amber, 0.28)} />
@@ -111,11 +114,12 @@ export const Output: React.FC = () => {
       {/* KPI tiles */}
       {KPIS.map((k, i) => {
         const tx = x + PAD + i * (tileW + gap);
-        const a = interpolate(f, [t0 + 10 + i * 8, t0 + 22 + i * 8], [0, 1], clamp);
+        const sp = pop(f, t0 + 10 + i * 8);
+        const a = Math.min(1, sp * 1.6);
         const val = Math.round(interpolate(f, [t0 + 14 + i * 8, t0 + 80 + i * 8], [0, k.to], { easing: Easing.out(Easing.cubic), ...clamp }));
         const unit = "unit" in k ? k.unit : "";
         return (
-          <g key={k.label} opacity={a} transform={`translate(0 ${(1 - a) * 6})`}>
+          <g key={k.label} opacity={a} transform={popTransform(sp, tx + tileW / 2, tileY + tileH / 2, 10)}>
             <path d={bevelPath(tx, tileY, tileW, tileH, 6)} fill={rgba(P.ink, 0.045)} stroke={rgba(P.blue, 0.4)} strokeWidth={1} />
             <line x1={tx + 8} y1={tileY + 1.2} x2={tx + tileW - 8} y2={tileY + 1.2} stroke={rgba(P.ink, 0.14)} strokeWidth={1} />
             <text x={tx + 10} y={tileY + 16} fontFamily={display} fontSize={8} letterSpacing={1.2} fill={rgba(P.ink, 0.5)}>
@@ -156,11 +160,12 @@ export const Output: React.FC = () => {
       </text>
       {PIPELINE.map((p, i) => {
         const rowY = bodyY + 18 + i * ((bodyH - 18) / 3);
-        const a = interpolate(f, [t0 + 50 + i * 22, t0 + 62 + i * 22], [0, 1], clamp);
+        const rs = pop(f, t0 + 50 + i * 22);
+        const a = Math.min(1, rs * 1.6);
         const fill = interpolate(f, [t0 + 56 + i * 22, t0 + 110 + i * 22], [0, p.fill], { easing: Easing.out(Easing.cubic), ...clamp });
         const c = p.pink ? P.pink : P.blue;
         return (
-          <g key={p.label} opacity={a}>
+          <g key={p.label} opacity={a} transform={popTransform(rs, pipeX + pipeW / 2, rowY + 10, 8)}>
             <text x={pipeX} y={rowY + 8} fontFamily={display} fontSize={9} letterSpacing={1.2} fill={rgba(P.ink, 0.85)}>
               {p.label.toUpperCase()}
             </text>
@@ -172,6 +177,7 @@ export const Output: React.FC = () => {
           </g>
         );
       })}
+      </g>
     </svg>
   );
 };

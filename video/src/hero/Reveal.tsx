@@ -3,6 +3,7 @@ import { BEATS, rgba, useLayout, type Pt, usePalette } from "./config";
 import { cloudFloat, phonePositions } from "./Phones";
 import { PLATFORMS } from "./marks";
 import { display } from "../theme";
+import { pop, popTransform } from "./springs";
 
 export const PORT_SIZE = 44;
 
@@ -47,7 +48,9 @@ export const Reveal: React.FC = () => {
       phase: (k * 2 + n) / (phones.length * 2),
     }));
   });
-  const kicker = interpolate(f, [BEATS.reveal.to - 20, BEATS.reveal.to + 10], [0, 1], clamp);
+  const kickerS = pop(f, BEATS.reveal.to - 16);
+  const kicker = Math.min(1, kickerS * 1.6);
+  const PORT_AT = (k: number) => BEATS.reveal.from + 58 + k * 5; // ports arrive left → right as the camera dives
   const kickerY = L.ports[0].y - PORT_SIZE / 2 - 24;
   return (
     <svg style={{ position: "absolute", left: 0, top: 0, overflow: "visible", opacity: show }} width={1} height={1}>
@@ -77,7 +80,7 @@ export const Reveal: React.FC = () => {
         );
       })}
       {/* THE MACHINE kicker with rules, above the ports */}
-      <g opacity={kicker}>
+      <g opacity={kicker} transform={popTransform(kickerS, L.funnel.cx, kickerY - 4, 8)}>
         <line x1={L.funnel.cx - 150} y1={kickerY - 4} x2={L.funnel.cx - 62} y2={kickerY - 4} stroke={rgba(P.blue, 0.5)} strokeWidth={1} />
         <line x1={L.funnel.cx + 62} y1={kickerY - 4} x2={L.funnel.cx + 150} y2={kickerY - 4} stroke={rgba(P.blue, 0.5)} strokeWidth={1} />
         <text x={L.funnel.cx} y={kickerY} textAnchor="middle" fontFamily={display} fontSize={11} letterSpacing={3.5} fill={rgba(P.ink, 0.65)}>
@@ -89,8 +92,9 @@ export const Reveal: React.FC = () => {
         const { Mark } = PLATFORMS[k];
         const x = port.x - PORT_SIZE / 2;
         const y = port.y - PORT_SIZE / 2;
+        const sp = pop(f, PORT_AT(k));
         return (
-          <g key={`port${k}`}>
+          <g key={`port${k}`} opacity={Math.min(1, sp * 1.6)} transform={popTransform(sp, port.x, port.y, 8)}>
             <path d={bevelPath(x, y, PORT_SIZE, PORT_SIZE)} fill="url(#glass)" stroke={rgba(P.blue, 0.6)} strokeWidth={1.2} />
             <line x1={x + 8} y1={y + 1.3} x2={x + PORT_SIZE - 8} y2={y + 1.3} stroke={rgba(P.ink, 0.18)} strokeWidth={1} />
             <g transform={`translate(${x + 10} ${y + 10})`}>

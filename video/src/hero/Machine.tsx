@@ -1,6 +1,7 @@
 import { interpolate, useCurrentFrame } from "remotion";
 import { BEATS, STAGES, funnelBottom, rgba, tierRect, useLayout, usePalette, type Funnel } from "./config";
 import { display } from "../theme";
+import { SOFT, pop, popTransform } from "./springs";
 
 // THE MACHINE, drawn as a funnel: four narrowing tiers = the four STAGES of
 // the service-business stack, top of funnel → paid. Pulses fall through the
@@ -48,6 +49,7 @@ export const Machine: React.FC = () => {
   const fn = L.funnel;
   const clamp = { extrapolateLeft: "clamp", extrapolateRight: "clamp" } as const;
   const exists = interpolate(f, [BEATS.reveal.from + 60, BEATS.reveal.from + 100], [0, 1], clamp);
+  const TIER_AT = (k: number) => BEATS.reveal.from + 66 + k * 7; // tiers build top → bottom as the camera lands
   const labelsOut = interpolate(f, [BEATS.output.from + 10, BEATS.output.from + 30], [1, 0], clamp);
   const top = fn.top;
   const bottom = funnelBottom(fn);
@@ -95,18 +97,20 @@ export const Machine: React.FC = () => {
         const r = tierRect(fn, k);
         const cy = r.y + r.h / 2;
         const depth = k / 3; // 0 at the mouth → 1 at the spout
-        const a = interpolate(f, [LABEL_AT(k), LABEL_AT(k) + 12], [0, 1], clamp) * labelsOut;
+        const ls = pop(f, LABEL_AT(k));
+        const a = Math.min(1, ls * 1.6) * labelsOut;
+        const ts = pop(f, TIER_AT(k), SOFT);
         const inset = (r.w - bottomWidth(fn, k)) / 2; // the slanted edge's run
         const left = r.x + inset + 10;
         const right = r.x + r.w - inset - 10;
         const iconX = right - 24; // icon tile mirrors the badge on the right
         return (
-          <g key={st.title}>
+          <g key={st.title} opacity={Math.min(1, ts * 1.6)} transform={popTransform(ts, fn.cx, cy, 14)}>
             {/* glass tier: translucent fill, bevel, top highlight, stroke brightening with depth */}
             <path d={tierPath(fn, k)} fill="url(#tier-glass)" stroke={rgba(P.blue, 0.5 + 0.4 * depth)} strokeWidth={1.4} />
             <path d={tierPath(fn, k, 8)} fill="none" stroke={rgba(P.ink, 0.06)} strokeWidth={1} transform={`translate(0 2)`} />
             <rect x={r.x + 14} y={r.y + 1.2} width={r.w - 28} height={1.2} fill="url(#tier-sheen)" />
-            <g opacity={a} transform={`translate(0 ${(1 - a) * 6})`}>
+            <g opacity={a} transform={popTransform(ls, fn.cx, cy, 6)}>
               {/* number badge + icon tile */}
               <circle cx={left + 8} cy={cy} r={8} fill={rgba(P.blue, 0.95)} />
               <text x={left + 8} y={cy + 3.4} textAnchor="middle" fontFamily={display} fontSize={fs.num} fontWeight={700} fill={P.bg}>

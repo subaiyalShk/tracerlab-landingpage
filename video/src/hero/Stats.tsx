@@ -1,5 +1,6 @@
 import { Easing, interpolate, useCurrentFrame, useVideoConfig } from "remotion";
 import { BEATS, rgba, usePalette, usePortraitFilm } from "./config";
+import { SOFT, enter, pop } from "./springs";
 import { display } from "../theme";
 
 // Opening stats, in screen space over the world and people beats: the scale
@@ -31,16 +32,21 @@ export const Stats: React.FC = () => {
   // Beat 2 — the habit.
   const a2 = window(f, BEATS.people.from + 10, BEATS.attention.from - 14); // gone with the map
 
-  const rise = (a: number) => `translateY(${(1 - a) * 10}px)`;
+  // spring entrances; the fade-outs keep the linear windows
+  const s1 = pop(f, BEATS.world.from + 6, SOFT);
+  const s2 = pop(f, BEATS.people.from + 10, SOFT);
   const rule = (a: number) => ({ width: 64 * a, height: 1, background: rgba(P.blue, 0.7), margin: "0 auto" });
-  const block = (a: number, top: number): React.CSSProperties => ({
-    position: "absolute",
-    left: 0,
-    right: 0,
-    top,
-    opacity: a,
-    transform: rise(a),
-  });
+  const block = (a: number, sp: number, top: number): React.CSSProperties => {
+    const e = enter(sp, 18);
+    return {
+      position: "absolute",
+      left: 0,
+      right: 0,
+      top,
+      opacity: Math.min(a, e.opacity),
+      transform: `translateY(${e.dy}px) scale(${e.scale})`,
+    };
+  };
   return (
     <div style={{ position: "absolute", inset: 0, pointerEvents: "none", fontFamily: display, textAlign: "center", color: P.ink }}>
       {/* soft backdrop so the figures sit on the map without fighting the dots */}
@@ -56,7 +62,7 @@ export const Stats: React.FC = () => {
           opacity: Math.max(a1, a2),
         }}
       />
-      <div style={block(a1, cy - fs.big)}>
+      <div style={block(a1, s1, cy - fs.big)}>
         <div style={{ fontSize: fs.kicker, letterSpacing: 6, opacity: 0.6 }}>RIGHT NOW ON EARTH</div>
         <div style={{ ...rule(a1), marginTop: 10, marginBottom: 6 }} />
         <div style={{ fontSize: fs.big, fontWeight: 700, lineHeight: 1.1, letterSpacing: -2, fontVariantNumeric: "tabular-nums" }}>
@@ -64,7 +70,7 @@ export const Stats: React.FC = () => {
         </div>
         <div style={{ fontSize: fs.sub, opacity: 0.75 }}>people</div>
       </div>
-      <div style={block(a2, cy - fs.big)}>
+      <div style={block(a2, s2, cy - fs.big)}>
         <div style={{ fontSize: fs.kicker, letterSpacing: 6, opacity: 0.6 }}>EVERY DAY, EACH OF THEM</div>
         <div style={{ ...rule(a2), marginTop: 10, marginBottom: 6 }} />
         <div style={{ fontSize: fs.big, fontWeight: 700, lineHeight: 1.1, letterSpacing: -2 }}>

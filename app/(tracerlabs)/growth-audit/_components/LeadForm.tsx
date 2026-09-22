@@ -1,6 +1,7 @@
 "use client";
 
 import { useState, type ReactNode } from "react";
+import { useRouter } from "next/navigation";
 import Bevel, { GLASS_BG, GLASS_BORDER } from "../../../components/Bevel";
 import Button from "../../../components/Button";
 import { AD_SPEND, BUSINESS_TYPES, LEAD_ENDPOINT } from "../config";
@@ -75,6 +76,7 @@ function Field({ label, htmlFor, error, children }: { label: string; htmlFor: st
 }
 
 export default function LeadForm() {
+  const router = useRouter();
   const [values, setValues] = useState<Values>({ name: "", phone: "", email: "", business_type: "", ad_spend: "" });
   const [errors, setErrors] = useState<Errors>({});
   const [status, setStatus] = useState<"idle" | "submitting" | "success" | "error">("idle");
@@ -117,7 +119,14 @@ export default function LeadForm() {
       const json = await res.json().catch(() => ({}));
       if (!res.ok || !json.ok) throw new Error(json.error || "Something went wrong.");
       // REPLACE: fire conversion on success, e.g. fbq('track','Lead') + CAPI event with matching event_id
-      // REPLACE: or redirect to a thank-you page URL (preferred for tracking)
+      // Straight into step 2 — the booking page carries an encrypted token, so
+      // no lead details ride in the URL. Stay in "submitting" through the
+      // navigation so the button never flashes back to its idle label.
+      if (json.token) {
+        router.push(`/growth-audit/book?t=${encodeURIComponent(json.token as string)}`);
+        return;
+      }
+      // No token (the CRM hand-off failed) — never send them to a page that cannot book.
       setStatus("success");
     } catch (err) {
       setServerError(err instanceof Error ? err.message : "Something went wrong.");
@@ -135,7 +144,7 @@ export default function LeadForm() {
             <h2 className="text-[1.65rem] font-extrabold leading-[1.15] tracking-[-0.02em]" style={{ fontFamily: DISPLAY }}>
               You&rsquo;re in.
             </h2>
-            <p className="mt-2 text-ink/60">Check your phone. Our AI will text you in the next few minutes to lock in your audit time.</p>
+            <p className="mt-2 text-ink/60">We&rsquo;ve got your details — we&rsquo;ll be in touch shortly to lock in your audit time.</p>
           </div>
         ) : (
           <>

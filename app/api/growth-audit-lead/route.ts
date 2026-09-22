@@ -1,4 +1,5 @@
 import { NextResponse } from "next/server";
+import { mint } from "../../(tracerlabs)/growth-audit/_lib/bookingToken";
 
 // Growth Audit funnel lead intake (/growth-audit form).
 //
@@ -17,12 +18,12 @@ const SOURCE_KEYS = ["utm_source", "utm_medium", "utm_campaign", "utm_content", 
 const EMAIL_RE = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
 const LEAD_SOURCE = "Growth Audit funnel";
 
-async function forwardToDealflow(lead: Record<string, string>) {
+async function forwardToDealflow(lead: Record<string, string>): Promise<string | null> {
   const url = process.env.DEALFLOW_INTAKE_URL;
   const secret = process.env.DEALFLOW_INTAKE_SECRET;
   if (!url || !secret) {
     console.warn("[growth-audit-lead] DEALFLOW_INTAKE_URL/SECRET not set — lead logged only");
-    return false;
+    return null;
   }
   try {
     const res = await fetch(url, {
@@ -33,12 +34,14 @@ async function forwardToDealflow(lead: Record<string, string>) {
     });
     if (!res.ok) {
       console.error("[growth-audit-lead] dealflow rejected lead:", res.status, await res.text().catch(() => ""));
-      return false;
+      return null;
     }
-    return true;
+    // The lead id is what lets the visitor book: it ties the appointment back to this lead.
+    const json = (await res.json().catch(() => ({}))) as { lead_id?: string };
+    return json.lead_id ?? null;
   } catch (err) {
     console.error("[growth-audit-lead] dealflow unreachable:", err);
-    return false;
+    return null;
   }
 }
 
@@ -77,8 +80,19 @@ export async function POST(request: Request) {
   // Log first: this is the fallback record if the CRM hand-off fails.
   console.log("[growth-audit-lead] new lead", JSON.stringify({ ...lead, submittedAt: new Date().toISOString() }));
 
-  const crm = await forwardToDealflow(lead);
-  if (!crm) console.error("[growth-audit-lead] NOT in dealflow — recover from this log:", lead.email);
+  const leadId = await forwardToDealflow(lead);
+  if (!leadId) console.error("[growth-audit-lead] NOT in dealflow — recover from this log:", lead.email);
 
-  return NextResponse.json({ ok: true });
+  // No lead id means no booking step: the client falls back to the plain
+  // thank-you state rather than opening a booking page that cannot book.
+  let token: string | undefined;
+  if (leadId && process.env.BOOKING_TOKEN_SECRET) {
+    try {
+      token = mint({ leadId, name: lead.name, email: lead.email, phone: lead.phone });
+    } catch (err) {
+      console.error("[growth-audit-lead] could not mint booking token:", err);
+    }
+  }
+
+  return NextResponse.json({ ok: true, ...(token ? { token } : {}) });
 }

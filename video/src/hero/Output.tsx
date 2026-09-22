@@ -6,9 +6,9 @@ import { display } from "../theme";
 // The finale, directly under the funnel's spout: an operations DASHBOARD —
 // the kind we build — coming alive as the pulses drop in. Four KPI tiles
 // (value counting up, delta, sparkline), the revenue curve, and the pipeline
-// column (Booked → Confirmed → Paid, pink on Booked). It is a product mock,
-// tagged SAMPLE DATA: the site's copy rule is that every published number
-// must be defensible, and these illustrate the dashboard, not a result.
+// column (Booked → Confirmed → Paid, pink on Booked). The figures are an
+// illustration of the dashboard, not a published result (owner's call,
+// 2026-09-22, to show it untagged).
 const KPIS = [
   { label: "Leads", to: 128, delta: "↑ 18%", spark: [3, 4, 4, 5, 6, 7, 9, 10] },
   { label: "Booked", to: 41, delta: "↑ 24%", spark: [2, 2, 3, 3, 4, 5, 6, 7] },
@@ -96,9 +96,6 @@ export const Output: React.FC = () => {
       </text>
       <text x={x + PAD + 92} y={headerY} fontFamily={display} fontSize={9} fill={rgba(P.ink, 0.35)}>
         This week ▾
-      </text>
-      <text x={x + w - PAD} y={headerY} textAnchor="end" fontFamily={display} fontSize={8} letterSpacing={2} fill={rgba(P.ink, 0.35)}>
-        SAMPLE DATA
       </text>
 
       {/* KPI tiles */}

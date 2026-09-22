@@ -1,8 +1,8 @@
 import { AbsoluteFill, Easing, interpolate, useCurrentFrame, useVideoConfig } from "remotion";
 import { CameraMotionBlur } from "@remotion/motion-blur";
 import type { ReactNode } from "react";
-import { cameraTransform, tiltAt, useCamera } from "./camera";
-import { BEATS, DURATION, useLayout, usePalette } from "./config";
+import { cameraTransform, useCamera } from "./camera";
+import { BEATS, DURATION, usePalette } from "./config";
 
 const FADE_IN = 12; // frames — file opens from the page background so the first painted frame is flat (the site's LCP protection is the attach timing in HeroFilm, not entropy)
 const FADE_OUT = BEATS.outro.to - BEATS.outro.from; // the outro: fade to the page background on the revenue scene
@@ -17,14 +17,8 @@ export const inBlurWindow = (f: number) => f >= BLUR_WINDOW.from && f < BLUR_WIN
 // size at zoom 1). Lives in its own component so CameraMotionBlur can render
 // it at sub-frame offsets — the transform must be computed INSIDE the blur.
 const CameraRig: React.FC<{ children: ReactNode }> = ({ children }) => {
-  const f = useCurrentFrame();
   const { width, height } = useVideoConfig();
   const cam = useCamera();
-  const L = useLayout();
-  const portrait = height > width;
-  // Finale tilt pivots on the dashboard's top edge, in screen space.
-  const tilt = tiltAt(f, portrait);
-  const pivotY = cam.anchor.y * height + (L.output.y - cam.target.y) * cam.zoom;
   return (
     <div
       style={{
@@ -33,25 +27,11 @@ const CameraRig: React.FC<{ children: ReactNode }> = ({ children }) => {
         top: 0,
         width,
         height,
-        transformOrigin: `50% ${pivotY}px`,
-        transform: `perspective(${portrait ? 1400 : 1700}px) rotateX(${tilt}deg)`,
-        transformStyle: "preserve-3d",
+        transformOrigin: "0 0",
+        transform: cameraTransform(cam, { w: width, h: height }),
       }}
     >
-      <div
-        style={{
-          position: "absolute",
-          left: 0,
-          top: 0,
-          width,
-          height,
-          transformOrigin: "0 0",
-          transform: cameraTransform(cam, { w: width, h: height }),
-          transformStyle: "preserve-3d",
-        }}
-      >
-        {children}
-      </div>
+      {children}
     </div>
   );
 };

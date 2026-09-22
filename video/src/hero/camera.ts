@@ -1,4 +1,4 @@
-import { Easing, interpolate, useCurrentFrame, useVideoConfig } from "remotion";
+import { interpolate, useCurrentFrame, useVideoConfig } from "remotion";
 import { noise2D } from "@remotion/noise";
 import { BEATS, DURATION, funnelBottom, layoutFor, worldSize, type Pt } from "./config";
 
@@ -33,12 +33,10 @@ export const cameraKeys = (portrait: boolean): CameraKey[] => {
   const funnelFocus = { x: fn.cx, y: funnelMidY - 20 };
   // Output: landscape frames spout + panel together; portrait (less width to
   // spare, more height) goes tighter on the panel with the spout just above.
-  // The finale tilt (tiltAt) makes the far tiers recede, so this frames a
-  // little wider and higher than the panel alone: the funnel towers above it.
-  const OUTPUT_ZOOM = portrait ? 1.4 : 1.45;
+  const OUTPUT_ZOOM = portrait ? 1.6 : 1.7;
   const outputFocus = portrait
-    ? { x: fn.cx, y: L.output.y + L.output.h / 2 - 260 }
-    : { x: fn.cx, y: (funnelBottom(fn) + L.output.y + L.output.h) / 2 - 150 };
+    ? { x: fn.cx, y: L.output.y + L.output.h / 2 - 80 }
+    : { x: fn.cx, y: (funnelBottom(fn) + L.output.y + L.output.h) / 2 - 10 };
   // Zoom-out over the phone cloud: the hero phone drifts from the legibility
   // anchor to the frame's center while the cloud fills the frame.
   const cloud = { zoom: portrait ? 2 : 2.4, target: { x: L.cluster.x, y: L.cluster.y }, anchor: mid };
@@ -132,15 +130,3 @@ export const useCamera = (): Cam => {
   const { width, height } = useVideoConfig();
   return withDrift(cameraAt(f, cameraKeys(height > width)), f, true);
 };
-
-// The finale tilt: once the camera has settled on the dashboard, the world
-// plane rotates back (rotateX, negative = top recedes) around the dashboard's
-// top edge, so the funnel towers away in perspective and the dashboard is the
-// piece nearest the lens. Degrees; eased; held to the last frame.
-export const TILT_DEG = { landscape: -34, portrait: -26 } as const;
-export const tiltAt = (frame: number, portrait: boolean) =>
-  interpolate(frame, [BEATS.output.from + 36, BEATS.output.from + 96], [0, portrait ? TILT_DEG.portrait : TILT_DEG.landscape], {
-    easing: Easing.inOut(Easing.cubic),
-    extrapolateLeft: "clamp",
-    extrapolateRight: "clamp",
-  });

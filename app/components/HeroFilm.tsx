@@ -25,10 +25,12 @@ import { HERO_INTRO_DONE } from "./HeroCopy";
 // Save-Data (then data-intro was never set and the copy is visible from the
 // first paint). The film is the LCP element by design.
 //
-// Sound: the film carries a score, but autoplay must be muted, so a speaker
-// toggle (shown during the intro) lets the visitor opt in — that click is a
-// real user gesture, which is what unmuting requires. It is the one input
-// that does NOT end the intro.
+// Sound: the film carries a score. We try to autoplay WITH sound first —
+// browsers allow it for visitors who have interacted with the site before
+// (Chrome's engagement score, or arriving via a click from another page on
+// the domain) — and fall back to muted when the browser refuses. Either way
+// a speaker toggle (shown during the intro) lets the visitor flip it; that
+// click is the one input that does NOT end the intro.
 const INTRO_TIMEOUT_MS = 6000;
 const INPUT_EVENTS = ["scroll", "touchstart", "pointerdown", "keydown"] as const;
 
@@ -97,10 +99,18 @@ export default function HeroFilm() {
     }, INTRO_TIMEOUT_MS);
 
     // Attach now: the film is the opening. One file per orientation × theme.
+    // Unmuted first; if the browser refuses, muted (the toggle can flip it).
     v.preload = "auto";
     v.setAttribute("src", pickSource(isPortrait(), readFilmEnv().theme));
     v.load();
-    v.play().catch(() => {});
+    v.muted = false;
+    v.play()
+      .then(() => setSound(true))
+      .catch(() => {
+        v.muted = true;
+        setSound(false);
+        v.play().catch(() => {});
+      });
 
     return () => {
       v.removeEventListener("playing", onPlaying);

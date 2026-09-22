@@ -1,4 +1,5 @@
 import { interpolate, useCurrentFrame } from "remotion";
+import { noise2D } from "@remotion/noise";
 import { BEATS, rgba, useLayout, usePalette, type Pt } from "./config";
 
 // The phone cloud: the hero phone is one of many. Same-size phones scattered
@@ -20,6 +21,13 @@ export const phonePositions = (c: Pt & { r: number }): CloudPhone[] =>
     return { x: c.x + Math.cos(a) * d, y: c.y + Math.sin(a) * d * 0.8, tilt: -14 + 28 * hash(k) };
   });
 
+// The float, shared with Reveal so the cables stay attached to the phones.
+export const cloudFloat = (k: number, f: number) => ({
+  dx: 5 * noise2D("cloud-x", k * 3.1, f / 90),
+  dy: 5 * noise2D("cloud-y", f / 90, k * 3.1),
+  dt: 2.5 * noise2D("cloud-t", k * 1.7, f / 120),
+});
+
 export const Phones: React.FC = () => {
   const P = usePalette();
   const f = useCurrentFrame();
@@ -37,8 +45,10 @@ export const Phones: React.FC = () => {
       {phonePositions(L.cluster).map((p, k) => {
         const glow = 0.5 + 0.3 * Math.sin(f / 11 + k);
         const tint = 0.1 + 0.08 * (k % 3);
+        // organic float: each phone drifts on its own low-frequency noise
+        const { dx, dy, dt } = cloudFloat(k, f);
         return (
-          <g key={k} transform={`translate(${p.x} ${p.y}) rotate(${p.tilt}) translate(${-w / 2} ${-h / 2})`}>
+          <g key={k} transform={`translate(${p.x + dx} ${p.y + dy}) rotate(${p.tilt + dt}) translate(${-w / 2} ${-h / 2})`}>
             <rect x={-0.4} y={-0.4} width={w + 0.8} height={h + 0.8} rx={6} fill={rgba(P.blue, 0.22 * glow)} filter="url(#cloud-rim)" />
             <rect x={0} y={0} width={w} height={h} rx={5.6} fill={P.surface} stroke={rgba(P.blue, 0.5)} strokeWidth={0.45} />
             <rect x={2} y={4} width={w - 4} height={h - 8} rx={3.6} fill={rgba(P.blue, tint)} />

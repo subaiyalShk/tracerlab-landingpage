@@ -1,7 +1,9 @@
 import { Easing, interpolate, useCurrentFrame, useVideoConfig } from "remotion";
+import { CameraMotionBlur } from "@remotion/motion-blur";
 import type { ReactNode } from "react";
 import { BEATS } from "./config";
-import { MAP_OUT, cameraTransform, phonePose, useCamera } from "./camera";
+import { MAP_OUT, cameraTransform, phonePose, useCamera, withDrift } from "./camera";
+import { BLUR, inBlurWindow } from "./Stage";
 
 const clamp = { extrapolateLeft: "clamp", extrapolateRight: "clamp" } as const;
 
@@ -14,7 +16,10 @@ const clamp = { extrapolateLeft: "clamp", extrapolateRight: "clamp" } as const;
 // `steady` children get the exact pose WITHOUT the settle (an integer 8× scale
 // that never changes frame to frame) — for the text chips, which shimmer when
 // re-rasterized at a drifting fractional scale.
-export const PhoneLayer: React.FC<{ children: ReactNode; steady?: ReactNode }> = ({ children, steady }) => {
+// The layer's own camera. Before the reveal: the fixed pose + settle, with
+// translation-only drift (the same drift for both slots, so the steady chips
+// stay steady relative to the phone). From the reveal: the main camera.
+const Layers: React.FC<{ children: ReactNode; steady?: ReactNode }> = ({ children, steady }) => {
   const f = useCurrentFrame();
   const { width, height } = useVideoConfig();
   const cam = useCamera();
@@ -22,8 +27,8 @@ export const PhoneLayer: React.FC<{ children: ReactNode; steady?: ReactNode }> =
   const settle = interpolate(f, [MAP_OUT, MAP_OUT + 70], [1.06, 1], { easing: Easing.out(Easing.cubic), ...clamp });
   const pose = phonePose(height > width);
   const before = f < BEATS.reveal.from;
-  const c = before ? { ...pose, zoom: pose.zoom * settle } : cam;
-  const cSteady = before ? pose : cam;
+  const c = before ? withDrift({ ...pose, zoom: pose.zoom * settle }, f, false) : cam;
+  const cSteady = before ? withDrift(pose, f, false) : cam;
   const layer = (t: typeof c): React.CSSProperties => ({
     position: "absolute",
     left: 0,
@@ -39,5 +44,18 @@ export const PhoneLayer: React.FC<{ children: ReactNode; steady?: ReactNode }> =
       <div style={layer(c)}>{children}</div>
       {steady && <div style={layer(cSteady)}>{steady}</div>}
     </>
+  );
+};
+
+export const PhoneLayer: React.FC<{ children: ReactNode; steady?: ReactNode }> = (props) => {
+  const f = useCurrentFrame();
+  const layers = <Layers {...props} />;
+  // On the moving camera during the reveal, so it blurs with the rig.
+  return inBlurWindow(f) ? (
+    <CameraMotionBlur samples={BLUR.samples} shutterAngle={BLUR.shutterAngle}>
+      {layers}
+    </CameraMotionBlur>
+  ) : (
+    layers
   );
 };

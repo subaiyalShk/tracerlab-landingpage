@@ -1,4 +1,5 @@
-import { useCurrentFrame, useVideoConfig } from "remotion";
+import { interpolate, useCurrentFrame, useVideoConfig } from "remotion";
+import { noise2D } from "@remotion/noise";
 import { BEATS, DURATION, funnelBottom, layoutFor, worldSize, type Pt } from "./config";
 
 export type Cam = { zoom: number; target: Pt; anchor: Pt };
@@ -86,8 +87,46 @@ export const cameraTransform = (cam: Cam, viewport: { w: number; h: number }) =>
   return `translate(${tx}px, ${ty}px) scale(${cam.zoom})`;
 };
 
+// A whisper of handheld drift on the HELD shots only — the phone scene, the
+// funnel hold and the dashboard hold — never during a keyframed move (it
+// would fight the ease). Simplex noise, low frequency, ~DRIFT_PX of screen
+// travel, and a breath of zoom (translation-only when `zoomToo` is false, so
+// steady text layers don't re-rasterize).
+const DRIFT_PX = 6;
+const DRIFT_ZOOM = 0.006;
+export const driftWeight = (frame: number) => {
+  const clamp = { extrapolateLeft: "clamp", extrapolateRight: "clamp" } as const;
+  const holds: [number, number][] = [
+    [BEATS.attention.from + 20, BEATS.reveal.from - 10],
+    [BEATS.reveal.to + 30, BEATS.mechanism.to - 10],
+    [BEATS.output.from + 40, DURATION],
+  ];
+  return Math.max(
+    0,
+    ...holds.map(([a, b]) => Math.min(interpolate(frame, [a, a + 30], [0, 1], clamp), interpolate(frame, [b - 30, b], [1, 0], clamp))),
+  );
+};
+export const driftAt = (frame: number): { dx: number; dy: number; dz: number } => {
+  const w = driftWeight(frame);
+  const t = frame / 140;
+  return {
+    dx: DRIFT_PX * w * noise2D("drift-x", t, 0),
+    dy: DRIFT_PX * w * noise2D("drift-y", 0, t),
+    dz: DRIFT_ZOOM * w * noise2D("drift-z", t, t),
+  };
+};
+export const withDrift = (cam: Cam, frame: number, zoomToo: boolean): Cam => {
+  const d = driftAt(frame);
+  // screen-px drift → world units at this zoom, so the motion feels the same at every scale
+  return {
+    zoom: cam.zoom * (1 + (zoomToo ? d.dz : 0)),
+    target: { x: cam.target.x - d.dx / cam.zoom, y: cam.target.y - d.dy / cam.zoom },
+    anchor: cam.anchor,
+  };
+};
+
 export const useCamera = (): Cam => {
   const f = useCurrentFrame();
   const { width, height } = useVideoConfig();
-  return cameraAt(f, cameraKeys(height > width));
+  return withDrift(cameraAt(f, cameraKeys(height > width)), f, true);
 };

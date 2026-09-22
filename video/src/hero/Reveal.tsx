@@ -1,6 +1,6 @@
 import { interpolate, useCurrentFrame } from "remotion";
 import { BEATS, rgba, useLayout, type Pt, usePalette } from "./config";
-import { phonePositions } from "./Phones";
+import { cloudFloat, phonePositions } from "./Phones";
 import { PLATFORMS } from "./marks";
 import { display } from "../theme";
 
@@ -31,7 +31,13 @@ export const Reveal: React.FC = () => {
   const clamp = { extrapolateLeft: "clamp", extrapolateRight: "clamp" } as const;
   // Cables appear as the camera pulls back over the cloud and stay for the film.
   const show = interpolate(f, [BEATS.reveal.from + 20, BEATS.reveal.from + 70], [0, 1], clamp);
-  const phones = [{ x: L.phone.x, y: L.phone.y }, ...phonePositions(L.cluster)];
+  const phones = [
+    { x: L.phone.x, y: L.phone.y },
+    ...phonePositions(L.cluster).map((p, k) => {
+      const { dx, dy } = cloudFloat(k, f);
+      return { x: p.x + dx, y: p.y + dy };
+    }),
+  ];
   const threads = phones.flatMap((p, k) => {
     const port = L.ports[k % L.ports.length];
     const top = { x: port.x, y: port.y - PORT_SIZE / 2 };

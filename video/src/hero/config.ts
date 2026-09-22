@@ -2,19 +2,19 @@ import { createContext, useContext } from "react";
 import { useVideoConfig } from "remotion";
 
 export const FPS = 30;
-export const DURATION = 870; // 29 s — the film plays once and fades out on the revenue scene
+export const DURATION = 850; // 28.3 s — the film plays once and fades out on the dashboard
 
 // Beat boundaries in frames. Contiguous; last ends at DURATION. The openers are
-// short and the Mechanism beat is the longest (7 s): the machine is the
-// explainer. The film ends on the revenue scene: the `outro` is its fade to black.
+// short; the Mechanism beat lights the machine up tier by tier (4.5 s) and
+// snaps to the dashboard. The film ends there: the `outro` is its fade.
 export const BEATS = {
   world: { from: 0, to: 90 },
   people: { from: 90, to: 180 },
   attention: { from: 180, to: 330 },
   reveal: { from: 330, to: 450 },
-  mechanism: { from: 450, to: 660 },
-  output: { from: 660, to: 820 },
-  outro: { from: 820, to: 870 },
+  mechanism: { from: 450, to: 585 },
+  output: { from: 585, to: 800 },
+  outro: { from: 800, to: 850 },
 } as const;
 
 // The four chambers of the machine — the service-business stack, in the

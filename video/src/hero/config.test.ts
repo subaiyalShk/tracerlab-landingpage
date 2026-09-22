@@ -2,9 +2,9 @@ import { test } from "node:test";
 import assert from "node:assert/strict";
 import { BEATS, COLORS, DURATION, FPS, funnelBottom, layoutFor, palette, worldSize } from "./config";
 
-test("film is 29s at 30fps", () => {
+test("film is 28.3s at 30fps", () => {
   assert.equal(FPS, 30);
-  assert.equal(DURATION, 870);
+  assert.equal(DURATION, 850);
 });
 
 test("beats are contiguous, ordered and end at DURATION", () => {

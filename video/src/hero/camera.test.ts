@@ -87,7 +87,7 @@ test("the whole funnel (ports to spout) is on screen through the mechanism beat;
       assert.ok(sy(c, L.ports[0].y - 22) >= 0, `portrait=${portrait} f=${f} ports above frame`);
       assert.ok(sy(c, funnelBottom(L.funnel)) <= h, `portrait=${portrait} f=${f} spout below frame`);
     }
-    for (let f = BEATS.output.from + 30; f <= BEATS.output.to; f += 10) {
+    for (let f = BEATS.output.from + 15; f <= BEATS.output.to; f += 10) {
       const c = cameraAt(f, k);
       assert.ok(sx(c, L.output.x) >= 0 && sx(c, L.output.x + L.output.w) <= w, `portrait=${portrait} f=${f} output x off-screen`);
       assert.ok(sy(c, L.output.y) >= 0 && sy(c, L.output.y + L.output.h) <= h, `portrait=${portrait} f=${f} output y off-screen`);
@@ -103,5 +103,5 @@ test("drift is silent during the camera moves and bounded on the holds", () => {
     const d = driftAt(f);
     assert.ok(Math.abs(d.dx) <= 6 && Math.abs(d.dy) <= 6 && Math.abs(d.dz) <= 0.006, `drift out of bounds at f=${f}`);
   }
-  assert.ok(driftWeight(BEATS.mechanism.from + 100) === 1, "funnel hold should carry full drift");
+  assert.ok(driftWeight(BEATS.mechanism.from + 70) === 1, "funnel hold should carry full drift");
 });

@@ -52,8 +52,8 @@ export const cameraKeys = (portrait: boolean): CameraKey[] => {
     { frame: BEATS.reveal.from + 70, ...cloud },
     { frame: BEATS.reveal.to, zoom: FUNNEL_ZOOM, target: funnelFocus, anchor: mid },
     { frame: BEATS.mechanism.to, zoom: FUNNEL_ZOOM, target: funnelFocus, anchor: mid },
-    // Output: down to the spout and the revenue under it.
-    { frame: BEATS.output.from + 30, zoom: OUTPUT_ZOOM, target: outputFocus, anchor: mid },
+    // Output: a quick snap down to the dashboard (half a second), then hold.
+    { frame: BEATS.output.from + 15, zoom: OUTPUT_ZOOM, target: outputFocus, anchor: mid },
     // …and hold it while the film fades out. (The film plays once — no loop.)
     { frame: DURATION, zoom: OUTPUT_ZOOM, target: outputFocus, anchor: mid },
   ];

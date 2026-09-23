@@ -83,5 +83,5 @@ console.log("  agent_id :", agent.agent_id);
 console.log("  book_call → ", bookUrl);
 console.log("\nNext:");
 console.log("  1) Set RETELL_AGENT_ID =", agent.agent_id, "in your env (.env.local + Vercel).");
-console.log("  2) Ensure CALCOM_API_KEY + CALCOM_EVENT_TYPE_ID are set so booking works.");
+console.log("  2) Ensure DEALFLOW_INTAKE_URL + DEALFLOW_INTAKE_SECRET are set so booking works.");
 console.log("  3) Pick/adjust the voice in the Retell dashboard if desired (current:", VOICE_ID + ").");

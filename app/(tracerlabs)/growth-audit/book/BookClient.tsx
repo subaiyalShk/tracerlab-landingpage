@@ -3,6 +3,7 @@
 import { useCallback, useEffect, useMemo, useState } from "react";
 import Bevel, { GLASS_BG, GLASS_BORDER } from "../../../components/Bevel";
 import Button from "../../../components/Button";
+import { trackBookingConfirmed } from "../_lib/pixel";
 
 // Day rail + time grid. Slots arrive as UTC ISO strings and are rendered in the
 // visitor's own timezone, so nobody has to do mental arithmetic to book a call.
@@ -117,6 +118,8 @@ export default function BookClient({ token, firstName }: { token: string; firstN
       if (!res.ok || !json.ok) throw new Error(json.error || "We could not book that time.");
       setBooked({ start: json.start, meetLink: json.meetLink ?? null });
       setState("booked");
+      // The conversion is the meeting, not the form fill.
+      trackBookingConfirmed({ meetingType: "Growth Audit" });
     } catch (e) {
       setError(e instanceof Error ? e.message : "We could not book that time.");
       setState("error");

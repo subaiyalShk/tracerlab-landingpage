@@ -128,7 +128,9 @@ export default function LeadForm() {
       });
       const json = await res.json().catch(() => ({}));
       if (!res.ok || !json.ok) throw new Error(json.error || "Something went wrong.");
-      // REPLACE: fire conversion on success, e.g. fbq('track','Lead') + CAPI event with matching event_id
+      // No conversion here on purpose: it fires when the MEETING is confirmed
+      // (book/BookClient.tsx → _lib/pixel.ts). A form fill with no booking is
+      // not the outcome we buy ads for.
       // Straight into step 2 — the booking page carries an encrypted token, so
       // no lead details ride in the URL. Stay in "submitting" through the
       // navigation so the button never flashes back to its idle label.

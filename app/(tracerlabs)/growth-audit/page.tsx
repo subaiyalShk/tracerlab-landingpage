@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
 import AuditHero from "./_components/AuditHero";
+import Tags from "./_components/Tags";
 import LeadForm from "./_components/LeadForm";
 import Bullets from "./_components/Bullets";
 import Proof from "./_components/Proof";
@@ -39,7 +40,7 @@ export const metadata: Metadata = {
 export default function GrowthAuditPage() {
   return (
     <>
-      {/* REPLACE: Meta Pixel base code + Google Ads / GA4 tag (next/script, afterInteractive) */}
+      <Tags />
       <AuditHero />
       <main id="content" className="font-body bg-page text-ink">
         <div id="form-card" className="mx-auto w-full max-w-[600px] scroll-mt-6 px-5">

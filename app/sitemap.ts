@@ -11,5 +11,7 @@ export default function sitemap(): MetadataRoute.Sitemap {
     { url: "https://tracerlabs.io/solar", changeFrequency: "monthly", priority: 0.8 },
     { url: "https://tracerlabs.io/work/harbs-farm", changeFrequency: "monthly", priority: 0.9 },
     { url: "https://tracerlabs.io/work/solar-lead-engine", changeFrequency: "monthly", priority: 0.9 },
+    { url: "https://tracerlabs.io/privacy", changeFrequency: "yearly", priority: 0.3 },
+    { url: "https://tracerlabs.io/terms", changeFrequency: "yearly", priority: 0.3 },
   ];
 }

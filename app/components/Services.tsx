@@ -67,7 +67,7 @@ const FEATURED: Service & { highlights: string[] } = {
   ],
   figures: [
     { v: "1,000+", l: "solar leads generated" },
-    { v: "$40–52", l: "per booked appointment" },
+    { v: "$40–52", l: "per lead on live funnels" },
     { v: "367", l: "consults booked" },
   ],
   who: "Across our solar portfolio — verified in-platform",

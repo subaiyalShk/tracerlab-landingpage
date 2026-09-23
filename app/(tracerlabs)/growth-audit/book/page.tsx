@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import Link from "next/link";
 import { read } from "../_lib/bookingToken";
 import BookClient from "./BookClient";
+import Tags from "../_components/Tags";
 
 // Step 2 of the Growth Audit funnel: pick a time. Reached only by redirect from
 // the form, carrying an encrypted token — never indexed, never linked.
@@ -17,6 +18,7 @@ export default async function BookPage({ searchParams }: { searchParams: Promise
 
   return (
     <main className="font-body relative isolate min-h-[100dvh] w-full overflow-clip bg-page text-ink">
+      <Tags />
       <div aria-hidden className="nt-horizon -z-10" />
       <div aria-hidden className="nt-gridfloor -z-10" />
       <div className="mx-auto w-full max-w-[640px] px-5 py-12 sm:py-16">

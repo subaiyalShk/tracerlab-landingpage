@@ -26,23 +26,22 @@ export const VSL_LENGTH = "3 min";
 /** Where the form posts. Same stub pattern as /solar (see app/api/growth-audit-lead). */
 export const LEAD_ENDPOINT = "/api/growth-audit-lead";
 
-/** REPLACE with the real policy URLs once they exist. */
-export const PRIVACY_URL = "/";
-export const TERMS_URL = "/";
+export const PRIVACY_URL = "/privacy";
+export const TERMS_URL = "/terms";
 
 export const BUSINESS_TYPES = ["Solar", "HVAC", "Roofing", "Other home service"] as const;
 export const AD_SPEND = ["Not running ads yet", "Under $2K", "$2K–$5K", "$5K+"] as const;
 
 /** Headline proof stats. Cost/consult/show figures come from the solar portfolio. */
 export const STATS: { value: string; label: string }[] = [
-  { value: "$5M+", label: "revenue generated for clients" },
-  { value: "$40–52", label: "per booked appointment" },
+  { value: "$40–52", label: "cost per lead" },
+  { value: "≈$96", label: "ad spend per booked consult" },
   { value: "2×", label: "lead-to-consult rate" },
   { value: "94%", label: "appointment show rate" },
 ];
 
 export const STATS_SOURCE =
-  "Cost per appointment, conversion and show-rate figures are from our solar portfolio, verified in-platform. Show rate measured across 487 appointments.";
+  "Cost, conversion and show-rate figures are from our solar portfolio, verified in-platform. Show rate measured across 487 appointments.";
 
 /** Replace the bracketed text with real customers' words. Entries flagged `placeholder`
  *  are NOT rendered; the whole section is hidden until at least one is real. */

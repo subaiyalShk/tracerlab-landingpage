@@ -771,6 +771,24 @@ html[data-theme="light"] .nt-grain {
   100% { background-position: -80% 0; }
 }
 
+/* Legal pages (/privacy, /terms): plain prose. The site runs Tailwind without
+   preflight and resets heading/paragraph margins, so these pages restore just
+   enough rhythm to be readable at length. */
+.nt-legal h2 {
+  margin-top: 2.25rem;
+  margin-bottom: 0.6rem;
+  font-family: var(--font-archivo), system-ui, sans-serif;
+  font-size: 1.15rem;
+  font-weight: 700;
+  color: var(--tl-ink);
+}
+.nt-legal p { margin-bottom: 1.1rem; }
+.nt-legal code {
+  padding: 0.1em 0.35em;
+  background: var(--tl-surface);
+  font-size: 0.9em;
+}
+
 /* Section kicker — a short gradient dash above section labels. */
 .nt-kicker {
   display: block;

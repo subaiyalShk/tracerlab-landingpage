@@ -72,13 +72,31 @@ from the token, never the request body.
   dealflow. The Calendar API must stay enabled in GCP project `dealflow-487605`.
 - Prod env: `BOOKING_TOKEN_SECRET` (here), `BOOKING_CALENDAR_ID` + `LEAD_INTAKE_SECRET` (dealflow).
 - Spec/plan: `docs/superpowers/specs|plans/2026-09-22-growth-audit-booking*.md`.
-- ⚠️ Still open: no spam protection on the public form, the page is indexable and in the
-  sitemap, privacy/terms link to `/`, and the Meta/GA pixel is still a `REPLACE` marker (fire
-  the conversion on **booking confirmed**, not form submit).
+- **Bot guards** on the form (`growth-audit/_lib/guards.ts`, unit-tested): off-screen honeypot,
+  3 s minimum fill time, per-IP 5/10 min, and a link-in-name check. Every drop returns the
+  IDENTICAL `{ok:true}` a human gets — a bot must learn nothing — and is logged with the
+  payload so a real person caught by a guard can be recovered. Escalation = Turnstile.
+- **Conversion fires on BOOKING CONFIRMED**, never form submit (`_lib/pixel.ts` ←
+  `book/BookClient.tsx`); `_components/Tags.tsx` renders the Meta/GA base tags only when
+  `NEXT_PUBLIC_META_PIXEL_ID` / `NEXT_PUBLIC_GA_ID` are set, so an unconfigured site ships no
+  third-party script. **Neither ID is set yet** — tracking is inert until they are.
+- `/growth-audit` and `/growth-audit/book` are `robots: noindex` and out of `sitemap.ts`
+  (paid-traffic pages with no nav). `/privacy` and `/terms` ARE indexed.
+- ⚠️ Still open: the VSL URL and testimonials are placeholders (the testimonials section hides
+  itself until one is real).
+
+## Legal pages
+`/privacy` and `/terms` (route group `(tracerlabs)`, shared chrome in `_components/LegalPage.tsx`,
+prose styles `.nt-legal` in globals). They describe what the forms, the voice agent and the
+booking step ACTUALLY collect — keep them in step with the code when a form changes. Meta
+requires a reachable privacy policy on lead-gen landing pages. ⚠️ Written from observed
+behaviour, not by a lawyer; worth a review before scaling spend.
 
 ## Copy rules (user-set, 2026-09-05)
 - **Never state exact client counts** — vague plurals only ("solar companies", "our solar
   portfolio"). Clients stay anonymized except Harbs Farm (already public on its case study).
+- **`$40–52` is cost per LEAD, `≈$96` is ad spend per booked consult.** These were once
+  swapped, which made the homepage contradict `/work/solar-lead-engine`; fixed 2026-09-22.
 - **Every published number must be defensible**: lead counts/CPL trace to the clients' Meta ad
   accounts (via the meta-ads-official MCP; count only campaigns we ran — Solrite's account has
   ~$21k of pre-engagement history), consults/bookings to production systems.
@@ -152,7 +170,11 @@ the agent books via `/api/book` (shared secret in `?s=`). **Cal.com was retired 
 `DEALFLOW_INTAKE_URL`/`DEALFLOW_INTAKE_SECRET`), the same Google Calendar engine behind
 `/growth-audit` and the CRM scheduler, so the three can never disagree about a free time.
 Calling it with no `preferred_time` returns real openings, so the agent can close on the call.
-The Retell agent itself needs no reconfiguration — same tool URL, arguments and spoken replies. Vercel **Production** env:
+The Retell agent itself needs no reconfiguration — same tool URL, arguments and spoken replies.
+⚠️ **Cal.com is gone from the APIs but not from the site**: five pages (Cta, gnrg, agents,
+voice-agents, insurance) still send humans to `https://cal.com/team/tracerlabs/discovery-call`
+as a hardcoded fallback link. Retiring it fully needs a PUBLIC (tokenless) booking page of our
+own — `/growth-audit/book` requires a lead token. The `CAL_*` env vars were deleted 2026-09-22. Vercel **Production** env:
 `RETELL_API_KEY`, `RETELL_AGENT_ID`, `RETELL_FUNCTION_SECRET`, `DEALFLOW_INTAKE_URL`,
 `DEALFLOW_INTAKE_SECRET` (the `CAL_*` vars are now unused and can be deleted). `scripts/repoint-book-call.mjs` re-points the
 agent’s `book_call` URL after a domain change (updates the existing LLM, no new agent).

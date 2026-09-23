@@ -147,9 +147,14 @@ with `scroll-margin-top` on the sections so the sticky nav doesn’t cover them.
 
 ## Voice agent (CTA)
 `/api/retell/web-call` mints a short-lived Retell token; `VoiceWidget` runs the in-browser call;
-the agent books via `/api/book` (Cal.com; shared secret in `?s=`). Vercel **Production** env:
-`RETELL_API_KEY`, `RETELL_AGENT_ID`, `RETELL_FUNCTION_SECRET`, `CAL_API_KEY`, `CAL_EVENT_TYPE_SLUG`,
-`CAL_TEAM_SLUG`, `NEXT_PUBLIC_CAL_BOOKING_LINK`. `scripts/repoint-book-call.mjs` re-points the
+the agent books via `/api/book` (shared secret in `?s=`). **Cal.com was retired 2026-09-22** —
+`/api/book` now proxies dealflow's `/api/calendar/{slots,book}` (header `x-intake-secret`,
+`DEALFLOW_INTAKE_URL`/`DEALFLOW_INTAKE_SECRET`), the same Google Calendar engine behind
+`/growth-audit` and the CRM scheduler, so the three can never disagree about a free time.
+Calling it with no `preferred_time` returns real openings, so the agent can close on the call.
+The Retell agent itself needs no reconfiguration — same tool URL, arguments and spoken replies. Vercel **Production** env:
+`RETELL_API_KEY`, `RETELL_AGENT_ID`, `RETELL_FUNCTION_SECRET`, `DEALFLOW_INTAKE_URL`,
+`DEALFLOW_INTAKE_SECRET` (the `CAL_*` vars are now unused and can be deleted). `scripts/repoint-book-call.mjs` re-points the
 agent’s `book_call` URL after a domain change (updates the existing LLM, no new agent).
 
 **Notification pipeline (2026-09-05, audited end-to-end):** the agent's `webhook_url` points at
